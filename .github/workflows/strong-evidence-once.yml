@@ -1,0 +1,68 @@
+name: Cat Paw strong evidence once
+
+on:
+  push:
+    branches:
+      - codex/sfhs-github-migration
+    paths:
+      - .github/workflows/strong-evidence-once.yml
+
+concurrency:
+  group: cat-paw-strong-evidence-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  strong-evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      SFHS_ROOT: ${{ github.workspace }}/.sfhs-toolchain
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check out pinned SFHS toolchain
+        uses: actions/checkout@v4
+        with:
+          repository: falloutmule/single-file-html-software
+          ref: 36cf483d04b4c743b5c7f90ca8c4879d690904d1
+          path: .sfhs-toolchain
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.11.1'
+          cache: pnpm
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.9.0
+          run_install: false
+
+      - name: Install pinned SFHS workspace
+        working-directory: .sfhs-toolchain
+        run: pnpm install --frozen-lockfile
+
+      - name: Install game project
+        run: pnpm install --frozen-lockfile
+
+      - name: Prepare clean SFHS integration project
+        run: pnpm run sfhs:prepare
+
+      - name: Run strong migration evidence
+        run: pnpm run ci:strong
+
+      - name: Upload bounded strong evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cat-paw-strong-evidence
+          path: |
+            dist/index.html
+            evidence/**
+            .sfhs-evidence/**
+            .sfhs-browser/**
+            one-shot/VERIFICATION-REPORT.md
+          if-no-files-found: warn
+          retention-days: 7
