@@ -1,0 +1,40 @@
+{
+  "name": "cat-paw-air-hockey",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "packageManager": "pnpm@11.9.0",
+  "dependencies": {
+    "@sfhs/adapter-pixi-v8": "workspace:*",
+    "@sfhs/pixi-runtime": "workspace:*",
+    "pixi.js": "8.19.0"
+  },
+  "scripts": {
+    "test:input": "node --experimental-strip-types tests/input-lifecycle.ts",
+    "test:physics": "node --experimental-strip-types tests/scenarios.ts",
+    "test:match": "node --experimental-strip-types tests/match-flow.ts",
+    "test:orientation": "node --experimental-strip-types tests/orientation-layout.ts",
+    "test:browser-driver": "node --experimental-strip-types tests/browser-match-driver.ts",
+    "test:controls": "node --experimental-strip-types tests/control-phase.ts",
+    "test:lifecycle": "node --experimental-strip-types tests/lifecycle.ts",
+    "test:pointer-sampling": "node --experimental-strip-types tests/pointer-sampling.ts",
+    "test:audio": "node --experimental-strip-types tests/audio.ts",
+    "test:allocation": "node --experimental-strip-types --expose-gc tests/allocation-pressure.ts",
+    "test:physics-profile": "node --experimental-strip-types tests/physics-profile.ts",
+    "test:collision-fuzz": "node --experimental-strip-types tests/seeded-collision-fuzz.ts",
+    "test:source": "node scripts/run-source-tests.mjs",
+    "sfhs:prepare": "node scripts/prepare-sfhs-workspace.mjs",
+    "sfhs:inspect": "node scripts/run-sfhs-command.mjs inspect",
+    "sfhs:validate": "node scripts/run-sfhs-command.mjs validate",
+    "sfhs:check": "node scripts/run-sfhs-command.mjs check",
+    "sfhs:pack": "node scripts/run-sfhs-command.mjs pack",
+    "sfhs:verify": "node scripts/run-sfhs-command.mjs verify",
+    "one-shot:inspect": "node scripts/run-sfhs-command.mjs one-shot inspect",
+    "one-shot:audit": "node scripts/run-sfhs-command.mjs one-shot audit",
+    "test:strong-source": "node scripts/run-strong-source-tests.mjs",
+    "verify:intake": "node scripts/verify-intake.mjs"
+  }
+}

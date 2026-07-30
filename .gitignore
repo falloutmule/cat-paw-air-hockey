@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.sfhs-integration/
+.sfhs-evidence/
+.sfhs-browser/
+.sfhs-determinism/
+.intake/
+candidate/*.html
+test-results/
+playwright-report/
+*.log
+.DS_Store
