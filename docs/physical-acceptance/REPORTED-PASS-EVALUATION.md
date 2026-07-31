@@ -1,0 +1,18 @@
+# Exact canonical Galaxy S21 Ultra acceptance — evaluation trigger
+
+Recorded: 2026-07-30T17:29:00-06:00
+
+Status: `REPORTED PASS`
+
+User report:
+
+> Exact canonical Galaxy S21 Ultra acceptance is REPORTED PASS.
+
+Known device context:
+
+- Samsung Galaxy S21 Ultra
+- model identifier: SM-G998U1
+- Android 15
+- stable Android Chrome
+
+This report requests binding to the canonical artifact produced by the pinned SFHS toolchain and an official `sfhs release prepare` evaluation. Numeric Chrome version, measured portrait and landscape viewport dimensions/DPR, and bound screenshots were not supplied and must not be invented.
