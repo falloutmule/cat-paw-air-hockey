@@ -1,0 +1,130 @@
+name: Evaluate reported Galaxy S21 Ultra acceptance
+
+on:
+  pull_request:
+    branches:
+      - main
+
+concurrency:
+  group: cat-paw-device-eval-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  release-preparation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Check out evaluation ref
+        uses: actions/checkout@v4
+
+      - name: Reconstruct authoritative Cat Paw source
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat .remote-restore2/part-* | base64 --decode > /tmp/source.tar.xz
+          echo "958201c82e1022e9277a0631903fe167bc3fa533f8e75a16f53b04fb0d747bad  /tmp/source.tar.xz" | sha256sum -c -
+          mkdir -p /tmp/cat-paw-source
+          tar -xJf /tmp/source.tar.xz -C /tmp/cat-paw-source
+          test -f /tmp/cat-paw-source/src/main.ts
+          test -f /tmp/cat-paw-source/docs/physical-acceptance/REPORTED-EXACT-CANONICAL-PASS.md
+
+      - name: Check out pinned SFHS
+        uses: actions/checkout@v4
+        with:
+          repository: falloutmule/single-file-html-software
+          ref: 36cf483d04b4c743b5c7f90ca8c4879d690904d1
+          path: sfhs
+
+      - name: Set up Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24.11.1
+          cache: pnpm
+          cache-dependency-path: sfhs/pnpm-lock.yaml
+
+      - name: Activate pnpm 11.9.0
+        run: |
+          corepack enable
+          corepack prepare pnpm@11.9.0 --activate
+
+      - name: Materialize disposable SFHS integration project
+        shell: bash
+        run: |
+          rm -rf sfhs/examples/cat-paw-air-hockey
+          mkdir -p sfhs/examples/cat-paw-air-hockey
+          rsync -a \
+            --exclude .git \
+            --exclude .intake \
+            --exclude node_modules \
+            --exclude dist \
+            --exclude candidate/*.html \
+            /tmp/cat-paw-source/ sfhs/examples/cat-paw-air-hockey/
+
+      - name: Install pinned workspace and Chromium
+        working-directory: sfhs
+        run: |
+          CI=true pnpm install --no-frozen-lockfile
+          pnpm exec playwright install --with-deps chromium
+
+      - name: Run source tests, canonical pack, and exact verify
+        working-directory: sfhs
+        run: |
+          pnpm --dir examples/cat-paw-air-hockey test:source | tee ../source-tests.log
+          pnpm sfhs pack --json --project examples/cat-paw-air-hockey | tee ../sfhs-pack.json
+          pnpm sfhs verify --json --project examples/cat-paw-air-hockey | tee ../sfhs-verify.json
+
+      - name: Bind reported physical result to exact canonical identity
+        run: |
+          node /tmp/cat-paw-source/scripts/bind-reported-device-evidence.mjs \
+            sfhs-pack.json \
+            device-acceptance.reported.json | tee device-binding.log
+
+      - name: Run official SFHS release preparation
+        shell: bash
+        run: |
+          set +e
+          cd sfhs
+          pnpm sfhs release prepare \
+            --json \
+            --project examples/cat-paw-air-hockey \
+            --evidence ../release-evidence \
+            --device-evidence ../device-acceptance.reported.json \
+            | tee ../release-prepare.json
+          exit_code=${PIPESTATUS[0]}
+          cd ..
+          echo "$exit_code" > release-prepare.exit-code
+          set -e
+
+          node - <<'NODE'
+          const fs = require('node:fs');
+          const result = JSON.parse(fs.readFileSync('release-prepare.json', 'utf8'));
+          const codes = (result.findings ?? []).map((finding) => finding.code);
+          if (result.release?.status !== 'blocked') {
+            throw new Error(`Expected release status blocked, received ${result.release?.status}`);
+          }
+          if (!codes.includes('SFHS_RELEASE_DEVICE_EVIDENCE_INVALID')) {
+            throw new Error(`Expected SFHS_RELEASE_DEVICE_EVIDENCE_INVALID, received ${codes.join(', ')}`);
+          }
+          console.log(JSON.stringify({ release: result.release, findingCodes: codes }, null, 2));
+          NODE
+
+      - name: Upload exact release evaluation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cat-paw-reported-device-release-evaluation-${{ github.sha }}
+          retention-days: 14
+          if-no-files-found: error
+          path: |
+            sfhs/examples/cat-paw-air-hockey/dist/index.html
+            sfhs-pack.json
+            sfhs-verify.json
+            source-tests.log
+            device-acceptance.reported.json
+            device-binding.log
+            release-prepare.json
+            release-prepare.exit-code
+            release-evidence/
