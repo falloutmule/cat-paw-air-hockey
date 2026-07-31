@@ -16,3 +16,5 @@ Known device context:
 - stable Android Chrome
 
 This report requests binding to the canonical artifact produced by the pinned SFHS toolchain and an official `sfhs release prepare` evaluation. Numeric Chrome version, measured portrait and landscape viewport dimensions/DPR, and bound screenshots were not supplied and must not be invented.
+
+Evaluation retry: staged archive input is sanitized to the Base64 alphabet before exact SHA-256 validation.
