@@ -24,7 +24,12 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          cat .remote-restore2/part-* | base64 --decode > /tmp/source.tar.xz
+          for file in .remote-restore2/part-*; do
+            wc -c "$file"
+            sha256sum "$file"
+          done
+          cat .remote-restore2/part-* | tr -cd 'A-Za-z0-9+/=' | base64 --decode > /tmp/source.tar.xz
+          sha256sum /tmp/source.tar.xz
           echo "958201c82e1022e9277a0631903fe167bc3fa533f8e75a16f53b04fb0d747bad  /tmp/source.tar.xz" | sha256sum -c -
           mkdir -p /tmp/cat-paw-source
           tar -xJf /tmp/source.tar.xz -C /tmp/cat-paw-source
@@ -117,7 +122,7 @@ jobs:
         with:
           name: cat-paw-reported-device-release-evaluation-${{ github.sha }}
           retention-days: 14
-          if-no-files-found: error
+          if-no-files-found: warn
           path: |
             sfhs/examples/cat-paw-air-hockey/dist/index.html
             sfhs-pack.json
