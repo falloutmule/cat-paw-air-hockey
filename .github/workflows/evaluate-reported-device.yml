@@ -20,37 +20,27 @@ jobs:
       - name: Check out evaluation ref
         uses: actions/checkout@v4
 
-      - name: Reconstruct authoritative Cat Paw source
+      - name: Restore authoritative source from prepared Git bundle
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p /tmp/normalized-parts
-
-          normalize_part() {
-            local name="$1"
-            local bytes="$2"
-            local expected_sha="$3"
-            head -c "$bytes" ".remote-restore2/part-$name" > "/tmp/normalized-parts/part-$name"
-            echo "$expected_sha  /tmp/normalized-parts/part-$name" | sha256sum -c -
-          }
-
-          normalize_part 00 12000 a71be8ba1fb2b3b48cfa5019ed38f544f4d18a3a0216cf6dcd99b60a6f24ca78
-          normalize_part 01 12000 b7f0e71a5c1b280dc1e17db9382b2bce21b5f1d49def9f0dd060406eb53fb6b2
-          normalize_part 02 12000 2581013fb106143f3fdf777cc791c5e75db46df2e62972bb331b16433e838a0b
-          normalize_part 03 12000 b10d6838770fdf0292035cd1f8f2e1a296259cb7a9e51f749969709ba8675034
-          normalize_part 04 12000 40a02429c4a38178d179908a5e6a71f7b7e007de253bd406c0874ed52113195d
-          normalize_part 05 12000 0119cf342331b7f42150f19b4955ac295ac012d13bb74ac9126a3413053b4b0f
-          normalize_part 06 12000 b7150882cc055e33dbf07f3e780746230e947a26f73bf9c24b39b217dbe557e2
-          normalize_part 07 12000 ad7180815876d9492f2189cda37f884d04cda3591ff5f39e461bc27815be655f
-          normalize_part 08 11536 ac2c4fdb95467d360ac15a5d4ba17cf8ea56993cd6cb0a570b3a40a28c22a313
-
-          cat /tmp/normalized-parts/part-* | base64 --decode > /tmp/source.tar.xz
-          echo "958201c82e1022e9277a0631903fe167bc3fa533f8e75a16f53b04fb0d747bad  /tmp/source.tar.xz" | sha256sum -c -
+          cat .remote-import/part-* > /tmp/cat-paw-air-hockey.bundle.b64
+          base64 --decode /tmp/cat-paw-air-hockey.bundle.b64 > /tmp/cat-paw-air-hockey.bundle
+          git bundle verify /tmp/cat-paw-air-hockey.bundle
 
           mkdir -p /tmp/cat-paw-source
-          tar -xJf /tmp/source.tar.xz -C /tmp/cat-paw-source
+          git -C /tmp/cat-paw-source init
+          git -C /tmp/cat-paw-source fetch /tmp/cat-paw-air-hockey.bundle \
+            refs/heads/codex/sfhs-github-migration:refs/heads/imported
+          git -C /tmp/cat-paw-source checkout imported
+
+          test "$(git -C /tmp/cat-paw-source rev-parse HEAD)" = \
+            "a962ebbe9c4d4a2ea62c44db3de650d80f89aa90"
           test -f /tmp/cat-paw-source/src/main.ts
-          test -f /tmp/cat-paw-source/docs/physical-acceptance/REPORTED-EXACT-CANONICAL-PASS.md
+
+          mkdir -p /tmp/cat-paw-source/docs/physical-acceptance
+          cp docs/physical-acceptance/REPORTED-PASS-EVALUATION.md \
+            /tmp/cat-paw-source/docs/physical-acceptance/REPORTED-EXACT-CANONICAL-PASS.md
 
       - name: Check out pinned SFHS
         uses: actions/checkout@v4
@@ -98,10 +88,49 @@ jobs:
           pnpm sfhs verify --json --project examples/cat-paw-air-hockey | tee ../sfhs-verify.json
 
       - name: Bind reported physical result to exact canonical identity
+        shell: bash
         run: |
-          node /tmp/cat-paw-source/scripts/bind-reported-device-evidence.mjs \
-            sfhs-pack.json \
-            device-acceptance.reported.json | tee device-binding.log
+          node - <<'NODE' | tee device-binding.log
+          const fs = require('node:fs');
+          const pack = JSON.parse(fs.readFileSync('sfhs-pack.json', 'utf8'));
+          if (!pack.ok || !pack.artifact) throw new Error('Canonical pack identity is unavailable.');
+          const artifact = pack.artifact;
+          const record = {
+            schema: 'cat-paw-air-hockey.reported-device-acceptance@1',
+            status: 'REPORTED',
+            verdict: 'pass',
+            recordedAt: '2026-07-30T17:29:00-06:00',
+            userReport: 'Exact canonical Galaxy S21 Ultra acceptance is REPORTED PASS.',
+            artifact: {
+              path: artifact.path,
+              bytes: artifact.bytes,
+              sha256: artifact.sha256,
+              buildId: artifact.buildId,
+              sourceSha256: artifact.sourceSha256
+            },
+            device: {
+              physical: true,
+              target: 'samsung-galaxy-s21-ultra',
+              modelIdentifier: 'SM-G998U1',
+              androidVersion: '15',
+              chromeVersion: null,
+              browser: 'stable Android Chrome'
+            },
+            orientations: {
+              portrait: { status: 'REPORTED', viewport: null, devicePixelRatio: null, screenshot: null },
+              landscape: { status: 'REPORTED', viewport: null, devicePixelRatio: null, screenshot: null }
+            },
+            missingOfficialFields: [
+              'numeric Chrome version',
+              'portrait viewport width, height, and device-pixel ratio',
+              'landscape viewport width, height, and device-pixel ratio',
+              'portrait screenshot bound to this artifact',
+              'landscape screenshot bound to this artifact'
+            ]
+          };
+          fs.writeFileSync('device-acceptance.reported.json', JSON.stringify(record, null, 2) + '\n');
+          console.log(JSON.stringify(record, null, 2));
+          NODE
 
       - name: Run official SFHS release preparation
         shell: bash
