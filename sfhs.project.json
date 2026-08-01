@@ -1,7 +1,7 @@
 {
   "schema": "sfhs.project@1",
   "project": {
-    "id": "cat-air-hockey",
+    "id": "cat-paw-air-hockey",
     "title": "Cat Paw Air Hockey",
     "version": "0.1.0"
   },
@@ -25,7 +25,7 @@
     "logicalWidth": 540,
     "logicalHeight": 960,
     "maxDevicePixelRatio": 2,
-    "orientation": "portrait"
+    "orientation": "adaptive"
   },
   "assets": {
     "manifest": "src/assets/manifest.json",
@@ -41,7 +41,7 @@
   },
   "storage": {
     "localStorage": "optional",
-    "exportImportFallback": false
+    "exportImportFallback": true
   },
   "build": {
     "output": "dist/index.html",
@@ -55,7 +55,7 @@
     "baseURL": "http://127.0.0.1:4173",
     "browsers": ["chromium"],
     "viewports": ["desktop", "pixel-7"],
-    "screenshots": ["ready", "countdown", "play", "goal", "win"],
+    "screenshots": ["boot", "play"],
     "fileProtocolSmoke": true
   }
 }

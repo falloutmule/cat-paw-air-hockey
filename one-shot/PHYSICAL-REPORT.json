@@ -1,0 +1,29 @@
+{
+  "schema": "cat-paw-air-hockey.physical-report@1",
+  "status": "REPORTED PASS",
+  "evidenceStatus": "REPORTED",
+  "artifact": {
+    "classification": "canonical",
+    "buildId": "cat-paw-air-hockey-e1a629b12b42",
+    "bytes": 560146,
+    "sha256": "ecfd57a25c19c3347618cc72dca667a95d5a8c3206a4599bed2833e7af499f5e"
+  },
+  "reporterStatement": "User reported PASS and supplied a phone screenshot of the exact artifact session.",
+  "screenshot": {
+    "path": "one-shot/evidence/physical-reported-pass.jpg",
+    "bytes": 61166,
+    "sha256": "2a5f7cca4d9e28dce92e195a52c529dc62257a1ec3909f76f47a396493a364c8"
+  },
+  "targetDevice": "Samsung Galaxy S21 Ultra",
+  "missingFormalMetadata": [
+    "confirmed device model",
+    "Android version",
+    "numeric Chrome version",
+    "portrait viewport dimensions and DPR",
+    "landscape viewport dimensions and DPR",
+    "session date",
+    "landscape screenshot",
+    "session notes"
+  ],
+  "limitations": "This retained user report improves product evidence but remains REPORTED, not independently VERIFIED."
+}

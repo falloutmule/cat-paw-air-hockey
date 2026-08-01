@@ -1,12 +1,8 @@
 node_modules/
 dist/
-.sfhs-integration/
-.sfhs-evidence/
-.sfhs-browser/
-.sfhs-determinism/
-.intake/
-candidate/*.html
+artifacts/
 test-results/
-playwright-report/
+.sfhs-*/
+.sfhs-grad-*/
+candidate/
 *.log
-.DS_Store

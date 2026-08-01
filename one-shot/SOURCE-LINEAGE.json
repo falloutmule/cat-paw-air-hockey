@@ -1,0 +1,14 @@
+{
+  "revisions": [
+    {
+      "authority": "AUTHORITATIVE",
+      "id": "source-1-ea74d7d29909",
+      "input": "SOURCE-IDENTITY.json",
+      "reason": "Imported source identity selected by the validated migration plan.",
+      "root": "."
+    }
+  ],
+  "schema": "sfhs.source-lineage@1",
+  "selectedSourceId": "source-1-ea74d7d29909",
+  "version": 1
+}
