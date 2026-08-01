@@ -34,7 +34,9 @@ jobs:
           node --experimental-strip-types tests/scenarios.ts
           node --experimental-strip-types tests/match-flow.ts
           node --experimental-strip-types tests/orientation-layout.ts
-      - run: pnpm --dir sfhs sfhs one-shot graduate materialize --project "$GITHUB_WORKSPACE" --json
+      - run: |
+          cd sfhs
+          pnpm sfhs one-shot graduate materialize --project "$GITHUB_WORKSPACE" --json
       - run: |
           project="$(find sfhs/examples -maxdepth 1 -type d -name '.sfhs-grad-cat-paw-air-hockey-*' | head -n 1)"
           pnpm --dir sfhs sfhs inspect --json --project "$project"
