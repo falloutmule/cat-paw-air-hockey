@@ -1,6 +1,9 @@
 {
   "schema": "cat-air-hockey.canonical-browser@1",
-  "artifact": "C:/tmp/sfhs-grad-external-overlay/examples/.sfhs-grad-cat-paw-air-hockey-fb3b5d8af81f/dist/index.html",
+  "artifact": "dist/index.html",
+  "artifactBytes": 560146,
+  "artifactSha256": "ecfd57a25c19c3347618cc72dca667a95d5a8c3206a4599bed2833e7af499f5e",
+  "sfhsCommit": "68ef8f021eea2ab90a57ca6e2f608d8166a39859",
   "initial": {
     "schema": "cat-air-hockey.runtime-snapshot@1",
     "renderer": {

@@ -17,7 +17,7 @@ jobs:
       - uses: actions/checkout@v4
       - run: |
           git clone --no-checkout https://github.com/falloutmule/single-file-html-software.git "$RUNNER_TEMP/sfhs"
-          git -C "$RUNNER_TEMP/sfhs" fetch --depth=1 origin 8b392576470f4615e062ab1188372ecf1a81c69b
+          git -C "$RUNNER_TEMP/sfhs" fetch --depth=1 origin 68ef8f021eea2ab90a57ca6e2f608d8166a39859
           git -C "$RUNNER_TEMP/sfhs" checkout --detach FETCH_HEAD
       - uses: pnpm/action-setup@v4
         with:
