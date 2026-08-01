@@ -9,4 +9,4 @@ Canonical artifact: `dist/index.html` in disposable materialization.
 - Toolchain pin: `8b392576470f4615e062ab1188372ecf1a81c69b`
 - Verifier: real `sfhs verify` — VERIFIED
 
-Canonical browser evidence is `one-shot/canonical-browser.json`: one visible Pixi WebGL renderer, no page/console errors, no unexpected requests, independent pointer IDs 101 and 202, third-pointer rejection, audio unlock, landscape gate/pause, and portrait restoration. Physical status is UNTESTED for this exact artifact.
+Canonical browser evidence is `one-shot/canonical-browser.json`: one visible Pixi WebGL renderer, no page/console errors, no unexpected requests, independent pointer IDs 101 and 202, third-pointer rejection, audio unlock, landscape gate/pause, and portrait restoration. Physical status is **REPORTED PASS** for this exact artifact in `one-shot/PHYSICAL-REPORT.json`; missing formal device metadata remains explicitly recorded there.

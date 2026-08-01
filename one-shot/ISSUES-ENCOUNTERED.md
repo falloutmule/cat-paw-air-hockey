@@ -37,7 +37,9 @@ It was not written to `dist/`, and it must not be renamed to the canonical artif
 
 | Issue ID | Status | Resolution / current truth |
 |---|---|---|
-| OSF-GRAD-003 | INVESTIGATING | The legacy `sfhs.project@1` manifest declared `viewport.orientation: "portrait"`; current SFHS requires `"adaptive"`. The authoritative source retains its portrait-first design through a pause-and-guide landscape policy while adopting the valid contract. Canonical verification will decide resolution. |
+| OSF-GRAD-003 | RESOLVED | The legacy `sfhs.project@1` manifest declared `viewport.orientation: "portrait"`; current SFHS requires `"adaptive"`. The authoritative source retains its portrait-first design through a pause-and-guide landscape policy while adopting the valid contract. Canonical pack and exact verification passed. |
 | ENV-001 | SUPERSEDED | A pinned SFHS checkout and real materializer are now available for graduation. |
 | ENV-004 | SUPERSEDED | The canonical path is available through the pinned SFHS materialization; the historical candidate remains noncanonical. |
 | VERIFY-001 | SUPERSEDED | This historical Chat blocker is replaced by the current real SFHS pack and exact-verifier gate. |
+
+| MOBILE-001 | RESOLVED WITH MISSING METADATA | A user supplied **REPORTED PASS** against canonical build `cat-paw-air-hockey-e1a629b12b42` / SHA-256 `ecfd57a25c19c3347618cc72dca667a95d5a8c3206a4599bed2833e7af499f5e`. The bound screenshot is retained; model/OS/Chrome/viewport/date/session details remain explicitly absent in `one-shot/PHYSICAL-REPORT.json`. |

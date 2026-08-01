@@ -7,8 +7,8 @@
     "sha256": "ecfd57a25c19c3347618cc72dca667a95d5a8c3206a4599bed2833e7af499f5e",
     "verifier": "sfhs verify"
   },
-  "physical": "UNTESTED",
+  "physical": "REPORTED",
   "remoteActions": "not-authorized",
   "schema": "sfhs.graduation-report@1",
-  "stage": "GRADUATION_PHYSICAL_PENDING"
+  "stage": "GRADUATION_COMPLETE"
 }
