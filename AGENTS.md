@@ -1,24 +1,9 @@
-# Cat Paw Air Hockey Agent Guide
+# Cat Paw Air Hockey
 
-This repository contains the Cat Paw Air Hockey product. SFHS remains an external pinned toolchain.
+`src/`, `tests/`, `public/`, `sfhs.project.json`, and `one-shot/` are the authoritative product records. `dist/` and `artifacts/` are generated and must never be hand-edited or committed.
 
-## Boundaries
+The game is a local, shared-phone, two-player air-hockey game. Preserve independent opposite-end pointer ownership, portrait-first play, the landscape orientation gate, fixed-step renderer-neutral rules, first-to-five match flow, and no-runtime-network policy. Do not add modes or redesign controls as part of graduation.
 
-- Preserve the existing local two-player portrait game.
-- Use the PixiJS v8 lane and the real `@sfhs/adapter-pixi-v8` and `@sfhs/pixi-runtime` packages.
-- Keep simulation renderer-neutral and fixed-step.
-- Raw pointer input becomes semantic actions before simulation.
-- Rendering reads state and never mutates gameplay.
-- Edit readable source only. Never hand-edit `dist/index.html`.
-- Do not vendor or copy SFHS packages into this repository.
-- Do not add AI, handicap, co-op, network play, accounts, progression, publication, releases, or Pages deployment during migration.
-- Preserve issue and evidence history. Use only `VERIFIED`, `REPORTED`, `INFERRED`, `PROPOSED`, `UNTESTED`, `BLOCKED`, and `SUPERSEDED` for evidence claims.
+Canonical work uses the SFHS pin in `one-shot/SFHS-PIN.json` and the SFHS graduation materializer. Its disposable project is not authoritative source. A candidate artifact is historical only and cannot be copied into `dist/` or used as canonical evidence.
 
-## Toolchain
-
-- SFHS repository: `falloutmule/single-file-html-software`
-- Pinned revision: `36cf483d04b4c743b5c7f90ca8c4879d690904d1`
-- Node: 24 or newer
-- pnpm: 11.9.0
-
-The project is copied into a disposable SFHS workspace for canonical inspection, packing, verification, and browser evidence. The dedicated repository remains authoritative.
+The exact physical-device gate is separate. Never claim physical acceptance without an artifact-bound user report.

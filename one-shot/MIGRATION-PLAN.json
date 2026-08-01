@@ -1,0 +1,65 @@
+{
+  "forbidden": [
+    "Automatic source-code migration",
+    "Candidate promotion",
+    "Remote repository actions"
+  ],
+  "historicalOnly": [
+    "Candidate builder and candidate artifact"
+  ],
+  "inspection": {
+    "evidence": {
+      "candidateTooling": [],
+      "canvasCreation": [],
+      "customAnimationLoop": [],
+      "customResizeListener": [
+        "cat-air-hockey/src/main.ts"
+      ],
+      "customVisibilityListener": [
+        "cat-air-hockey/src/input.ts",
+        "cat-air-hockey/src/main.ts"
+      ],
+      "directEventStateMutation": [],
+      "directPixiApplication": [],
+      "hardCodedRuntimeUrl": [],
+      "namespaceGlobals": [],
+      "pixiTickerGameplay": [],
+      "semanticActions": [
+        "cat-air-hockey/src/input.ts",
+        "cat-air-hockey/src/physics.ts",
+        "cat-air-hockey/src/scene.ts",
+        "cat-air-hockey/src/state.ts"
+      ]
+    },
+    "facts": {
+      "candidateTooling": "NOT_DETECTED",
+      "canvasCreation": "NOT_DETECTED",
+      "customAnimationLoop": "NOT_DETECTED",
+      "customResizeListener": "DETECTED",
+      "customVisibilityListener": "DETECTED",
+      "directEventStateMutation": "NOT_DETECTED",
+      "directPixiApplication": "NOT_DETECTED",
+      "hardCodedRuntimeUrl": "NOT_DETECTED",
+      "namespaceGlobals": "NOT_DETECTED",
+      "pixiTickerGameplay": "NOT_DETECTED",
+      "semanticActions": "DETECTED"
+    }
+  },
+  "modifiers": [],
+  "preserve": [
+    "Game rules, source history, issue records, decisions, tests, and evidence"
+  ],
+  "productRepairs": [],
+  "remoteAuthorized": false,
+  "replace": [
+    "Canonical pack, verifier, browser runner, and adapter lifecycle only when migration requires it"
+  ],
+  "rewire": [
+    "Current SFHS project manifest orientation contract"
+  ],
+  "schema": "sfhs.migration-plan@1",
+  "sourceId": "source-1-ea74d7d29909",
+  "strategy": "DIRECT_CANONICALIZATION",
+  "targetLane": "pixi-v8",
+  "version": 1
+}

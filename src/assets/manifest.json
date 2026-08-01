@@ -1,0 +1,5 @@
+{
+  "schema": "sfhs.asset-manifest@1",
+  "bundles": [],
+  "notes": "All game art and sound are procedural. No runtime asset URLs are required."
+}

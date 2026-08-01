@@ -1,0 +1,43 @@
+name: canonical-sfhs
+
+on:
+  pull_request:
+    paths-ignore:
+      - "docs/**"
+  workflow_dispatch:
+
+concurrency:
+  group: cat-paw-canonical-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: falloutmule/single-file-html-software
+          ref: 8b392576470f4615e062ab1188372ecf1a81c69b
+          path: sfhs
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.9.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+          cache-dependency-path: sfhs/pnpm-lock.yaml
+      - run: pnpm --dir sfhs install --frozen-lockfile
+      - run: |
+          node --experimental-strip-types tests/input-lifecycle.ts
+          node --experimental-strip-types tests/scenarios.ts
+          node --experimental-strip-types tests/match-flow.ts
+          node --experimental-strip-types tests/orientation-layout.ts
+      - run: pnpm --dir sfhs sfhs one-shot graduate materialize --project "$GITHUB_WORKSPACE" --json
+      - run: |
+          project="$(find sfhs/examples -maxdepth 1 -type d -name '.sfhs-grad-cat-paw-air-hockey-*' | head -n 1)"
+          pnpm --dir sfhs sfhs inspect --json --project "$project"
+          pnpm --dir sfhs sfhs validate --json --project "$project"
+          pnpm --dir sfhs sfhs pack --json --project "$project"
+          pnpm --dir sfhs sfhs verify --json --project "$project"

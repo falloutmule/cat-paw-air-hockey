@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <meta name="theme-color" content="#172331">
+  <link rel="stylesheet" href="./styles.css">
+  <title>Cat Paw Air Hockey</title>
+</head>
+<body>
+  <main id="game-shell" aria-label="Two-player cat paw air hockey">
+    <section id="instructions" class="sr-only" aria-live="polite">
+      <h1>Cat Paw Air Hockey</h1>
+      <p>Place the phone flat in portrait orientation with one player at each short end. Each player touches and holds the ready paw on their own half. After the countdown, drag one finger to move your paw striker. Score in the opposite cat goal. First to five wins. Both players hold their ready paws again for a rematch.</p>
+      <output id="runtime-status">Loading</output>
+    </section>
+
+    <div id="pixi-host" role="application" aria-label="Air hockey rink. Player 2 controls the top half. Player 1 controls the bottom half."></div>
+
+    <nav class="edge-controls edge-controls--top" aria-label="Player 2 match controls">
+      <button type="button" data-action="mute" aria-label="Sound on" title="Sound on">🔊</button>
+      <button type="button" data-action="pause" aria-label="Pause" title="Pause">Ⅱ</button>
+      <button type="button" data-action="effects" aria-label="Full effects" title="Full effects">✨</button>
+    </nav>
+    <nav class="edge-controls edge-controls--bottom" aria-label="Player 1 match controls">
+      <button type="button" data-action="mute" aria-label="Sound on" title="Sound on">🔊</button>
+      <button type="button" data-action="pause" aria-label="Pause" title="Pause">Ⅱ</button>
+      <button type="button" data-action="effects" aria-label="Full effects" title="Full effects">✨</button>
+    </nav>
+
+    <section id="orientation-gate" hidden aria-live="assertive">
+      <div class="rotate-card">
+        <div class="rotate-phone" aria-hidden="true">↻</div>
+        <h2>Turn the phone upright</h2>
+        <p>Portrait gives both cats equal reach and keeps hands away from the center scramble.</p>
+      </div>
+    </section>
+
+    <section id="capability-page" hidden role="alert">
+      <div>
+        <h2>WebGL is required</h2>
+        <p>This SFHS PixiJS game does not use a hidden Canvas fallback. Enable hardware acceleration or use a WebGL-capable Android Chrome or desktop Chromium browser.</p>
+      </div>
+    </section>
+  </main>
+  <script type="module" src="./main.ts"></script>
+</body>
+</html>

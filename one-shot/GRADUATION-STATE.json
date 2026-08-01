@@ -1,0 +1,33 @@
+{
+  "deferredWork": [],
+  "evidenceStatus": "VERIFIED",
+  "nextAction": "Collect canonical physical evidence and formal device metadata.",
+  "physicalStatus": "UNTESTED",
+  "productStatus": "PRODUCT_COMPLETE",
+  "projectRoot": ".",
+  "records": {
+    "physicalSeed": {
+      "path": "one-shot/GRADUATION-PHYSICAL-TEST-SEED.json",
+      "sha256": "92ce92f5aa4f409484ef972fe1d83301c7414b2aaa4372d95cc36799d3b5d45e"
+    },
+    "plan": {
+      "path": "one-shot/MIGRATION-PLAN.json",
+      "sha256": "c64d89043b57178f4c6b6106cce13055f59ff8a9f05694ec205ef82d7d88902d"
+    },
+    "report": {
+      "path": "one-shot/GRADUATION-REPORT.json",
+      "sha256": "046a274dd324dabd62e3c45bbc13a7e47feb77a6952b351c14f587b19528407d"
+    },
+    "source": {
+      "path": "SOURCE-IDENTITY.json",
+      "sha256": "4c65148a24419c3941bfecc79cf851a882ab23a369a0dae2ce0c18dfa39e12ea"
+    }
+  },
+  "requiredRepairs": [],
+  "schema": "sfhs.graduation-state@1",
+  "sfhsStatus": "SFHS_CANONICAL",
+  "sourceId": "source-1-ea74d7d29909",
+  "stage": "GRADUATION_PHYSICAL_PENDING",
+  "strategy": "DIRECT_CANONICALIZATION",
+  "version": 1
+}

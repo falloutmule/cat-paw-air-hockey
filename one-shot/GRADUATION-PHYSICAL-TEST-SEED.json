@@ -1,0 +1,26 @@
+{
+  "artifact": {
+    "buildId": "cat-paw-air-hockey-e1a629b12b42",
+    "bytes": 560146,
+    "path": "dist/index.html",
+    "sha256": "ecfd57a25c19c3347618cc72dca667a95d5a8c3206a4599bed2833e7af499f5e",
+    "verifier": "sfhs verify"
+  },
+  "classification": "canonical",
+  "required": [
+    "device model",
+    "Android version",
+    "numeric Chrome version",
+    "portrait and landscape viewport dimensions and DPR",
+    "screenshots",
+    "primary workflow",
+    "background/return",
+    "audio",
+    "performance and heat"
+  ],
+  "resultVocabulary": [
+    "REPORTED PASS",
+    "REPORTED FAIL"
+  ],
+  "schema": "sfhs.graduation-physical-test-seed@1"
+}
