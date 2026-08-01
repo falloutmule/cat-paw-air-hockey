@@ -14,15 +14,15 @@ jobs:
   verify:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - run: |
           git clone --no-checkout https://github.com/falloutmule/single-file-html-software.git "$RUNNER_TEMP/sfhs"
           git -C "$RUNNER_TEMP/sfhs" fetch --depth=1 origin 68ef8f021eea2ab90a57ca6e2f608d8166a39859
           git -C "$RUNNER_TEMP/sfhs" checkout --detach FETCH_HEAD
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
         with:
           version: 11.9.0
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: 24
           cache: pnpm
