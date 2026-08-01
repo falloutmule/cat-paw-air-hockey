@@ -15,11 +15,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/checkout@v4
-        with:
-          repository: falloutmule/single-file-html-software
-          ref: 8b392576470f4615e062ab1188372ecf1a81c69b
-          path: sfhs
+      - run: |
+          git clone --no-checkout https://github.com/falloutmule/single-file-html-software.git "$RUNNER_TEMP/sfhs"
+          git -C "$RUNNER_TEMP/sfhs" fetch --depth=1 origin 8b392576470f4615e062ab1188372ecf1a81c69b
+          git -C "$RUNNER_TEMP/sfhs" checkout --detach FETCH_HEAD
       - uses: pnpm/action-setup@v4
         with:
           version: 11.9.0
@@ -27,19 +26,19 @@ jobs:
         with:
           node-version: 24
           cache: pnpm
-          cache-dependency-path: sfhs/pnpm-lock.yaml
-      - run: pnpm --dir sfhs install --frozen-lockfile
+          cache-dependency-path: ${{ runner.temp }}/sfhs/pnpm-lock.yaml
+      - run: pnpm --dir "$RUNNER_TEMP/sfhs" install --frozen-lockfile
       - run: |
           node --experimental-strip-types tests/input-lifecycle.ts
           node --experimental-strip-types tests/scenarios.ts
           node --experimental-strip-types tests/match-flow.ts
           node --experimental-strip-types tests/orientation-layout.ts
       - run: |
-          cd sfhs
+          cd "$RUNNER_TEMP/sfhs"
           pnpm sfhs one-shot graduate materialize --project "$GITHUB_WORKSPACE" --json
       - run: |
-          project="$(find sfhs/examples -maxdepth 1 -type d -name '.sfhs-grad-cat-paw-air-hockey-*' | head -n 1)"
-          pnpm --dir sfhs sfhs inspect --json --project "$project"
-          pnpm --dir sfhs sfhs validate --json --project "$project"
-          pnpm --dir sfhs sfhs pack --json --project "$project"
-          pnpm --dir sfhs sfhs verify --json --project "$project"
+          project="$(find "$RUNNER_TEMP/sfhs/examples" -maxdepth 1 -type d -name '.sfhs-grad-cat-paw-air-hockey-*' | head -n 1)"
+          pnpm --dir "$RUNNER_TEMP/sfhs" sfhs inspect --json --project "$project"
+          pnpm --dir "$RUNNER_TEMP/sfhs" sfhs validate --json --project "$project"
+          pnpm --dir "$RUNNER_TEMP/sfhs" sfhs pack --json --project "$project"
+          pnpm --dir "$RUNNER_TEMP/sfhs" sfhs verify --json --project "$project"
