@@ -54,7 +54,7 @@ jobs:
           pushd "$RUNNER_TEMP/sfhs"
           node packages/cli/src/main.ts inspect --json --project "$CAT_PAW_SFHS_PROJECT"
           node packages/cli/src/main.ts validate --json --project "$CAT_PAW_SFHS_PROJECT"
-          node packages/cli/src/main.ts check --json --project "$CAT_PAW_SFHS_PROJECT" "${args[@]}"
+          SFHS_PLAYWRIGHT_RESOLVER="$RUNNER_TEMP/sfhs/packages/browser-runner/package.json" node packages/cli/src/main.ts check --json --project "$CAT_PAW_SFHS_PROJECT" "${args[@]}"
           node packages/cli/src/main.ts pack --json --project "$CAT_PAW_SFHS_PROJECT"
           node packages/cli/src/main.ts verify --json --project "$CAT_PAW_SFHS_PROJECT"
           node packages/cli/src/main.ts one-shot audit --project "$CAT_PAW_SFHS_PROJECT" --json
