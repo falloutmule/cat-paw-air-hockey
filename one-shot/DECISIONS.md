@@ -13,3 +13,4 @@
 | D-006 | REPORTED | Procedural Web Audio uses accepted louder master gain and one intentional-gesture unlock. | Historical device acceptance; audio tests. | None |
 | D-007 | VERIFIED | Committed readable source is authoritative; archives and candidates are historical only. | `docs/migration/SOURCE-LINEAGE.md`. | Bootstrap recovery route |
 | D-008 | VERIFIED | Only the real SFHS packer may produce `dist/index.html`; it remains ignored. | `AGENTS.md`, project manifest, verifier. | Candidate delivery |
+| D-009 | VERIFIED | The materialized project owns `browser-smoke`; it uses only the pinned SFHS workspace overlay to pack its own exact artifact before running the existing Chromium test. | SFHS PR #14 project-root repair and R2 direct materialized command/check evidence. | Old check execution from the SFHS checkout |

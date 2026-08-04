@@ -6,7 +6,7 @@
 - Settlement base: `05d39abdf8ec943b2ee4004163752a0305e1cc51`, the merge of PR #2.
 - Authoritative editable source is committed directly in `src/`, with `tests/`, `public/`, `sfhs.project.json`, and `one-shot/` as product records.
 - The active runtime imports `@sfhs/adapter-pixi-v8` and `@sfhs/pixi-runtime`; it presents one required WebGL Pixi surface and has no hidden Canvas world.
-- The pin is SFHS `68ef8f021eea2ab90a57ca6e2f608d8166a39859`, Node 24, pnpm 11.9.0, and Pixi 8.19.0. It supersedes the historical `36cf...` pin through the merged source lineage.
+- The pin is SFHS `5acd8fc9a24834d9416a6e615bb78b8012962e30`, Node 24, pnpm 11.9.0, and Pixi 8.19.0. It supersedes the historical `36cf...` pin through the merged source lineage.
 
 ## VERIFIED migration and evidence disposition
 
@@ -39,8 +39,18 @@ Historical Samsung acceptance applies to a prior exact artifact only. The R1 art
 - The direct materialized command passed, while SFHS's spawned `pnpm run test` did not. The product `test` script now runs its same five Node test commands directly, and Quality runs the materialized `pnpm test` first with visible output before retaining SFHS check as its separate required gate. The remaining executor defect is recorded below.
 - Quality now checks out full history and proves the base object with `git cat-file -e "$base^{commit}"` before diffing. A missing base is fatal and can never be treated as an empty diff.
 
-## BLOCKED pinned SFHS check executor
+## SUPERSEDED pinned SFHS check executor
 
 - Actions runs `30921067361`, `30921401375`, and `30921722974` all reproduced the remaining `sfhs check` failure after the direct materialized `pnpm test` had passed visibly. The check reported only `SFHS_TEST_STEP_FAILED` for `pnpm run test`.
 - The pinned SFHS source at `68ef8f021eea2ab90a57ca6e2f608d8166a39859` proves the cause: `packages/cli/src/index.ts` calls `executeTestPlan(selected, options.workspaceRoot ?? workingDirectory, ...)`; `workingDirectory` is the SFHS checkout, not the `--project` path. Therefore `check --project <materialized game>` runs generic test-plan commands from SFHS rather than from the materialized game. The command's `--project` contract is not honored for its test executor.
-- This is a **BLOCKED** SFHS framework defect. The product has direct materialized test output, project lint/typecheck scripts, successful inspect/validate/pack/verify, and a packed-artifact browser smoke. Making SFHS check green requires a framework repair that passes the resolved project root to `executeTestPlan` (and preserves its command-output diagnostics); that change is outside this authorized repository repair.
+- This was a **BLOCKED** SFHS framework defect. The product had direct materialized test output, project lint/typecheck scripts, successful inspect/validate/pack/verify, and a packed-artifact browser smoke. Making SFHS check green required a framework repair that passed the resolved project root to `executeTestPlan`.
+
+## VERIFIED SFHS repair consumption - BASELINE-SETTLE-001-R2
+
+- Failed quality run `30921941797`, canonical job `92034489558`, remains preserved evidence of the old pin's wrong-working-directory defect. The direct materialized test passed while the old CLI ran `pnpm run test` from the SFHS checkout.
+- SFHS PR #14 merged the generic CLI repair as `5acd8fc9a24834d9416a6e615bb78b8012962e30`. The current pin consumes that exact commit; no newer SFHS revision is selected.
+- R2 adds the project-owned `browser-smoke` command and materializes the pinned `@sfhs/browser-runner` overlay. The command packs the materialized project through its pinned workspace, then runs the existing exact-artifact smoke. Chromium installation occurs before `sfhs check` in durable CI. These are test/materialization changes only; gameplay source and behavior are unchanged.
+- A fresh R2 materialization passed direct `pnpm test`, `sfhs check` (lint, typecheck, unit-all, and browser-smoke), pack, exact verify, One-Shot audit, and the explicit packed-artifact Chromium smoke.
+- The actual PR changed-path check also passed. It retained the non-fatal `SFHS_TEST_SELECTION_REVIEW_REQUIRED` warning for inherited unknown runtime-like paths (including `src/main.ts`, selected test records, and One-Shot evidence records); no warning was suppressed or promoted to a failure. Its selected static/build, unit, and browser-smoke steps all passed.
+- The canonical result is byte-for-byte unchanged across the SFHS repair: `dist/index.html`, 560,309 bytes, SHA-256 `3022f196f6c5d6abe9df1699d8ad57ea91e0db2b99dbb4ad748a79e8e9c2a228`, build `cat-paw-air-hockey-05dc1f192cf4`, source SHA-256 `05dc1f192cf43637373b558e3e66a0781223ecca252f791c3746910dcaf81da5`.
+- Physical Samsung acceptance remains **UNTESTED** for this artifact. Historical physical evidence remains **REPORTED** and bound to its earlier identity.

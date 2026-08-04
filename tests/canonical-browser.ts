@@ -1,15 +1,14 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
+import { realpathSync } from "node:fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { createServer } from "node:http";
 import { createRequire } from "node:module";
 import { dirname, resolve } from "node:path";
 
-const playwrightResolver = process.env.SFHS_PLAYWRIGHT_RESOLVER;
-if (playwrightResolver === undefined || playwrightResolver.length === 0) {
-  throw new Error("SFHS_PLAYWRIGHT_RESOLVER must identify the pinned SFHS workspace package.json.");
-}
-const { chromium } = createRequire(playwrightResolver)("playwright") as {
+const playwrightResolver = process.env.SFHS_PLAYWRIGHT_RESOLVER
+  ?? resolve(process.cwd(), "node_modules", "@sfhs", "browser-runner", "package.json");
+const { chromium } = createRequire(realpathSync(playwrightResolver))("playwright") as {
   readonly chromium: { launch(options: { readonly headless: boolean }): Promise<any> };
 };
 

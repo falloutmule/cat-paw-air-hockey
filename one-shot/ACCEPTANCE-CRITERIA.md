@@ -1,5 +1,5 @@
 ---
-{"schema":"sfhs.one-shot-acceptance@1","status":"VERIFIED","facts":{"physicalDevice":"REPORTED"}}
+{"schema":"sfhs.one-shot-acceptance@1","status":"VERIFIED","facts":{"physicalDevice":"UNTESTED"}}
 ---
 # Acceptance Criteria
 
