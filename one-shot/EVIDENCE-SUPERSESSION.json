@@ -4,13 +4,19 @@
       "earlier": "one-shot/PHYSICAL-REPORT.json",
       "status": "REPORTED",
       "treatment": "Historical physical acceptance remains bound to cat-paw-air-hockey-e1a629b12b42 / ecfd57a25c19c3347618cc72dca667a95d5a8c3206a4599bed2833e7af499f5e and is superseded for current-artifact acceptance.",
-      "currentArtifact": "cat-paw-air-hockey-05dc1f192cf4 / 3022f196f6c5d6abe9df1699d8ad57ea91e0db2b99dbb4ad748a79e8e9c2a228"
+      "currentArtifact": "cat-paw-air-hockey-b6bee877e2dc / 78d728fe96f74ee92bdbaecaa8a0e7bd880dff29efd6d19ec2fc09dcfe309534"
     },
     {
       "earlier": "cat-paw-air-hockey-0aee153962c5 / 24d02527e87e0462901a5a8b1b2b053c93b4bab1c94c72b5b0252594e300c216",
       "status": "SUPERSEDED",
-      "treatment": "The 560,167-byte artifact is superseded by the R1 560,309-byte canonical artifact. R2 reproduced the latter byte-for-byte across the SFHS working-directory repair; no physical acceptance transfers.",
-      "currentArtifact": "cat-paw-air-hockey-05dc1f192cf4 / 3022f196f6c5d6abe9df1699d8ad57ea91e0db2b99dbb4ad748a79e8e9c2a228"
+      "treatment": "The 560,167-byte artifact is superseded. The former 560,309-byte R1/R2 artifact is also superseded after browser-smoke record changes; no physical acceptance transfers.",
+      "currentArtifact": "cat-paw-air-hockey-b6bee877e2dc / 78d728fe96f74ee92bdbaecaa8a0e7bd880dff29efd6d19ec2fc09dcfe309534"
+    },
+    {
+      "earlier": "cat-paw-air-hockey-05dc1f192cf4 / 3022f196f6c5d6abe9df1699d8ad57ea91e0db2b99dbb4ad748a79e8e9c2a228",
+      "status": "SUPERSEDED",
+      "treatment": "The former 560,309-byte artifact is preserved as prior canonical evidence. It is superseded by a 560,309-byte Linux canonical repack after the browser-smoke timing repair; physical acceptance remains UNTESTED for the current artifact.",
+      "currentArtifact": "cat-paw-air-hockey-b6bee877e2dc / 78d728fe96f74ee92bdbaecaa8a0e7bd880dff29efd6d19ec2fc09dcfe309534"
     }
   ],
   "schema": "sfhs.graduation-evidence-supersession@1"

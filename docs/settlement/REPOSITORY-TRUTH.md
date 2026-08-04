@@ -20,10 +20,10 @@
 
 The R1 materialized source passed real `sfhs pack` and `sfhs verify`:
 
-- `dist/index.html`: 560,309 bytes; SHA-256 `3022f196f6c5d6abe9df1699d8ad57ea91e0db2b99dbb4ad748a79e8e9c2a228`
-- Build ID `cat-paw-air-hockey-05dc1f192cf4`; source SHA-256 `05dc1f192cf43637373b558e3e66a0781223ecca252f791c3746910dcaf81da5`
+- `dist/index.html`: 560,309 bytes; SHA-256 `78d728fe96f74ee92bdbaecaa8a0e7bd880dff29efd6d19ec2fc09dcfe309534`
+- Build ID `cat-paw-air-hockey-b6bee877e2dc`; source SHA-256 `b6bee877e2dcc2f1b6caa3261dc9eecec63dca2b2845d15f5c24d362e90a46bf`
 
-The prior 560,167-byte artifact (`24d02527...`, build `cat-paw-air-hockey-0aee153962c5`) is **SUPERSEDED** by the R1 canonical identity. It changed with durable package-level validation configuration, not gameplay code. Its physical Samsung evidence does not transfer.
+The prior 560,167-byte artifact (`24d02527...`, build `cat-paw-air-hockey-0aee153962c5`) and the later 560,309-byte artifact (`3022f196...`, build `cat-paw-air-hockey-05dc1f192cf4`) are **SUPERSEDED**. The latter changed only with browser-smoke records and its physical Samsung evidence does not transfer.
 
 `dist/` remains ignored and is never hand-edited or committed.
 
@@ -53,7 +53,7 @@ Historical Samsung acceptance applies to a prior exact artifact only. The R1 art
 - Quality run `30931895011` exposed a Linux-only wrapper portability gap: its first `pnpm --workspace-root` lookup could not locate the hidden materialization workspace. The wrapper now derives the exact pinned CLI entry from the junction-resolved browser-runner overlay and passes the absolute project path. This is a resolved Cat Paw wrapper issue, not an SFHS framework defect.
 - A fresh R2 materialization passed direct `pnpm test`, `sfhs check` (lint, typecheck, unit-all, and browser-smoke), pack, exact verify, One-Shot audit, and the explicit packed-artifact Chromium smoke.
 - The actual PR changed-path check also passed. It retained the non-fatal `SFHS_TEST_SELECTION_REVIEW_REQUIRED` warning for inherited unknown runtime-like paths (including `src/main.ts`, selected test records, and One-Shot evidence records); no warning was suppressed or promoted to a failure. Its selected static/build, unit, and browser-smoke steps all passed.
-- The canonical result is byte-for-byte unchanged across the SFHS repair: `dist/index.html`, 560,309 bytes, SHA-256 `3022f196f6c5d6abe9df1699d8ad57ea91e0db2b99dbb4ad748a79e8e9c2a228`, build `cat-paw-air-hockey-05dc1f192cf4`, source SHA-256 `05dc1f192cf43637373b558e3e66a0781223ecca252f791c3746910dcaf81da5`.
+- The current Linux canonical result is `dist/index.html`, 560,309 bytes, SHA-256 `78d728fe96f74ee92bdbaecaa8a0e7bd880dff29efd6d19ec2fc09dcfe309534`, build `cat-paw-air-hockey-b6bee877e2dc`, source SHA-256 `b6bee877e2dcc2f1b6caa3261dc9eecec63dca2b2845d15f5c24d362e90a46bf`. It supersedes the former 560,309-byte identity after the timing-safe smoke assertion and does not add gameplay changes.
 - Physical Samsung acceptance remains **UNTESTED** for this artifact. Historical physical evidence remains **REPORTED** and bound to its earlier identity.
 
 ## VERIFIED browser-smoke timing repair
