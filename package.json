@@ -7,6 +7,8 @@
     "pixi.js": "8.19.0"
   },
   "scripts": {
+    "lint": "pnpm exec eslint .",
+    "typecheck": "pnpm exec tsc -p tsconfig.json",
     "test:input": "node --experimental-strip-types tests/input-lifecycle.ts",
     "test:physics": "node --experimental-strip-types tests/scenarios.ts",
     "test:match": "node --experimental-strip-types tests/match-flow.ts",

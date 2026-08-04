@@ -14,6 +14,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
       - uses: pnpm/action-setup@v6
         with:
           version: 11.9.0
@@ -31,22 +33,26 @@ jobs:
           git -C "$RUNNER_TEMP/sfhs" fetch --depth=1 origin "$pin"
           git -C "$RUNNER_TEMP/sfhs" checkout --detach FETCH_HEAD
           pnpm --dir "$RUNNER_TEMP/sfhs" install --frozen-lockfile
-          pnpm --dir "$RUNNER_TEMP/sfhs" sfhs one-shot inspect --project "$GITHUB_WORKSPACE" --json
-          pnpm --dir "$RUNNER_TEMP/sfhs" sfhs one-shot graduate materialize --project "$GITHUB_WORKSPACE" --json
+          pnpm --dir "$RUNNER_TEMP/sfhs" exec node packages/cli/src/main.ts one-shot inspect --project "$GITHUB_WORKSPACE" --json
+          pnpm --dir "$RUNNER_TEMP/sfhs" exec node packages/cli/src/main.ts one-shot graduate materialize --project "$GITHUB_WORKSPACE" --json
           project=$(find "$RUNNER_TEMP/sfhs/examples" -maxdepth 1 -type d -name '.sfhs-grad-cat-paw-air-hockey-*' | head -n 1)
           test -n "$project"
           echo "CAT_PAW_SFHS_PROJECT=$project" >> "$GITHUB_ENV"
       - name: Canonical SFHS gates
         run: |
-          changed=$(git diff --name-only "${{ github.event.pull_request.base.sha || github.event.before }}" "$GITHUB_SHA" -- || true)
+          base="${{ github.event.pull_request.base.sha || github.event.before }}"
+          test -n "$base"
+          git cat-file -e "$base^{commit}"
+          changed=$(git diff --name-only "$base" "$GITHUB_SHA" --)
           args=()
           while IFS= read -r path; do [ -z "$path" ] || args+=(--changed "$path"); done <<< "$changed"
-          pnpm --dir "$RUNNER_TEMP/sfhs" sfhs inspect --json --project "$CAT_PAW_SFHS_PROJECT"
-          pnpm --dir "$RUNNER_TEMP/sfhs" sfhs validate --json --project "$CAT_PAW_SFHS_PROJECT"
-          pnpm --dir "$RUNNER_TEMP/sfhs" sfhs check --json --project "$CAT_PAW_SFHS_PROJECT" "${args[@]}"
-          pnpm --dir "$RUNNER_TEMP/sfhs" sfhs pack --json --project "$CAT_PAW_SFHS_PROJECT"
-          pnpm --dir "$RUNNER_TEMP/sfhs" sfhs verify --json --project "$CAT_PAW_SFHS_PROJECT"
-          pnpm --dir "$RUNNER_TEMP/sfhs" sfhs one-shot audit --project "$CAT_PAW_SFHS_PROJECT" --json
+          pnpm --dir "$CAT_PAW_SFHS_PROJECT" test
+          pnpm --dir "$RUNNER_TEMP/sfhs" exec node packages/cli/src/main.ts inspect --json --project "$CAT_PAW_SFHS_PROJECT"
+          pnpm --dir "$RUNNER_TEMP/sfhs" exec node packages/cli/src/main.ts validate --json --project "$CAT_PAW_SFHS_PROJECT"
+          pnpm --dir "$RUNNER_TEMP/sfhs" exec node packages/cli/src/main.ts check --json --project "$CAT_PAW_SFHS_PROJECT" "${args[@]}"
+          pnpm --dir "$RUNNER_TEMP/sfhs" exec node packages/cli/src/main.ts pack --json --project "$CAT_PAW_SFHS_PROJECT"
+          pnpm --dir "$RUNNER_TEMP/sfhs" exec node packages/cli/src/main.ts verify --json --project "$CAT_PAW_SFHS_PROJECT"
+          pnpm --dir "$RUNNER_TEMP/sfhs" exec node packages/cli/src/main.ts one-shot audit --project "$CAT_PAW_SFHS_PROJECT" --json
       - name: Packed-artifact browser smoke
         run: |
           pnpm --dir "$RUNNER_TEMP/sfhs/packages/browser-runner" exec playwright install --with-deps chromium
