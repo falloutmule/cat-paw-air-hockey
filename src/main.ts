@@ -158,6 +158,7 @@ document.addEventListener("visibilitychange", () => {
   } else if (hiddenPaused) {
     hiddenPaused = false;
     if (!orientationPaused) runtime.resume();
+    void audio.unlock().then(updateControls);
   }
 });
 window.addEventListener("resize", applyOrientationGate);

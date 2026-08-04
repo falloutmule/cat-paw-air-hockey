@@ -1,5 +1,20 @@
-# Cat Paw Air Hockey — graduation brief
+---
+{"schema":"sfhs.one-shot-brief@1","project":{"id":"cat-paw-air-hockey","title":"Cat Paw Air Hockey"},"lane":{"id":"baseline-settle-001"},"target":{"device":"Android Chrome on Samsung Galaxy S21 Ultra","orientation":"portrait-first with landscape gate"},"status":"VERIFIED"}
+---
+# One-Shot Brief — Cat Paw Air Hockey
 
-Class: INTAKE → IMPLEMENT → VERIFY. The product is a bounded, local two-player shared-phone air-hockey game. Its highest-risk mechanic is two independent physical pointers controlling different paw strikers without stealing, cross-half leakage, stale capture, or bad mapping after a viewport change.
+## Product goal
 
-The target is Android Chrome in portrait; desktop Chromium is secondary. Landscape intentionally shows an orientation guide and pauses safely rather than presenting a redesigned rink.
+Two people share one portrait phone, controlling cat-paw strikers from opposite ends in a first-to-five air-hockey match.
+
+## Current authorized goal
+
+Settle the already accepted base game into one readable, canonical, independently verifiable checkpoint. This is not a product-development card.
+
+## Central verb and highest-risk mechanic
+
+Each player drags one independent finger in their legal rink half; pointer acquisition, release, cancellation, and remapping must remain independent.
+
+## Required features and exclusions
+
+Preserve local two-player play, ready/countdown, puck physics, goal/reset/win/rematch, procedural audio, mute, pause, reduced effects, accessibility, and the portrait/landscape policy. Exclude fullscreen, new modes, gameplay redesign, release, deployment, and merge.

@@ -1,5 +1,12 @@
-# Authorized scope
+---
+{"schema":"sfhs.one-shot-scope@1","status":"VERIFIED","facts":{"sfhsRevision":"68ef8f021eea2ab90a57ca6e2f608d8166a39859","lane":"baseline-settle-001","remoteMutationAuthorized":true}}
+---
+# Authorized Scope
 
-Preserve the two-player rules, fixed-step physics, first-to-five flow, cat presentation, audio, pause/rematch behavior, and source test scenarios. Adopt the current adaptive SFHS viewport contract without changing the product's portrait-first policy.
+## Allowed work
 
-Excluded: AI, online play, progression, new themes, new physics, release, deployment, and a redesign of the controls.
+Audit and settle readable source, One-Shot records, migration history, focused tests, canonical SFHS verification, browser evidence, durable CI, a local checkpoint commit, branch push, and draft-PR creation.
+
+## Explicit exclusions
+
+No fullscreen, release, Pages deployment, merge, product redesign, or SFHS-core change. Physical acceptance remains a separately reported device gate.

@@ -1,4 +1,11 @@
 {
-  "records": [],
+  "records": [
+    {
+      "earlier": "one-shot/PHYSICAL-REPORT.json",
+      "status": "REPORTED",
+      "treatment": "Historical physical acceptance remains bound to cat-paw-air-hockey-e1a629b12b42 / ecfd57a25c19c3347618cc72dca667a95d5a8c3206a4599bed2833e7af499f5e and is superseded for current-artifact acceptance.",
+      "currentArtifact": "cat-paw-air-hockey-0aee153962c5 / 24d02527e87e0462901a5a8b1b2b053c93b4bab1c94c72b5b0252594e300c216"
+    }
+  ],
   "schema": "sfhs.graduation-evidence-supersession@1"
 }

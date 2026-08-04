@@ -10,7 +10,9 @@
     "test:input": "node --experimental-strip-types tests/input-lifecycle.ts",
     "test:physics": "node --experimental-strip-types tests/scenarios.ts",
     "test:match": "node --experimental-strip-types tests/match-flow.ts",
+    "test:audio": "node --experimental-strip-types tests/audio-lifecycle.ts",
     "test:orientation": "node --experimental-strip-types tests/orientation-layout.ts",
-    "test": "pnpm test:input && pnpm test:physics && pnpm test:match && pnpm test:orientation"
+    "test:browser": "node --experimental-strip-types tests/canonical-browser.ts",
+    "test": "pnpm test:input && pnpm test:physics && pnpm test:match && pnpm test:audio && pnpm test:orientation"
   }
 }
