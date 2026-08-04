@@ -89,8 +89,10 @@ try {
   await page.waitForFunction(() => (window.__CAT_AIR_HOCKEY__!.snapshot() as any).state.phase === "countdown", undefined, { timeout: 3_000 });
   await page.locator("[data-action='pause']").last().click();
   await page.waitForFunction(() => (window.__CAT_AIR_HOCKEY__!.snapshot() as any).state.phase === "paused");
+  await page.waitForFunction(() => document.querySelector("[data-action='pause']")?.getAttribute("aria-label") === "Resume");
   await page.locator("[data-action='pause']").last().click();
-  await page.waitForFunction(() => (window.__CAT_AIR_HOCKEY__!.snapshot() as any).state.phase === "countdown");
+  await page.waitForFunction(() => (window.__CAT_AIR_HOCKEY__!.snapshot() as any).state.phase !== "paused");
+  await page.waitForFunction(() => document.querySelector("[data-action='pause']")?.getAttribute("aria-label") === "Pause");
 
   await page.setViewportSize({ width: 915, height: 412 });
   await page.waitForFunction(() => (window.__CAT_AIR_HOCKEY__!.snapshot() as any).orientationGateActive === true);

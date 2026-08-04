@@ -55,3 +55,8 @@ Historical Samsung acceptance applies to a prior exact artifact only. The R1 art
 - The actual PR changed-path check also passed. It retained the non-fatal `SFHS_TEST_SELECTION_REVIEW_REQUIRED` warning for inherited unknown runtime-like paths (including `src/main.ts`, selected test records, and One-Shot evidence records); no warning was suppressed or promoted to a failure. Its selected static/build, unit, and browser-smoke steps all passed.
 - The canonical result is byte-for-byte unchanged across the SFHS repair: `dist/index.html`, 560,309 bytes, SHA-256 `3022f196f6c5d6abe9df1699d8ad57ea91e0db2b99dbb4ad748a79e8e9c2a228`, build `cat-paw-air-hockey-05dc1f192cf4`, source SHA-256 `05dc1f192cf43637373b558e3e66a0781223ecca252f791c3746910dcaf81da5`.
 - Physical Samsung acceptance remains **UNTESTED** for this artifact. Historical physical evidence remains **REPORTED** and bound to its earlier identity.
+
+## VERIFIED browser-smoke timing repair
+
+- Quality runs `30932222927` and `30932492091` remained unable to expose the project-owned browser child's stderr after the prior wrapper repairs. Run `30932824397` retained `test-results/browser-smoke-error.txt` and proved the failure was `canonical-browser.ts:93`: a 30-second wait for the transient `countdown` phase after resuming.
+- This was a browser-smoke assertion race, not a gameplay or SFHS defect. On a slower Linux runner, the live three-second countdown can advance to `playing` between resume and the phase poll. The smoke now proves the UI pause state is reached, the control changes to Resume, resume leaves the paused state, and the control returns to Pause. The deterministic match-flow suite continues to prove exact phase restoration.
