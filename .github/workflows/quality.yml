@@ -33,8 +33,10 @@ jobs:
           git -C "$RUNNER_TEMP/sfhs" fetch --depth=1 origin "$pin"
           git -C "$RUNNER_TEMP/sfhs" checkout --detach FETCH_HEAD
           pnpm --dir "$RUNNER_TEMP/sfhs" install --frozen-lockfile
-          node "$RUNNER_TEMP/sfhs/packages/cli/src/main.ts" one-shot inspect --project "$GITHUB_WORKSPACE" --json
-          node "$RUNNER_TEMP/sfhs/packages/cli/src/main.ts" one-shot graduate materialize --project "$GITHUB_WORKSPACE" --json
+          pushd "$RUNNER_TEMP/sfhs"
+          node packages/cli/src/main.ts one-shot inspect --project "$GITHUB_WORKSPACE" --json
+          node packages/cli/src/main.ts one-shot graduate materialize --project "$GITHUB_WORKSPACE" --json
+          popd
           project=$(find "$RUNNER_TEMP/sfhs/examples" -maxdepth 1 -type d -name '.sfhs-grad-cat-paw-air-hockey-*' | head -n 1)
           test -n "$project"
           echo "CAT_PAW_SFHS_PROJECT=$project" >> "$GITHUB_ENV"
@@ -47,12 +49,14 @@ jobs:
           args=()
           while IFS= read -r path; do [ -z "$path" ] || args+=(--changed "$path"); done <<< "$changed"
           pnpm --dir "$CAT_PAW_SFHS_PROJECT" test
-          node "$RUNNER_TEMP/sfhs/packages/cli/src/main.ts" inspect --json --project "$CAT_PAW_SFHS_PROJECT"
-          node "$RUNNER_TEMP/sfhs/packages/cli/src/main.ts" validate --json --project "$CAT_PAW_SFHS_PROJECT"
-          node "$RUNNER_TEMP/sfhs/packages/cli/src/main.ts" check --json --project "$CAT_PAW_SFHS_PROJECT" "${args[@]}"
-          node "$RUNNER_TEMP/sfhs/packages/cli/src/main.ts" pack --json --project "$CAT_PAW_SFHS_PROJECT"
-          node "$RUNNER_TEMP/sfhs/packages/cli/src/main.ts" verify --json --project "$CAT_PAW_SFHS_PROJECT"
-          node "$RUNNER_TEMP/sfhs/packages/cli/src/main.ts" one-shot audit --project "$CAT_PAW_SFHS_PROJECT" --json
+          pushd "$RUNNER_TEMP/sfhs"
+          node packages/cli/src/main.ts inspect --json --project "$CAT_PAW_SFHS_PROJECT"
+          node packages/cli/src/main.ts validate --json --project "$CAT_PAW_SFHS_PROJECT"
+          node packages/cli/src/main.ts check --json --project "$CAT_PAW_SFHS_PROJECT" "${args[@]}"
+          node packages/cli/src/main.ts pack --json --project "$CAT_PAW_SFHS_PROJECT"
+          node packages/cli/src/main.ts verify --json --project "$CAT_PAW_SFHS_PROJECT"
+          node packages/cli/src/main.ts one-shot audit --project "$CAT_PAW_SFHS_PROJECT" --json
+          popd
       - name: Packed-artifact browser smoke
         run: |
           pnpm --dir "$RUNNER_TEMP/sfhs/packages/browser-runner" exec playwright install --with-deps chromium
