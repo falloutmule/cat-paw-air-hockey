@@ -1,5 +1,6 @@
 import type { PlayerId } from "./actions.ts";
 import { PLAYER_HOME, TARGET_SCORE } from "./constants.ts";
+import { DEFAULT_MATCH_SETTINGS, type MatchSettings } from "./settings.ts";
 
 export interface Vector2 {
   readonly x: number;
@@ -57,6 +58,8 @@ export interface HockeyGameState {
   readonly nextEventId: number;
   readonly soundCooldowns: SoundCooldowns;
   readonly reducedEffects: boolean;
+  readonly activeMatchSettings: MatchSettings;
+  readonly pendingMatchSettings: MatchSettings;
 }
 
 function striker(player: PlayerId): StrikerState {
@@ -90,6 +93,8 @@ export function createInitialGameState(): HockeyGameState {
     events: Object.freeze([]),
     nextEventId: 1,
     soundCooldowns: Object.freeze({ wall: 0, player1: 0, player2: 0 }),
-    reducedEffects: false
+    reducedEffects: false,
+    activeMatchSettings: DEFAULT_MATCH_SETTINGS,
+    pendingMatchSettings: DEFAULT_MATCH_SETTINGS
   });
 }

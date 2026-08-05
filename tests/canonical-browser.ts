@@ -56,6 +56,18 @@ try {
   assert.equal(await page.locator("#pixi-host canvas").count(), 1);
   assert.equal(await page.locator("canvas").count(), 1);
 
+  await page.locator("[data-action='menu']").last().click();
+  await page.waitForFunction(() => !(document.querySelector("#settings-overlay") as HTMLElement).hidden);
+  await page.waitForFunction(() => (window.__CAT_AIR_HOCKEY__!.snapshot() as any).state.phase === "paused");
+  const puckSpeed = page.locator(".settings-view--bottom input[data-setting='puckSpeed']");
+  await puckSpeed.evaluate((input) => { (input as HTMLInputElement).value = "130"; input.dispatchEvent(new Event("input", { bubbles: true })); });
+  await page.waitForFunction(() => (document.querySelector(".settings-view--top input[data-setting='puckSpeed']") as HTMLInputElement).value === "130");
+  await page.waitForFunction(() => (window.__CAT_AIR_HOCKEY__!.snapshot() as any).state.activeMatchSettings.puckSpeed === 130);
+  await page.locator("[data-menu-action='close']").last().click();
+  await page.waitForFunction(() => (document.querySelector("#settings-overlay") as HTMLElement).hidden);
+  await page.locator("[data-action='pause']").last().click();
+  await page.waitForFunction(() => (window.__CAT_AIR_HOCKEY__!.snapshot() as any).state.phase === "ready");
+
   const rink = await page.locator("#pixi-host").boundingBox();
   assert.ok(rink);
   const dispatchPointer = async (type: string, pointerId: number, yFraction: number): Promise<void> => {

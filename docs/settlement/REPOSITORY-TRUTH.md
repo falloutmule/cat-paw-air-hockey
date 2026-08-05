@@ -31,6 +31,12 @@ The prior 560,167-byte artifact (`24d02527...`, build `cat-paw-air-hockey-0aee15
 
 Historical Samsung acceptance applies to a prior exact artifact only. The R1 artifact preserves base-game behavior by source and browser evidence, but its Samsung device session is **UNTESTED**. The regression checklist is: simultaneous opposite-end touches, release/cancel, ready/countdown, rapid impacts/goals, pause one-shot sound, mute/unmute, background return, zero finger offset, winner/rematch, portrait, and landscape return.
 
+## VERIFIED expansion supersession - CATPAW-EXPANSION-001
+
+- The settled base-game artifact is **SUPERSEDED** for current canonical claims by a local, non-remote expansion build: `dist/index.html`, 579,921 bytes, SHA-256 `43243d2eec6775fa45ab93ef3b1facce92e4a387bc7141a12e128214607cc423`, build `cat-paw-air-hockey-9bbbce7fdf80`, source SHA-256 `9bbbce7fdf804d65040415e1b2c81fb87893deb4f1775d7afbd6ff70d6da67b3`.
+- The fresh materialization passed direct lint, typecheck, source tests, SFHS inspect, validate, check, pack, verify, and exact packed Chromium smoke. Check retained `SFHS_TEST_SELECTION_REVIEW_REQUIRED` as a non-fatal coverage-review warning; its lint, typecheck, build-pack-verify, unit-all, and browser-smoke steps passed.
+- The browser smoke proved Pixi WebGL, one visible canvas, no console/page errors, only the local root request, pointer lifecycle checks, landscape gate, pause/resume, ready/countdown, and mirrored paused-menu synchronization. Samsung evidence is **UNTESTED** for this changed artifact; prior physical acceptance remains **REPORTED** only.
+
 ## VERIFIED workflow repair - BASELINE-SETTLE-001-R1
 
 - Actions quality run `30917337883` (job `92018696615`) failed on 2026-08-04. Checkout used `fetch-depth: 1`, so the pull-request base `05d39abdf8ec943b2ee4004163752a0305e1cc51` was absent. `git diff` emitted `fatal: bad object 05d39abdf8ec943b2ee4004163752a0305e1cc51`; the workflow's `|| true` then converted that failure into `changedPaths: []`. This is a CI correctness defect, not an empty change set.

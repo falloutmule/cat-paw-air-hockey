@@ -34,6 +34,8 @@ export function installDiagnostics(options: {
           tick: state.tick,
           scores: state.scores,
           winner: state.winner ?? null,
+          activeMatchSettings: state.activeMatchSettings,
+          pendingMatchSettings: state.pendingMatchSettings,
           puck: state.puck,
           players: state.players,
           recentEvents: state.events

@@ -1,6 +1,8 @@
-import { Container, Graphics, Text, TextStyle } from "pixi.js";
+import { Container, Graphics, Rectangle, Sprite, Text, TextStyle, Texture } from "pixi.js";
 import type { SfhsPixiPresenter, SfhsPixiStageLayers } from "@sfhs/adapter-pixi-v8";
 import { LOGICAL_HEIGHT, LOGICAL_WIDTH, PUCK_RADIUS, READY_TARGET, RINK, STRIKER_RADIUS } from "./constants.ts";
+import { goalBounds, puckRadius, settingsSummary, strikerRadius } from "./settings.ts";
+import type { ThemeSlot, ValidTheme } from "./theme.ts";
 import type { HockeyGameState, PresentationEvent } from "./state.ts";
 
 interface ActiveImpact {
@@ -15,6 +17,7 @@ interface ConfettiPiece {
 
 export interface CatHockeyPresenter extends SfhsPixiPresenter<HockeyGameState> {
   setReducedEffects(value: boolean): void;
+  setTheme(theme: ValidTheme | undefined): void;
 }
 
 const COLORS = Object.freeze({
@@ -77,18 +80,22 @@ function drawYarn(graphic: Graphics): void {
     .moveTo(-18, -4).bezierCurveTo(-5, -17, 7, 16, 18, 4).stroke({ color: COLORS.cream, width: 2, alpha: 0.8 });
 }
 
-function drawCatGoal(graphic: Graphics, top: boolean, color: number): void {
+function drawCatGoal(graphic: Graphics, top: boolean, color: number, left: number = RINK.goalLeft, right: number = RINK.goalRight): void {
   const outerY = top ? RINK.top - 52 : RINK.bottom;
   const innerY = top ? RINK.top - 42 : RINK.bottom;
   const earBaseY = top ? RINK.top - 22 : RINK.bottom + 22;
   const earTipY = top ? RINK.top - 51 : RINK.bottom + 51;
   graphic.clear()
-    .roundRect(RINK.goalLeft - 14, outerY, RINK.goalRight - RINK.goalLeft + 28, 52, 16)
+    .roundRect(left - 14, outerY, right - left + 28, 52, 16)
     .fill({ color: COLORS.railDark })
-    .roundRect(RINK.goalLeft + 3, innerY, RINK.goalRight - RINK.goalLeft - 6, 42, 13)
+    .roundRect(left + 3, innerY, right - left - 6, 42, 13)
     .fill({ color: COLORS.shadow })
-    .moveTo(RINK.goalLeft + 18, earBaseY).lineTo(RINK.goalLeft + 40, earTipY).lineTo(RINK.goalLeft + 60, earBaseY).fill({ color })
-    .moveTo(RINK.goalRight - 18, earBaseY).lineTo(RINK.goalRight - 40, earTipY).lineTo(RINK.goalRight - 60, earBaseY).fill({ color });
+    .moveTo(left + 18, earBaseY).lineTo(left + 40, earTipY).lineTo(left + 60, earBaseY).fill({ color })
+    .moveTo(right - 18, earBaseY).lineTo(right - 40, earTipY).lineTo(right - 60, earBaseY).fill({ color });
+}
+
+function asPixiColor(value: string): number {
+  return Number.parseInt(value.slice(1), 16);
 }
 
 export function createCatHockeyPresenter(options: {
@@ -121,6 +128,16 @@ export function createCatHockeyPresenter(options: {
   let instruction2: Text;
   let topCat: Graphics;
   let bottomCat: Graphics;
+  let goalTop: Graphics;
+  let goalBottom: Graphics;
+  let posts: Graphics;
+  let paletteOverlay: Graphics;
+  let settingsLabel1: Text;
+  let settingsLabel2: Text;
+  let themeRoot: Container;
+  let themeTexture: Texture | undefined;
+  let themeSprites: Partial<Record<ThemeSlot, Sprite>> = {};
+  let theme: ValidTheme | undefined;
   const trail: Graphics[] = [];
   const impactPool: Graphics[] = [];
   const activeImpacts: ActiveImpact[] = [];
@@ -144,6 +161,9 @@ export function createCatHockeyPresenter(options: {
     layers.actorLayer.addChild(actorRoot);
     layers.worldEffectsLayer.addChild(effectsRoot);
     layers.hudLayer.addChild(hudRoot);
+    themeRoot = new Container({ label: "cat-hockey-theme" });
+    themeRoot.eventMode = "none";
+    layers.actorLayer.addChild(themeRoot);
 
     const backdrop = new Graphics()
       .rect(0, 0, LOGICAL_WIDTH, LOGICAL_HEIGHT).fill({ color: COLORS.table })
@@ -164,18 +184,19 @@ export function createCatHockeyPresenter(options: {
       railDetails.moveTo(27, y).lineTo(40, y + 20).stroke({ color: COLORS.cream, width: 3, alpha: 0.18 });
       railDetails.moveTo(513, y).lineTo(500, y + 20).stroke({ color: COLORS.cream, width: 3, alpha: 0.18 });
     }
-    const goalTop = new Graphics();
-    const goalBottom = new Graphics();
+    goalTop = new Graphics();
+    goalBottom = new Graphics();
     drawCatGoal(goalTop, true, COLORS.player2);
     drawCatGoal(goalBottom, false, COLORS.player1);
-    const posts = new Graphics();
+    posts = new Graphics();
     for (const y of [RINK.top, RINK.bottom]) {
       for (const x of [RINK.goalLeft, RINK.goalRight]) {
         posts.circle(x, y, RINK.postRadius + 5).fill({ color: COLORS.railDark })
           .circle(x, y, RINK.postRadius).fill({ color: COLORS.cream });
       }
     }
-    staticRoot.addChild(backdrop, markings, railDetails, goalTop, goalBottom, posts);
+    paletteOverlay = new Graphics();
+    staticRoot.addChild(backdrop, paletteOverlay, markings, railDetails, goalTop, goalBottom, posts);
 
     bottomCat = new Graphics();
     topCat = new Graphics();
@@ -253,7 +274,14 @@ export function createCatHockeyPresenter(options: {
     instruction1.position.set(270, 600);
     instruction2.position.set(270, 360);
     instruction2.rotation = Math.PI;
-    hudRoot.addChild(score1, score2, centerMessage1, centerMessage2, ready1, ready2, readyLabel1, readyLabel2, instruction1, instruction2);
+    settingsLabel1 = makeText("Classic settings", 13, COLORS.cream, "normal");
+    settingsLabel2 = makeText("Classic settings", 13, COLORS.cream, "normal");
+    settingsLabel1.position.set(270, 642);
+    settingsLabel2.position.set(270, 318);
+    settingsLabel2.rotation = Math.PI;
+    settingsLabel1.visible = false;
+    settingsLabel2.visible = false;
+    hudRoot.addChild(score1, score2, centerMessage1, centerMessage2, ready1, ready2, readyLabel1, readyLabel2, instruction1, instruction2, settingsLabel1, settingsLabel2);
   }
 
   function consumeEvents(state: Readonly<HockeyGameState>): void {
@@ -353,6 +381,60 @@ export function createCatHockeyPresenter(options: {
     centerMessage2.visible = message.length > 0;
     readyLabel1.text = state.phase === "won" ? "BOTH HOLD FOR REMATCH" : state.players[1].ready ? "READY!" : "HOLD PAW TO READY";
     readyLabel2.text = state.phase === "won" ? "BOTH HOLD FOR REMATCH" : state.players[2].ready ? "READY!" : "HOLD PAW TO READY";
+    const showSettings = state.phase === "won";
+    settingsLabel1.visible = showSettings;
+    settingsLabel2.visible = showSettings;
+    if (showSettings) {
+      const summary = settingsSummary(state.activeMatchSettings);
+      settingsLabel1.text = summary;
+      settingsLabel2.text = summary;
+    }
+  }
+
+  function updateGeometry(state: Readonly<HockeyGameState>): void {
+    const top = goalBounds(state.activeMatchSettings, 2);
+    const bottom = goalBounds(state.activeMatchSettings, 1);
+    const player1 = theme === undefined ? COLORS.player1 : asPixiColor(theme.palette.player1);
+    const player2 = theme === undefined ? COLORS.player2 : asPixiColor(theme.palette.player2);
+    drawCatGoal(goalTop, true, player2, top.left, top.right);
+    drawCatGoal(goalBottom, false, player1, bottom.left, bottom.right);
+    posts.clear();
+    for (const [y, goal] of [[RINK.top, top], [RINK.bottom, bottom]] as const) {
+      for (const x of [goal.left, goal.right]) posts.circle(x, y, RINK.postRadius + 5).fill({ color: theme === undefined ? COLORS.railDark : asPixiColor(theme.palette.rail) }).circle(x, y, RINK.postRadius).fill({ color: theme === undefined ? COLORS.cream : asPixiColor(theme.palette.markings) });
+    }
+  }
+
+  function updateThemePalette(): void {
+    paletteOverlay.clear();
+    if (theme === undefined) return;
+    const palette = theme.palette;
+    paletteOverlay
+      .rect(0, 0, LOGICAL_WIDTH, LOGICAL_HEIGHT).fill({ color: asPixiColor(palette.table), alpha: 0.56 })
+      .roundRect(18, 20, LOGICAL_WIDTH - 36, LOGICAL_HEIGHT - 40, 34).fill({ color: asPixiColor(palette.rail), alpha: 0.34 })
+      .roundRect(RINK.left - 8, RINK.top - 8, RINK.right - RINK.left + 16, RINK.bottom - RINK.top + 16, 25).fill({ color: asPixiColor(palette.felt), alpha: 0.46 });
+  }
+
+  function applyTheme(): void {
+    if (!initialized) return;
+    themeRoot.removeChildren().forEach((child) => child.destroy());
+    themeSprites = {};
+    themeTexture?.destroy(false);
+    themeTexture = undefined;
+    updateThemePalette();
+    if (theme === undefined) return;
+    themeTexture = Texture.from(theme.url);
+    const cells: Readonly<Record<string, number>> = Object.freeze({ paw1: 0, paw2: 1, puck: 2, emblem: 3, mascot1: 4, mascot2: 5, goal1: 6, goal2: 7, impact: 8, confetti: 9, winner: 10, corner: 11 });
+    for (const [name, cell] of Object.entries(cells)) {
+      if (!theme.slots[name as ThemeSlot]) continue;
+      const sprite = new Sprite(new Texture({ source: themeTexture.source, frame: new Rectangle(cell % 4 * 256, Math.floor(cell / 4) * 256, 256, 256) }));
+      sprite.anchor.set(0.5); sprite.eventMode = "none"; themeSprites[name as ThemeSlot] = sprite; themeRoot.addChild(sprite);
+    }
+  }
+
+  function setThemeSprite(name: ThemeSlot, x: number, y: number, width: number, height: number, visible = true): Sprite | undefined {
+    const sprite = themeSprites[name];
+    if (sprite !== undefined) { sprite.position.set(x, y); sprite.width = width; sprite.height = height; sprite.visible = visible; }
+    return sprite;
   }
 
   return {
@@ -365,9 +447,12 @@ export function createCatHockeyPresenter(options: {
       paw2.position.set(state.players[2].position.x, state.players[2].position.y);
       const speed1 = Math.hypot(state.players[1].velocity.x, state.players[1].velocity.y);
       const speed2 = Math.hypot(state.players[2].velocity.x, state.players[2].velocity.y);
-      paw1.scale.set(1 + Math.min(0.08, speed1 / 24_000), 1 - Math.min(0.06, speed1 / 28_000));
-      paw2.scale.set(1 + Math.min(0.08, speed2 / 24_000), 1 - Math.min(0.06, speed2 / 28_000));
+      const scale1 = strikerRadius(state.activeMatchSettings, 1) / STRIKER_RADIUS;
+      const scale2 = strikerRadius(state.activeMatchSettings, 2) / STRIKER_RADIUS;
+      paw1.scale.set(scale1 * (1 + Math.min(0.08, speed1 / 24_000)), scale1 * (1 - Math.min(0.06, speed1 / 28_000)));
+      paw2.scale.set(scale2 * (1 + Math.min(0.08, speed2 / 24_000)), scale2 * (1 - Math.min(0.06, speed2 / 28_000)));
       puck.position.set(state.puck.position.x, state.puck.position.y);
+      puck.scale.set(puckRadius(state.activeMatchSettings) / PUCK_RADIUS);
       puck.rotation = state.tick * Math.hypot(state.puck.velocity.x, state.puck.velocity.y) / 240_000;
       for (let index = 0; index < trail.length; index += 1) {
         const point = state.puck.trail[index];
@@ -380,6 +465,26 @@ export function createCatHockeyPresenter(options: {
       }
       updateImpacts(state);
       updateConfetti(state);
+      updateGeometry(state);
+      const themedPaw1 = themeSprites.paw1; const themedPaw2 = themeSprites.paw2; const themedPuck = themeSprites.puck;
+      if (themedPaw1 !== undefined) { themedPaw1.position.copyFrom(paw1.position); themedPaw1.width = strikerRadius(state.activeMatchSettings, 1) * 2; themedPaw1.height = strikerRadius(state.activeMatchSettings, 1) * 2; paw1Graphic.visible = false; } else paw1Graphic.visible = true;
+      if (themedPaw2 !== undefined) { themedPaw2.position.copyFrom(paw2.position); themedPaw2.width = strikerRadius(state.activeMatchSettings, 2) * 2; themedPaw2.height = strikerRadius(state.activeMatchSettings, 2) * 2; themedPaw2.rotation = Math.PI; paw2Graphic.visible = false; } else paw2Graphic.visible = true;
+      if (themedPuck !== undefined) { themedPuck.position.copyFrom(puck.position); themedPuck.width = puckRadius(state.activeMatchSettings) * 2; themedPuck.height = puckRadius(state.activeMatchSettings) * 2; puckGraphic.visible = false; puckHighlight.visible = false; } else { puckGraphic.visible = true; puckHighlight.visible = true; }
+      const topGoal = goalBounds(state.activeMatchSettings, 2);
+      const bottomGoal = goalBounds(state.activeMatchSettings, 1);
+      const themedGoal2 = setThemeSprite("goal2", 270, RINK.top - 14, topGoal.right - topGoal.left + 74, 78);
+      const themedGoal1 = setThemeSprite("goal1", 270, RINK.bottom + 14, bottomGoal.right - bottomGoal.left + 74, 78);
+      goalTop.visible = themedGoal2 === undefined;
+      goalBottom.visible = themedGoal1 === undefined;
+      const themedMascot1 = setThemeSprite("mascot1", 68, 872, 82, 82);
+      const themedMascot2 = setThemeSprite("mascot2", 472, 88, 82, 82);
+      bottomCat.visible = themedMascot1 === undefined;
+      topCat.visible = themedMascot2 === undefined;
+      setThemeSprite("emblem", 270, RINK.centerY, 132, 132, state.phase !== "playing");
+      setThemeSprite("corner", RINK.left + 30, RINK.centerY, 52, 52);
+      setThemeSprite("winner", 270, RINK.centerY, 210, 210, state.phase === "won");
+      setThemeSprite("impact", state.puck.position.x, state.puck.position.y, 96, 96, activeImpacts.length > 0 && !reducedEffects);
+      setThemeSprite("confetti", 270, state.winner === 1 ? 180 : 780, 190, 190, celebrationEvent !== undefined && !reducedEffects);
       updateHud(state);
       bottomCat.scale.set(1);
       topCat.scale.set(1);
@@ -409,6 +514,7 @@ export function createCatHockeyPresenter(options: {
       }
     },
     setReducedEffects(value): void { reducedEffects = value; },
+    setTheme(value): void { if (theme !== undefined) URL.revokeObjectURL(theme.url); theme = value; applyTheme(); },
     destroy(): void {
       if (destroyed) return;
       destroyed = true;
@@ -420,6 +526,7 @@ export function createCatHockeyPresenter(options: {
       impactPool.length = 0;
       confetti.length = 0;
       trail.length = 0;
+      themeTexture?.destroy(false);
     }
   };
 }

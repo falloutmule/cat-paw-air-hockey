@@ -19,6 +19,7 @@ export interface PlayerAction {
 export interface HockeyActionSnapshot {
   readonly players: Readonly<Record<PlayerId, PlayerAction>>;
   readonly pausePressed: boolean;
+  readonly settingsRequested?: import("./settings.ts").MatchSettings;
 }
 
 export const EMPTY_PLAYER_ACTION: PlayerAction = Object.freeze({

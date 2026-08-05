@@ -1,14 +1,14 @@
 {
   "deferredWork": [],
   "evidenceStatus": "VERIFIED",
-  "nextAction": "Collect a new exact-artifact Samsung session with formal device metadata; fullscreen remains a separately authorized design card.",
+  "nextAction": "Collect the CATPAW-EXPANSION-001 exact-artifact Samsung session with formal device metadata and the documented fullscreen, menu, handicap, capture, and theme checklist.",
   "physicalStatus": "UNTESTED",
   "productStatus": "PRODUCT_COMPLETE",
   "projectRoot": ".",
   "records": {
     "physicalSeed": {
       "path": "one-shot/GRADUATION-PHYSICAL-TEST-SEED.json",
-      "sha256": "5f79dd32b58c1433ff35f5a40cc3b2277f3e6dad5bc51ab7f24ec1c47dfcecd7"
+      "sha256": "41166299b8c71c5ee789c0d71ccd546962d1483f1ff7f1cdcde3f546da375229"
     },
     "plan": {
       "path": "one-shot/MIGRATION-PLAN.json",
@@ -16,7 +16,7 @@
     },
     "report": {
       "path": "one-shot/GRADUATION-REPORT.json",
-      "sha256": "450952a59f1eab57a35a4682839bdfb6358850fa4d120cf01f85a8c247741894"
+      "sha256": "7b99e56918db7b89ef63831a1b9fb98fff6e1c53c72cfa8817a5d9e675d1f354"
     },
     "source": {
       "path": "SOURCE-IDENTITY.json",

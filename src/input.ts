@@ -6,6 +6,7 @@ import {
   type PlayerId
 } from "./actions.ts";
 import { LOGICAL_HEIGHT, LOGICAL_WIDTH } from "./constants.ts";
+import type { MatchSettings } from "./settings.ts";
 
 interface MutablePlayerInput {
   pointerId?: number;
@@ -27,6 +28,7 @@ export interface HockeyInputDiagnostics {
 
 export interface HockeyInput extends SfhsSemanticActionSource<HockeyActionSnapshot> {
   requestPause(): void;
+  requestSettings(settings: MatchSettings): void;
   setSurface(surface: HTMLElement, getCanvas: () => HTMLCanvasElement | undefined): void;
   getDiagnostics(): HockeyInputDiagnostics;
 }
@@ -43,6 +45,7 @@ export function createHockeyInput(options: {
   let surface = options.initialSurface;
   let getCanvas = options.getCanvas;
   let pausePressed = false;
+  let settingsRequested: MatchSettings | undefined;
   let ignoredPointerCount = 0;
   let captureFailureCount = 0;
   let clearCount = 0;
@@ -158,6 +161,7 @@ export function createHockeyInput(options: {
       slot.keys.clear();
     }
     pausePressed = false;
+    settingsRequested = undefined;
   }
 
   function keyDown(event: KeyboardEvent): void {
@@ -240,13 +244,16 @@ export function createHockeyInput(options: {
       }
       const snapshot = Object.freeze({
         players: Object.freeze({ 1: sample(1), 2: sample(2) }),
-        pausePressed
+        pausePressed,
+        ...(settingsRequested === undefined ? {} : { settingsRequested })
       });
       pausePressed = false;
+      settingsRequested = undefined;
       return snapshot;
     },
     clear,
     requestPause(): void { pausePressed = true; },
+    requestSettings(settings): void { settingsRequested = settings; },
     setSurface(nextSurface, nextGetCanvas): void {
       for (const remove of surfaceRemovers.splice(0)) remove();
       getCanvas = nextGetCanvas;
