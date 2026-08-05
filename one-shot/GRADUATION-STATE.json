@@ -1,14 +1,14 @@
 {
   "deferredWork": [],
   "evidenceStatus": "VERIFIED",
-  "nextAction": "Collect the CATPAW-EXPANSION-001 exact-artifact Samsung session with formal device metadata and the documented fullscreen, menu, handicap, capture, and theme checklist.",
+  "nextAction": "Collect the CATPAW-EXPANSION-001-R1 exact-artifact Samsung session with return-speed, split goal-side control, fullscreen-apron, capture, and theme evidence.",
   "physicalStatus": "UNTESTED",
   "productStatus": "PRODUCT_COMPLETE",
   "projectRoot": ".",
   "records": {
     "physicalSeed": {
       "path": "one-shot/GRADUATION-PHYSICAL-TEST-SEED.json",
-      "sha256": "41166299b8c71c5ee789c0d71ccd546962d1483f1ff7f1cdcde3f546da375229"
+      "sha256": "3dc5602486b2a60f714b7dd53802b2a87155a1fb01b6c055f1e15e2800d20ff5"
     },
     "plan": {
       "path": "one-shot/MIGRATION-PLAN.json",
@@ -16,7 +16,7 @@
     },
     "report": {
       "path": "one-shot/GRADUATION-REPORT.json",
-      "sha256": "7b99e56918db7b89ef63831a1b9fb98fff6e1c53c72cfa8817a5d9e675d1f354"
+      "sha256": "2ca6c1f68fb9bb1d3f27a75a6a9402bb62b15bca03d58a1bd871419663b338d7"
     },
     "source": {
       "path": "SOURCE-IDENTITY.json",

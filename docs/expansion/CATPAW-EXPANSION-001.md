@@ -14,4 +14,10 @@ The settled baseline artifact is **SUPERSEDED** by any packed expansion artifact
 
 ## Local canonical record
 
-**VERIFIED locally:** SFHS `5acd8fc9a24834d9416a6e615bb78b8012962e30` packed and verified `dist/index.html` at 579,921 bytes, SHA-256 `43243d2eec6775fa45ab93ef3b1facce92e4a387bc7141a12e128214607cc423`, build `cat-paw-air-hockey-9bbbce7fdf80`, source SHA-256 `9bbbce7fdf804d65040415e1b2c81fb87893deb4f1775d7afbd6ff70d6da67b3`. This has not been pushed, merged, released, or deployed.
+**SUPERSEDED locally:** SFHS `5acd8fc9a24834d9416a6e615bb78b8012962e30` packed the former `dist/index.html` at 579,921 bytes, SHA-256 `43243d2eec6775fa45ab93ef3b1facce92e4a387bc7141a12e128214607cc423`, build `cat-paw-air-hockey-9bbbce7fdf80`. It was not pushed, merged, released, or deployed.
+
+## R1 return-speed and end-layout repair
+
+The prior expansion artifact is **SUPERSEDED**. Its Samsung session is **REPORTED — NEEDS REPAIR**: core play, fullscreen, mirrored settings, and custom goals worked; independent return-speed handicaps and split goal-side controls were absent. R1 adds those bounded settings and records last-paw-contact physics so the hitter's multiplier applies once per real paw collision, remains through wall/post travel, and clears at serving boundaries.
+
+**VERIFIED locally:** `dist/index.html` is 581,838 bytes, SHA-256 `27f6fa3daccb99256f5a2ea01a3c45618846c02e87b0f9e1cfe0e061c66a25ba`, build `cat-paw-air-hockey-63565c6a8410`, source SHA-256 `63565c6a841032427da85ce243fc41b7f6b64892ea9fe336f4bf692e4e1da0d3`. It remains local only and requires a new Samsung session.

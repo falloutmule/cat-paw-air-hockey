@@ -56,6 +56,26 @@ try {
   assert.equal(await page.locator("#pixi-host canvas").count(), 1);
   assert.equal(await page.locator("canvas").count(), 1);
 
+  const viewport = page.viewportSize()!;
+  for (const end of ["top", "bottom"] as const) {
+    const apron = page.locator(`.edge-controls--${end} .goal-apron`);
+    const leftPair = page.locator(`.edge-controls--${end} .control-pair--left`);
+    const rightPair = page.locator(`.edge-controls--${end} .control-pair--right`);
+    const [apronBox, leftBox, rightBox] = await Promise.all([apron.boundingBox(), leftPair.boundingBox(), rightPair.boundingBox()]);
+    assert.ok(apronBox && leftBox && rightBox);
+    const screenLeft = end === "top" ? rightBox : leftBox;
+    const screenRight = end === "top" ? leftBox : rightBox;
+    assert.ok(screenLeft.x + screenLeft.width <= apronBox.x && apronBox.x + apronBox.width <= screenRight.x, `${end} controls split around the goal apron`);
+    for (const box of [screenLeft, screenRight]) assert.ok(box.x >= 0 && box.y >= 0 && box.x + box.width <= viewport.width && box.y + box.height <= viewport.height, `${end} control pair remains in the viewport`);
+  }
+  const topFullscreen = await page.locator(".edge-controls--top [data-action='fullscreen']").boundingBox();
+  const topPause = await page.locator(".edge-controls--top [data-action='pause']").boundingBox();
+  const bottomMute = await page.locator(".edge-controls--bottom [data-action='mute']").boundingBox();
+  const bottomFullscreen = await page.locator(".edge-controls--bottom [data-action='fullscreen']").boundingBox();
+  assert.ok(topFullscreen && topPause && bottomMute && bottomFullscreen);
+  assert.ok(topFullscreen.x < topPause.x, "top arrangement is mirrored");
+  assert.ok(bottomMute.x < bottomFullscreen.x, "bottom arrangement follows Player 1 reading direction");
+
   await page.locator("[data-action='menu']").last().click();
   await page.waitForFunction(() => !(document.querySelector("#settings-overlay") as HTMLElement).hidden);
   await page.waitForFunction(() => (window.__CAT_AIR_HOCKEY__!.snapshot() as any).state.phase === "paused");
@@ -63,6 +83,14 @@ try {
   await puckSpeed.evaluate((input) => { (input as HTMLInputElement).value = "130"; input.dispatchEvent(new Event("input", { bubbles: true })); });
   await page.waitForFunction(() => (document.querySelector(".settings-view--top input[data-setting='puckSpeed']") as HTMLInputElement).value === "130");
   await page.waitForFunction(() => (window.__CAT_AIR_HOCKEY__!.snapshot() as any).state.activeMatchSettings.puckSpeed === 130);
+  const returnSpeed = page.locator(".settings-view--bottom input[data-setting='returnSpeed1']");
+  assert.match(await returnSpeed.evaluate((input) => input.closest("label")?.textContent ?? ""), /Player 1 return speed/);
+  await returnSpeed.evaluate((input) => { (input as HTMLInputElement).value = "70"; input.dispatchEvent(new Event("input", { bubbles: true })); });
+  await page.waitForFunction(() => (document.querySelector(".settings-view--top input[data-setting='returnSpeed1']") as HTMLInputElement).value === "70");
+  await page.waitForFunction(() => (window.__CAT_AIR_HOCKEY__!.snapshot() as any).state.activeMatchSettings.returnSpeed[1] === 70);
+  const returnSpeed2 = page.locator(".settings-view--bottom input[data-setting='returnSpeed2']");
+  assert.equal(await returnSpeed2.count(), 1);
+  assert.match(await returnSpeed2.evaluate((input) => input.closest("label")?.textContent ?? ""), /Player 2 return speed/);
   await page.locator("[data-menu-action='close']").last().click();
   await page.waitForFunction(() => (document.querySelector("#settings-overlay") as HTMLElement).hidden);
   await page.locator("[data-action='pause']").last().click();

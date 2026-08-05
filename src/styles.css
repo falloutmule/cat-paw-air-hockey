@@ -21,23 +21,26 @@ button { font: inherit; }
 .edge-controls {
   position: absolute;
   z-index: 5;
-  display: flex;
-  gap: 0.28rem;
-  padding: 0.3rem;
-  border-radius: 999px;
-  background: rgb(7 16 24 / 72%);
-  backdrop-filter: blur(3px);
-  pointer-events: auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(8.4rem, 11rem) minmax(0, 1fr);
+  align-items: center;
+  width: 100%;
+  padding: 0 max(.35rem, env(safe-area-inset-right)) 0 max(.35rem, env(safe-area-inset-left));
+  pointer-events: none;
 }
 .edge-controls--top {
   top: max(0.3rem, env(safe-area-inset-top));
-  left: max(0.3rem, env(safe-area-inset-left));
+  left: 0;
   transform: rotate(180deg);
 }
 .edge-controls--bottom {
-  right: max(0.3rem, env(safe-area-inset-right));
+  right: 0;
   bottom: max(0.3rem, env(safe-area-inset-bottom));
 }
+.control-pair { display: flex; gap: .28rem; padding: .3rem; border-radius: 999px; background: rgb(7 16 24 / 72%); backdrop-filter: blur(3px); pointer-events: auto; }
+.control-pair--left { justify-self: start; }
+.control-pair--right { justify-self: end; }
+.goal-apron { min-height: 2.85rem; display: grid; place-items: center; border-top: 2px solid rgb(255 244 214 / 22%); border-bottom: 2px solid rgb(255 244 214 / 22%); border-radius: 1rem; color: rgb(255 244 214 / 68%); background: linear-gradient(90deg, transparent, rgb(38 63 76 / 76%), transparent); font-size: .62rem; font-weight: 800; letter-spacing: .1em; pointer-events: none; }
 .edge-controls button {
   width: 2.7rem;
   min-width: 2.7rem;
@@ -71,6 +74,7 @@ button { font: inherit; }
 .settings-view fieldset { margin: .5rem 0; border: 1px solid rgb(255 244 214 / 25%); border-radius: .65rem; }
 .settings-view label { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .45rem; margin: .5rem 0; font-size: .88rem; }
 .settings-view input[type="range"] { grid-column: 1 / -1; width: 100%; accent-color: #41d8c7; }
+.settings-view input[type="range"][data-default="true"] { accent-color: #ffd45c; }
 .settings-view output { color: #ffd45c; font-variant-numeric: tabular-nums; }
 .settings-view button { margin: .25rem; min-height: 2.35rem; border: 1px solid #a97549; border-radius: .55rem; color: #fff4d6; background: #263f4c; }
 .settings-summary { color: #d8e7e8; font-size: .78rem; line-height: 1.3; }

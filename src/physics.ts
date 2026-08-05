@@ -18,7 +18,7 @@ import {
   STRIKER_RESTITUTION,
   WALL_RESTITUTION
 } from "./constants.ts";
-import { goalBounds, normalizeMatchSettings, puckRadius, puckSpeedCap, strikerImpulseCap, strikerRadius, strikerSpeedCap, type MatchSettings } from "./settings.ts";
+import { goalBounds, normalizeMatchSettings, puckRadius, puckSpeedCap, returnSpeedCap, strikerImpulseCap, strikerRadius, strikerSpeedCap, type MatchSettings } from "./settings.ts";
 import type {
   HockeyGameState,
   MatchPhase,
@@ -30,7 +30,7 @@ import type {
 
 interface MutableVector { x: number; y: number }
 interface MutableStriker { position: MutableVector; previousPosition: MutableVector; velocity: MutableVector; readyProgress: number; ready: boolean }
-interface MutablePuck { position: MutableVector; previousPosition: MutableVector; velocity: MutableVector; trail: Vector2[] }
+interface MutablePuck { position: MutableVector; previousPosition: MutableVector; velocity: MutableVector; trail: Vector2[]; lastHitter?: PlayerId }
 interface MutableContext {
   events: PresentationEvent[];
   nextEventId: number;
@@ -223,7 +223,10 @@ function resolveStriker(puck: MutablePuck, striker: MutableStriker, interpolated
     const speed = -normalVelocity;
     puck.velocity.x -= (1 + STRIKER_RESTITUTION) * normalVelocity * nx;
     puck.velocity.y -= (1 + STRIKER_RESTITUTION) * normalVelocity * ny;
-    capVelocity(puck.velocity, puckSpeedCap(settings));
+    puck.velocity.x *= settings.returnSpeed[player] / 100;
+    puck.velocity.y *= settings.returnSpeed[player] / 100;
+    puck.lastHitter = player;
+    capVelocity(puck.velocity, returnSpeedCap(settings, player));
     impactEvent(context, player === 1 ? "player1" : "player2", "paw-hit", puck.position.x, puck.position.y, speed, player);
   }
 }
@@ -296,7 +299,7 @@ function advancePuck(puck: MutablePuck, players: Readonly<Record<PlayerId, Mutab
     puck.velocity.x = 0;
     puck.velocity.y = 0;
   }
-  capVelocity(puck.velocity, puckSpeedCap(settings));
+  capVelocity(puck.velocity, puck.lastHitter === undefined ? puckSpeedCap(settings) : returnSpeedCap(settings, puck.lastHitter));
   return undefined;
 }
 
@@ -348,7 +351,8 @@ export function stepGame(state: HockeyGameState, action: Readonly<HockeyActionSn
     position: { ...state.puck.position },
     previousPosition: { ...state.puck.position },
     velocity: { ...state.puck.velocity },
-    trail: state.puck.trail.map((point) => ({ ...point }))
+    trail: state.puck.trail.map((point) => ({ ...point })),
+    ...(state.puck.lastHitter === undefined ? {} : { lastHitter: state.puck.lastHitter })
   };
 
   if (action.pausePressed) {
@@ -444,7 +448,8 @@ export function stepGame(state: HockeyGameState, action: Readonly<HockeyActionSn
       position: freezeVector(puck.position),
       previousPosition: freezeVector(puck.previousPosition),
       velocity: freezeVector(puck.velocity),
-      trail: Object.freeze(puck.trail.map((point) => Object.freeze({ ...point })))
+      trail: Object.freeze(puck.trail.map((point) => Object.freeze({ ...point }))),
+      ...(puck.lastHitter === undefined ? {} : { lastHitter: puck.lastHitter })
     }),
     events: Object.freeze([
       ...state.events.filter((event) => tick - event.tick <= 180),

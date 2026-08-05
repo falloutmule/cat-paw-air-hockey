@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { EMPTY_ACTION_SNAPSHOT } from "../src/actions.ts";
 import { PUCK_RADIUS, PUCK_SPEED_CAP, RINK, STRIKER_IMPULSE_SPEED_CAP, STRIKER_MAX_SPEED, STRIKER_RADIUS } from "../src/constants.ts";
 import { stepGame } from "../src/physics.ts";
-import { DEFAULT_MATCH_SETTINGS, goalBounds, normalizeMatchSettings, puckRadius, puckSpeedCap, strikerImpulseCap, strikerRadius, strikerSpeedCap } from "../src/settings.ts";
+import { DEFAULT_MATCH_SETTINGS, goalBounds, normalizeMatchSettings, puckRadius, puckSpeedCap, returnSpeedCap, settingsSummary, strikerImpulseCap, strikerRadius, strikerSpeedCap } from "../src/settings.ts";
 import { createInitialGameState, type HockeyGameState } from "../src/state.ts";
 
 const requested = (settings = DEFAULT_MATCH_SETTINGS) => Object.freeze({ ...EMPTY_ACTION_SNAPSHOT, settingsRequested: settings });
@@ -10,6 +10,7 @@ const changed = normalizeMatchSettings({ puckSpeed: 130, puckSize: 125, pawSpeed
 assert.equal(puckRadius(DEFAULT_MATCH_SETTINGS), PUCK_RADIUS);
 assert.equal(strikerRadius(DEFAULT_MATCH_SETTINGS, 1), STRIKER_RADIUS);
 assert.equal(puckSpeedCap(DEFAULT_MATCH_SETTINGS), PUCK_SPEED_CAP);
+assert.equal(returnSpeedCap(DEFAULT_MATCH_SETTINGS, 1), PUCK_SPEED_CAP);
 assert.equal(strikerSpeedCap(DEFAULT_MATCH_SETTINGS, 2), STRIKER_MAX_SPEED);
 assert.equal(strikerImpulseCap(DEFAULT_MATCH_SETTINGS, 1), STRIKER_IMPULSE_SPEED_CAP);
 assert.deepEqual(goalBounds(DEFAULT_MATCH_SETTINGS, 1), { left: RINK.goalLeft, right: RINK.goalRight });
@@ -20,6 +21,9 @@ assert.ok(Math.abs(strikerImpulseCap(changed, 2) - 2925) < 0.001);
 assert.equal(goalBounds(changed, 1).right - goalBounds(changed, 1).left, 138);
 assert.equal(goalBounds(changed, 2).right - goalBounds(changed, 2).left, 230);
 assert.deepEqual(normalizeMatchSettings({ puckSpeed: 999 }), normalizeMatchSettings({ puckSpeed: 130 }));
+assert.deepEqual(normalizeMatchSettings({ ...changed, returnSpeed: { 1: 70, 2: 130 } }).returnSpeed, { 1: 70, 2: 130 });
+assert.equal(normalizeMatchSettings(changed).returnSpeed[1], 100);
+assert.match(settingsSummary(normalizeMatchSettings({ returnSpeed: { 1: 70, 2: 100 } })), /P1: 100% paw speed · 70% return/);
 
 let ready = stepGame(createInitialGameState(), requested(changed), 1 / 60);
 assert.deepEqual(ready.activeMatchSettings, changed);
@@ -32,4 +36,4 @@ const goal = { ...playing, phase: "goal" as const, phaseTimer: 0 } as HockeyGame
 const afterGoal = stepGame(goal, EMPTY_ACTION_SNAPSHOT, 1 / 60);
 assert.deepEqual(afterGoal.activeMatchSettings, DEFAULT_MATCH_SETTINGS);
 assert.equal(afterGoal.phase, "countdown");
-console.log(JSON.stringify({ schema: "cat-air-hockey.settings@1", passed: true, checks: 15 }, null, 2));
+console.log(JSON.stringify({ schema: "cat-air-hockey.settings@1", passed: true, checks: 19 }, null, 2));

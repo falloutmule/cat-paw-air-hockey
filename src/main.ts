@@ -51,18 +51,18 @@ const presentation = createSfhsPixiV8Presentation<HockeyGameState>({ backgroundC
 const input = createHockeyInput({ initialSurface: host, getCanvas: () => runtime?.getPrimarySurface(), onIntentionalGesture: () => { void audio.unlock().then(updateControls); } });
 
 const menuMarkup = `<h2>Cat Paw settings</h2><p class="settings-summary" data-summary></p><fieldset><legend>Gameplay</legend>
-${[["puckSpeed", "Puck speed", 70, 130], ["pawSpeed1", "Player 1 paw speed", 70, 130], ["pawSpeed2", "Player 2 paw speed", 70, 130], ["puckSize", "Puck size", 75, 125], ["pawSize1", "Player 1 paw size", 75, 125], ["pawSize2", "Player 2 paw size", 75, 125], ["goalSize1", "Player 1 goal opening", 75, 125], ["goalSize2", "Player 2 goal opening", 75, 125]].map(([key, label, min, max]) => `<label>${label}<output data-value="${key}"></output><input data-setting="${key}" type="range" min="${min}" max="${max}" step="5"></label>`).join("")}
+${[["puckSpeed", "Puck speed", 70, 130], ["pawSpeed1", "Player 1 paw speed", 70, 130], ["pawSpeed2", "Player 2 paw speed", 70, 130], ["returnSpeed1", "Player 1 return speed", 70, 130], ["returnSpeed2", "Player 2 return speed", 70, 130], ["puckSize", "Puck size", 75, 125], ["pawSize1", "Player 1 paw size", 75, 125], ["pawSize2", "Player 2 paw size", 75, 125], ["goalSize1", "Player 1 goal opening", 75, 125], ["goalSize2", "Player 2 goal opening", 75, 125]].map(([key, label, min, max]) => `<label>${label}<output data-value="${key}"></output><input data-setting="${key}" type="range" min="${min}" max="${max}" step="5"></label>`).join("")}
 <button type="button" data-menu-action="reset">Reset Gameplay Defaults</button></fieldset><fieldset><legend>Display</legend><label>Reduced motion <input data-menu-action="reduced" type="checkbox"></label><p data-fullscreen-status></p></fieldset><fieldset><legend>Theme</legend><button type="button" data-menu-action="template">Download Template</button><button type="button" data-menu-action="guide">Download Guide</button><button type="button" data-menu-action="load-theme">Load Theme PNG</button><button type="button" data-menu-action="reset-theme">Reset Default Theme</button><p data-theme-status>Classic theme</p></fieldset><fieldset><legend>About / Reset</legend><p>Changes during a match apply next serve.</p><button type="button" data-menu-action="close">Close settings</button></fieldset>`;
 for (const view of menuViews) view.innerHTML = menuMarkup;
 
 function settingValue(key: string): number {
-  const values: Record<string, number> = { puckSpeed: menuSettings.puckSpeed, pawSpeed1: menuSettings.pawSpeed[1], pawSpeed2: menuSettings.pawSpeed[2], puckSize: menuSettings.puckSize, pawSize1: menuSettings.pawSize[1], pawSize2: menuSettings.pawSize[2], goalSize1: menuSettings.goalSize[1], goalSize2: menuSettings.goalSize[2] };
+  const values: Record<string, number> = { puckSpeed: menuSettings.puckSpeed, pawSpeed1: menuSettings.pawSpeed[1], pawSpeed2: menuSettings.pawSpeed[2], returnSpeed1: menuSettings.returnSpeed[1], returnSpeed2: menuSettings.returnSpeed[2], puckSize: menuSettings.puckSize, pawSize1: menuSettings.pawSize[1], pawSize2: menuSettings.pawSize[2], goalSize1: menuSettings.goalSize[1], goalSize2: menuSettings.goalSize[2] };
   return values[key] ?? 100;
 }
 function syncMenuViews(): void {
   const state = runtime?.getState();
   for (const view of menuViews) {
-    for (const range of view.querySelectorAll<HTMLInputElement>("input[data-setting]")) { range.value = String(settingValue(range.dataset.setting ?? "")); range.setAttribute("aria-valuetext", `${range.value}%`); }
+    for (const range of view.querySelectorAll<HTMLInputElement>("input[data-setting]")) { range.value = String(settingValue(range.dataset.setting ?? "")); range.setAttribute("aria-valuetext", `${range.value}%`); range.dataset.default = String(range.value === "100"); }
     for (const output of view.querySelectorAll<HTMLOutputElement>("output[data-value]")) output.value = `${settingValue(output.dataset.value ?? "")}%`;
     const checkbox = view.querySelector<HTMLInputElement>("input[data-menu-action='reduced']"); if (checkbox !== null) checkbox.checked = reducedEffects;
     const summary = view.querySelector<HTMLElement>("[data-summary]"); if (summary !== null) summary.textContent = settingsEqual(state?.activeMatchSettings ?? menuSettings, menuSettings) ? settingsSummary(menuSettings) : `${settingsSummary(menuSettings)} · Applies next serve`;
@@ -71,9 +71,10 @@ function syncMenuViews(): void {
 }
 function persistPreferences(): void { try { localStorage.setItem(settingsStorageKey, JSON.stringify(menuSettings)); localStorage.setItem("cat-paw-air-hockey.reduced-motion.v1", String(reducedEffects)); } catch { /* session fallback */ } }
 function updateSetting(key: string, value: number): void {
-  const next = { puckSpeed: menuSettings.puckSpeed, puckSize: menuSettings.puckSize, pawSpeed: { ...menuSettings.pawSpeed }, pawSize: { ...menuSettings.pawSize }, goalSize: { ...menuSettings.goalSize } };
+  const next = { puckSpeed: menuSettings.puckSpeed, puckSize: menuSettings.puckSize, pawSpeed: { ...menuSettings.pawSpeed }, returnSpeed: { ...menuSettings.returnSpeed }, pawSize: { ...menuSettings.pawSize }, goalSize: { ...menuSettings.goalSize } };
   if (key === "puckSpeed" || key === "puckSize") next[key] = value;
   else if (key === "pawSpeed1") next.pawSpeed[1] = value; else if (key === "pawSpeed2") next.pawSpeed[2] = value;
+  else if (key === "returnSpeed1") next.returnSpeed[1] = value; else if (key === "returnSpeed2") next.returnSpeed[2] = value;
   else if (key === "pawSize1") next.pawSize[1] = value; else if (key === "pawSize2") next.pawSize[2] = value;
   else if (key === "goalSize1") next.goalSize[1] = value; else if (key === "goalSize2") next.goalSize[2] = value;
   menuSettings = normalizeMatchSettings(next); input.requestSettings(menuSettings); persistPreferences(); syncMenuViews();
@@ -105,6 +106,7 @@ function updateControls(): void {
   const muted = audio.isMuted(); const state = runtime?.getState(); const paused = state?.phase === "paused";
   for (const button of muteButtons) { button.textContent = muted ? "🔇" : "🔊"; button.setAttribute("aria-label", muted ? "Sound off" : "Sound on"); button.title = muted ? "Sound off" : "Sound on"; button.setAttribute("aria-pressed", String(muted)); }
   for (const button of pauseButtons) { button.textContent = paused ? "▶" : "Ⅱ"; button.setAttribute("aria-label", paused ? "Resume" : "Pause"); button.title = paused ? "Resume" : "Pause"; }
+  for (const button of pauseButtons) button.hidden = state?.phase === "won";
   for (const button of menuButtons) { button.setAttribute("aria-label", menuOpen ? "Close settings" : "Open settings"); button.title = menuOpen ? "Close settings" : "Open settings"; button.setAttribute("aria-pressed", String(menuOpen)); }
   const fullscreenAvailable = document.fullscreenEnabled && typeof shell.requestFullscreen === "function";
   for (const button of fullscreenButtons) { button.disabled = !fullscreenAvailable; button.hidden = state !== undefined && !(state.phase === "ready" || state.phase === "paused" || state.phase === "won" || menuOpen); button.setAttribute("aria-label", document.fullscreenElement === null ? "Enter fullscreen" : "Exit fullscreen"); button.title = fullscreenAvailable ? button.getAttribute("aria-label") ?? "Fullscreen" : "Fullscreen unavailable"; button.setAttribute("aria-pressed", String(document.fullscreenElement !== null)); }

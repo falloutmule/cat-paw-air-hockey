@@ -33,6 +33,7 @@ export interface PuckState {
   readonly previousPosition: Vector2;
   readonly velocity: Vector2;
   readonly trail: readonly Vector2[];
+  readonly lastHitter?: PlayerId;
 }
 
 export interface SoundCooldowns {

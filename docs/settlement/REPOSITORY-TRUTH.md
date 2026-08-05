@@ -37,6 +37,11 @@ Historical Samsung acceptance applies to a prior exact artifact only. The R1 art
 - The fresh materialization passed direct lint, typecheck, source tests, SFHS inspect, validate, check, pack, verify, and exact packed Chromium smoke. Check retained `SFHS_TEST_SELECTION_REVIEW_REQUIRED` as a non-fatal coverage-review warning; its lint, typecheck, build-pack-verify, unit-all, and browser-smoke steps passed.
 - The browser smoke proved Pixi WebGL, one visible canvas, no console/page errors, only the local root request, pointer lifecycle checks, landscape gate, pause/resume, ready/countdown, and mirrored paused-menu synchronization. Samsung evidence is **UNTESTED** for this changed artifact; prior physical acceptance remains **REPORTED** only.
 
+## VERIFIED R1 physical repair supersession
+
+- The 579,921-byte expansion artifact (`cat-paw-air-hockey-9bbbce7fdf80` / `43243d2eec6775fa45ab93ef3b1facce92e4a387bc7141a12e128214607cc423`) is **SUPERSEDED**. Its Samsung session is **REPORTED — NEEDS REPAIR**: the existing game, fullscreen, mirrored settings, and custom goals worked, while return-speed handicaps and split goal-side controls were missing.
+- R1 adds independent bounded return speeds, one-time hitter-specific collision scaling, and mirrored goal-apron control pairs. The current local canonical identity and Samsung test target are recorded in `docs/expansion/` and One-Shot evidence; physical acceptance remains **UNTESTED** until an exact-artifact report is supplied.
+
 ## VERIFIED workflow repair - BASELINE-SETTLE-001-R1
 
 - Actions quality run `30917337883` (job `92018696615`) failed on 2026-08-04. Checkout used `fetch-depth: 1`, so the pull-request base `05d39abdf8ec943b2ee4004163752a0305e1cc51` was absent. `git diff` emitted `fatal: bad object 05d39abdf8ec943b2ee4004163752a0305e1cc51`; the workflow's `|| true` then converted that failure into `changedPaths: []`. This is a CI correctness defect, not an empty change set.
