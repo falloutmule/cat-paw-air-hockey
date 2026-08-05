@@ -20,4 +20,6 @@ The settled baseline artifact is **SUPERSEDED** by any packed expansion artifact
 
 The prior expansion artifact is **SUPERSEDED**. Its Samsung session is **REPORTED — NEEDS REPAIR**: core play, fullscreen, mirrored settings, and custom goals worked; independent return-speed handicaps and split goal-side controls were absent. R1 adds those bounded settings and records last-paw-contact physics so the hitter's multiplier applies once per real paw collision, remains through wall/post travel, and clears at serving boundaries.
 
-**VERIFIED locally:** `dist/index.html` is 581,838 bytes, SHA-256 `27f6fa3daccb99256f5a2ea01a3c45618846c02e87b0f9e1cfe0e061c66a25ba`, build `cat-paw-air-hockey-63565c6a8410`, source SHA-256 `63565c6a841032427da85ce243fc41b7f6b64892ea9fe336f4bf692e4e1da0d3`. It remains local only and requires a new Samsung session.
+**SUPERSEDED locally:** the first R1 artifact was 581,838 bytes, SHA-256 `27f6fa3daccb99256f5a2ea01a3c45618846c02e87b0f9e1cfe0e061c66a25ba`, build `cat-paw-air-hockey-63565c6a8410`.
+
+**VERIFIED locally:** the corrected `dist/index.html` is 581,644 bytes, SHA-256 `816c04a93ac85d7653ab6a6af6ea61f3a80b0d47a0cf4569174f95a6d5fa1adf`, build `cat-paw-air-hockey-95ed3f8aa868`, source SHA-256 `95ed3f8aa86811085394b277816344c229a42a0696aa37cac313a3554a3ea72e`. Fullscreen remains visible while playing; the goal itself says GOAL; the continuous tabletop fills the end space. It remains local only and requires a new Samsung session.

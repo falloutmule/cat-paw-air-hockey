@@ -109,7 +109,7 @@ function updateControls(): void {
   for (const button of pauseButtons) button.hidden = state?.phase === "won";
   for (const button of menuButtons) { button.setAttribute("aria-label", menuOpen ? "Close settings" : "Open settings"); button.title = menuOpen ? "Close settings" : "Open settings"; button.setAttribute("aria-pressed", String(menuOpen)); }
   const fullscreenAvailable = document.fullscreenEnabled && typeof shell.requestFullscreen === "function";
-  for (const button of fullscreenButtons) { button.disabled = !fullscreenAvailable; button.hidden = state !== undefined && !(state.phase === "ready" || state.phase === "paused" || state.phase === "won" || menuOpen); button.setAttribute("aria-label", document.fullscreenElement === null ? "Enter fullscreen" : "Exit fullscreen"); button.title = fullscreenAvailable ? button.getAttribute("aria-label") ?? "Fullscreen" : "Fullscreen unavailable"; button.setAttribute("aria-pressed", String(document.fullscreenElement !== null)); }
+  for (const button of fullscreenButtons) { button.disabled = !fullscreenAvailable; button.hidden = false; button.setAttribute("aria-label", document.fullscreenElement === null ? "Enter fullscreen" : "Exit fullscreen"); button.title = fullscreenAvailable ? button.getAttribute("aria-label") ?? "Fullscreen" : "Fullscreen unavailable"; button.setAttribute("aria-pressed", String(document.fullscreenElement !== null)); }
   for (const button of captureButtons) { button.hidden = state?.phase !== "won"; button.disabled = captureInProgress; }
   status.value = `Audio ${audio.getStatus()} · ${reducedEffects ? "reduced motion" : "full effects"}${menuOpen ? " · settings open" : ""}`; syncMenuViews();
 }

@@ -130,6 +130,8 @@ export function createCatHockeyPresenter(options: {
   let bottomCat: Graphics;
   let goalTop: Graphics;
   let goalBottom: Graphics;
+  let goalLabelTop: Text;
+  let goalLabelBottom: Text;
   let posts: Graphics;
   let paletteOverlay: Graphics;
   let settingsLabel1: Text;
@@ -196,7 +198,12 @@ export function createCatHockeyPresenter(options: {
       }
     }
     paletteOverlay = new Graphics();
-    staticRoot.addChild(backdrop, paletteOverlay, markings, railDetails, goalTop, goalBottom, posts);
+    goalLabelTop = makeText("GOAL", 16, COLORS.cream);
+    goalLabelTop.position.set(LOGICAL_WIDTH / 2, RINK.top - 28);
+    goalLabelTop.rotation = Math.PI;
+    goalLabelBottom = makeText("GOAL", 16, COLORS.cream);
+    goalLabelBottom.position.set(LOGICAL_WIDTH / 2, RINK.bottom + 28);
+    staticRoot.addChild(backdrop, paletteOverlay, markings, railDetails, goalTop, goalBottom, posts, goalLabelTop, goalLabelBottom);
 
     bottomCat = new Graphics();
     topCat = new Graphics();

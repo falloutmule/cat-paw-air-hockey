@@ -63,6 +63,7 @@ try {
     const rightPair = page.locator(`.edge-controls--${end} .control-pair--right`);
     const [apronBox, leftBox, rightBox] = await Promise.all([apron.boundingBox(), leftPair.boundingBox(), rightPair.boundingBox()]);
     assert.ok(apronBox && leftBox && rightBox);
+    assert.equal(await apron.textContent(), "");
     const screenLeft = end === "top" ? rightBox : leftBox;
     const screenRight = end === "top" ? leftBox : rightBox;
     assert.ok(screenLeft.x + screenLeft.width <= apronBox.x && apronBox.x + apronBox.width <= screenRight.x, `${end} controls split around the goal apron`);
@@ -127,6 +128,9 @@ try {
   await dispatchPointer("pointerdown", 111, 0.8);
   await dispatchPointer("pointerdown", 222, 0.2);
   await page.waitForFunction(() => (window.__CAT_AIR_HOCKEY__!.snapshot() as any).state.phase === "countdown", undefined, { timeout: 3_000 });
+  assert.equal(await page.locator("[data-action='fullscreen']").count(), 2);
+  assert.equal(await page.locator("[data-action='fullscreen']").first().isVisible(), true);
+  assert.equal(await page.locator("[data-action='fullscreen']").last().isVisible(), true);
   await page.locator("[data-action='pause']").last().click();
   await page.waitForFunction(() => (window.__CAT_AIR_HOCKEY__!.snapshot() as any).state.phase === "paused");
   await page.waitForFunction(() => document.querySelector("[data-action='pause']")?.getAttribute("aria-label") === "Resume");

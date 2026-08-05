@@ -14,9 +14,9 @@ button { font: inherit; }
   height: 100dvh;
   overflow: hidden;
   padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
-  background: radial-gradient(circle at center, #263f4c 0%, #101923 75%);
+  background: linear-gradient(180deg, #172331 0%, #263f4c 50%, #172331 100%);
 }
-#pixi-host { position: absolute; inset: 0; touch-action: none; overflow: hidden; }
+#pixi-host { position: absolute; inset: 0; touch-action: none; overflow: hidden; background: linear-gradient(180deg, #172331 0%, #263f4c 16%, #263f4c 84%, #172331 100%); }
 #pixi-host canvas { touch-action: none; }
 .edge-controls {
   position: absolute;
@@ -40,7 +40,7 @@ button { font: inherit; }
 .control-pair { display: flex; gap: .28rem; padding: .3rem; border-radius: 999px; background: rgb(7 16 24 / 72%); backdrop-filter: blur(3px); pointer-events: auto; }
 .control-pair--left { justify-self: start; }
 .control-pair--right { justify-self: end; }
-.goal-apron { min-height: 2.85rem; display: grid; place-items: center; border-top: 2px solid rgb(255 244 214 / 22%); border-bottom: 2px solid rgb(255 244 214 / 22%); border-radius: 1rem; color: rgb(255 244 214 / 68%); background: linear-gradient(90deg, transparent, rgb(38 63 76 / 76%), transparent); font-size: .62rem; font-weight: 800; letter-spacing: .1em; pointer-events: none; }
+.goal-apron { min-height: 2.85rem; pointer-events: none; }
 .edge-controls button {
   width: 2.7rem;
   min-width: 2.7rem;

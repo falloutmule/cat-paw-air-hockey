@@ -1,34 +1,40 @@
 {
   "records": [
     {
+      "earlier": "cat-paw-air-hockey-63565c6a8410 / 27f6fa3daccb99256f5a2ea01a3c45618846c02e87b0f9e1cfe0e061c66a25ba",
+      "status": "SUPERSEDED",
+      "treatment": "The first R1 artifact is superseded after keeping fullscreen controls visible during live play, moving the label into the rendered goal, and extending the themed tabletop through end space. No physical acceptance transfers.",
+      "currentArtifact": "cat-paw-air-hockey-95ed3f8aa868 / 816c04a93ac85d7653ab6a6af6ea61f3a80b0d47a0cf4569174f95a6d5fa1adf"
+    },
+    {
       "earlier": "cat-paw-air-hockey-9bbbce7fdf80 / 43243d2eec6775fa45ab93ef3b1facce92e4a387bc7141a12e128214607cc423",
       "status": "SUPERSEDED",
       "treatment": "Samsung reported gameplay, fullscreen, mirrored settings, custom goals, and expansion usability as working, but return-speed handicaps and split goal-side controls were missing. The session is retained as REPORTED — NEEDS REPAIR and does not transfer.",
-      "currentArtifact": "cat-paw-air-hockey-63565c6a8410 / 27f6fa3daccb99256f5a2ea01a3c45618846c02e87b0f9e1cfe0e061c66a25ba"
+      "currentArtifact": "cat-paw-air-hockey-95ed3f8aa868 / 816c04a93ac85d7653ab6a6af6ea61f3a80b0d47a0cf4569174f95a6d5fa1adf"
     },
     {
       "earlier": "cat-paw-air-hockey-b6bee877e2dc / 78d728fe96f74ee92bdbaecaa8a0e7bd880dff29efd6d19ec2fc09dcfe309534",
       "status": "SUPERSEDED",
       "treatment": "The settled base-game canonical artifact is superseded for current-artifact claims by CATPAW-EXPANSION-001. Its historical Samsung evidence remains REPORTED only and does not transfer.",
-      "currentArtifact": "cat-paw-air-hockey-63565c6a8410 / 27f6fa3daccb99256f5a2ea01a3c45618846c02e87b0f9e1cfe0e061c66a25ba"
+      "currentArtifact": "cat-paw-air-hockey-95ed3f8aa868 / 816c04a93ac85d7653ab6a6af6ea61f3a80b0d47a0cf4569174f95a6d5fa1adf"
     },
     {
       "earlier": "one-shot/PHYSICAL-REPORT.json",
       "status": "REPORTED",
       "treatment": "Historical physical acceptance remains bound to cat-paw-air-hockey-e1a629b12b42 / ecfd57a25c19c3347618cc72dca667a95d5a8c3206a4599bed2833e7af499f5e and is superseded for current-artifact acceptance.",
-      "currentArtifact": "cat-paw-air-hockey-63565c6a8410 / 27f6fa3daccb99256f5a2ea01a3c45618846c02e87b0f9e1cfe0e061c66a25ba"
+      "currentArtifact": "cat-paw-air-hockey-95ed3f8aa868 / 816c04a93ac85d7653ab6a6af6ea61f3a80b0d47a0cf4569174f95a6d5fa1adf"
     },
     {
       "earlier": "cat-paw-air-hockey-0aee153962c5 / 24d02527e87e0462901a5a8b1b2b053c93b4bab1c94c72b5b0252594e300c216",
       "status": "SUPERSEDED",
       "treatment": "The 560,167-byte artifact is superseded. The former 560,309-byte R1/R2 artifact is also superseded after browser-smoke record changes; no physical acceptance transfers.",
-      "currentArtifact": "cat-paw-air-hockey-63565c6a8410 / 27f6fa3daccb99256f5a2ea01a3c45618846c02e87b0f9e1cfe0e061c66a25ba"
+      "currentArtifact": "cat-paw-air-hockey-95ed3f8aa868 / 816c04a93ac85d7653ab6a6af6ea61f3a80b0d47a0cf4569174f95a6d5fa1adf"
     },
     {
       "earlier": "cat-paw-air-hockey-05dc1f192cf4 / 3022f196f6c5d6abe9df1699d8ad57ea91e0db2b99dbb4ad748a79e8e9c2a228",
       "status": "SUPERSEDED",
       "treatment": "The former 560,309-byte artifact is preserved as prior canonical evidence. It is superseded by a 560,309-byte Linux canonical repack after the browser-smoke timing repair; physical acceptance remains UNTESTED for the current artifact.",
-      "currentArtifact": "cat-paw-air-hockey-63565c6a8410 / 27f6fa3daccb99256f5a2ea01a3c45618846c02e87b0f9e1cfe0e061c66a25ba"
+      "currentArtifact": "cat-paw-air-hockey-95ed3f8aa868 / 816c04a93ac85d7653ab6a6af6ea61f3a80b0d47a0cf4569174f95a6d5fa1adf"
     }
   ],
   "schema": "sfhs.graduation-evidence-supersession@1"
