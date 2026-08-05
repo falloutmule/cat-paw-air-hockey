@@ -66,6 +66,8 @@ jobs:
         if: always()
         with:
           name: cat-paw-browser-evidence
-          path: ${{ env.CAT_PAW_SFHS_PROJECT }}/test-results/
+          path: |
+            ${{ env.CAT_PAW_SFHS_PROJECT }}/test-results/
+            ${{ env.CAT_PAW_SFHS_PROJECT }}/dist/index.html
           retention-days: 7
           if-no-files-found: ignore
