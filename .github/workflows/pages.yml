@@ -57,12 +57,12 @@ jobs:
           pnpm --dir "$CAT_PAW_SFHS_PROJECT" test
           pushd "$RUNNER_TEMP/sfhs"
           node packages/cli/src/main.ts one-shot inspect --project "$CAT_PAW_SFHS_PROJECT" --json
-          node packages/cli/src/main.ts one-shot audit --project "$CAT_PAW_SFHS_PROJECT" --json
           node packages/cli/src/main.ts inspect --project "$CAT_PAW_SFHS_PROJECT" --json
           node packages/cli/src/main.ts validate --project "$CAT_PAW_SFHS_PROJECT" --json
           SFHS_PLAYWRIGHT_RESOLVER="$RUNNER_TEMP/sfhs/packages/browser-runner/package.json" node packages/cli/src/main.ts check --project "$CAT_PAW_SFHS_PROJECT" --json
           node packages/cli/src/main.ts pack --project "$CAT_PAW_SFHS_PROJECT" --json
           node packages/cli/src/main.ts verify --project "$CAT_PAW_SFHS_PROJECT" --json
+          node packages/cli/src/main.ts one-shot audit --project "$CAT_PAW_SFHS_PROJECT" --json
           popd
       - name: Packed-artifact browser smoke
         run: SFHS_PLAYWRIGHT_RESOLVER="$RUNNER_TEMP/sfhs/packages/browser-runner/package.json" SFHS_BROWSER_REPORT="$CAT_PAW_SFHS_PROJECT/test-results/canonical-browser.json" pnpm --dir "$CAT_PAW_SFHS_PROJECT" test:browser
