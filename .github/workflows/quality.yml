@@ -1,0 +1,73 @@
+name: quality
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: cat-paw-quality-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  canonical:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 11.9.0
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm test
+      - name: Materialize exact SFHS workspace
+        run: |
+          pin=$(node -p "require('./one-shot/SFHS-PIN.json').sfhsCommit")
+          git clone --no-checkout https://github.com/falloutmule/single-file-html-software.git "$RUNNER_TEMP/sfhs"
+          git -C "$RUNNER_TEMP/sfhs" fetch --depth=1 origin "$pin"
+          git -C "$RUNNER_TEMP/sfhs" checkout --detach FETCH_HEAD
+          pnpm --dir "$RUNNER_TEMP/sfhs" install --frozen-lockfile
+          pushd "$RUNNER_TEMP/sfhs"
+          node packages/cli/src/main.ts one-shot inspect --project "$GITHUB_WORKSPACE" --json
+          node packages/cli/src/main.ts one-shot graduate materialize --project "$GITHUB_WORKSPACE" --json
+          popd
+          project=$(find "$RUNNER_TEMP/sfhs/examples" -maxdepth 1 -type d -name '.sfhs-grad-cat-paw-air-hockey-*' | head -n 1)
+          test -n "$project"
+          echo "CAT_PAW_SFHS_PROJECT=$project" >> "$GITHUB_ENV"
+      - name: Install pinned Chromium for materialized browser smoke
+        run: pnpm --dir "$RUNNER_TEMP/sfhs/packages/browser-runner" exec playwright install --with-deps chromium
+      - name: Canonical SFHS gates
+        run: |
+          base="${{ github.event.pull_request.base.sha || github.event.before }}"
+          test -n "$base"
+          git cat-file -e "$base^{commit}"
+          changed=$(git diff --name-only "$base" "$GITHUB_SHA" --)
+          args=()
+          while IFS= read -r path; do [ -z "$path" ] || args+=(--changed "$path"); done <<< "$changed"
+          pnpm --dir "$CAT_PAW_SFHS_PROJECT" test
+          pushd "$RUNNER_TEMP/sfhs"
+          node packages/cli/src/main.ts inspect --json --project "$CAT_PAW_SFHS_PROJECT"
+          node packages/cli/src/main.ts validate --json --project "$CAT_PAW_SFHS_PROJECT"
+          SFHS_PLAYWRIGHT_RESOLVER="$RUNNER_TEMP/sfhs/packages/browser-runner/package.json" node packages/cli/src/main.ts check --json --project "$CAT_PAW_SFHS_PROJECT" "${args[@]}"
+          node packages/cli/src/main.ts pack --json --project "$CAT_PAW_SFHS_PROJECT"
+          node packages/cli/src/main.ts verify --json --project "$CAT_PAW_SFHS_PROJECT"
+          node packages/cli/src/main.ts one-shot audit --project "$CAT_PAW_SFHS_PROJECT" --json
+          popd
+      - name: Packed-artifact browser smoke
+        run: |
+          SFHS_PLAYWRIGHT_RESOLVER="$RUNNER_TEMP/sfhs/packages/browser-runner/package.json" SFHS_BROWSER_REPORT="$CAT_PAW_SFHS_PROJECT/test-results/canonical-browser.json" pnpm --dir "$CAT_PAW_SFHS_PROJECT" test:browser
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cat-paw-browser-evidence
+          path: |
+            ${{ env.CAT_PAW_SFHS_PROJECT }}/test-results/
+            ${{ env.CAT_PAW_SFHS_PROJECT }}/dist/index.html
+          retention-days: 7
+          if-no-files-found: ignore

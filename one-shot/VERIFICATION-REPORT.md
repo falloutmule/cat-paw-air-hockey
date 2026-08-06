@@ -1,12 +1,6 @@
-# Canonical verification report
+---
+{"schema":"sfhs.one-shot-report@1","status":"VERIFIED","facts":{"artifact":{"classification":"canonical","path":"dist/index.html","bytes":581644,"sha256":"0d18270c36ff36987c8653579693a3dca3fc62b4271ea2cb55be0c13816f6b53","buildId":"cat-paw-air-hockey-64741220be29","verifier":"sfhs verify","sourceSha256":"64741220be29f0db3a3044f977d4cbba8acb0fb92d4c181c571d11f8f3afeeca"},"sfhsCommit":"5acd8fc9a24834d9416a6e615bb78b8012962e30","renderer":"PIXI WebGL","externalReferences":"none","browserSmoke":"VERIFIED","physicalDevice":"UNTESTED"}}
+---
+# Verification Report
 
-Canonical artifact: `dist/index.html` in disposable materialization.
-
-- Build ID: `cat-paw-air-hockey-e1a629b12b42`
-- Bytes: `560146`
-- SHA-256: `ecfd57a25c19c3347618cc72dca667a95d5a8c3206a4599bed2833e7af499f5e`
-- Source SHA-256: `e1a629b12b425605c51d15b0a2df9ed770950d81c03df2724b702f2158ef0894`
-- Toolchain pin: `68ef8f021eea2ab90a57ca6e2f608d8166a39859` (merged PR #10)
-- Verifier: real `sfhs verify` — VERIFIED
-
-The merged toolchain packed this exact identity twice deterministically and the real `sfhs verify` passed. Canonical browser evidence is `one-shot/canonical-browser.json`: one visible Pixi WebGL renderer, no page/console errors, no unexpected requests, independent pointer IDs 101 and 202, third-pointer rejection, audio unlock, landscape gate/pause, and portrait restoration. Physical status is **REPORTED PASS** for this exact artifact in `one-shot/PHYSICAL-REPORT.json`; missing formal device metadata remains explicitly recorded there.
+The corrected CATPAW-EXPANSION-001-R1 materialization passed One-Shot inspect/audit, inspect, validate, check, pack, exact `sfhs verify`, and packed Chromium evidence with one Pixi WebGL canvas and no external references. The former 581,838-byte R1 artifact is **SUPERSEDED** after fullscreen persistence and goal-label/end-table correction. Repository graduation's Linux Quality run on 2026-08-06 is the current canonical source-format result: `0d1827…6b53`. The Windows CRLF materialization `816c04…1adf` is SUPERSEDED and does not transfer physical acceptance. GitHub Pages publication is authorized but not yet recorded. Physical status remains **UNTESTED** pending a new exact-artifact Samsung session.

@@ -83,6 +83,12 @@ scenario("third pointer does not steal either striker", () => {
   assert.equal(input.getDiagnostics().ignoredPointerCount, 1);
 });
 
+scenario("additional same-half pointer is rejected without replacing its owner", () => {
+  pointer(surface, "pointerdown", 34, 180, 760);
+  assert.deepEqual(input.getDiagnostics().owners, { 1: 11, 2: 22 });
+  assert.equal(input.getDiagnostics().ignoredPointerCount, 2);
+});
+
 scenario("releasing player one does not interrupt player two", () => {
   pointer(surface, "pointerup", 11, 430, 710);
   const snapshot = input.sampleForStep();
@@ -90,6 +96,14 @@ scenario("releasing player one does not interrupt player two", () => {
   assert.equal(snapshot.players[1].held, false);
   assert.equal(snapshot.players[2].held, true);
   assert.deepEqual(input.getDiagnostics().owners, { 1: null, 2: 22 });
+});
+
+scenario("stale moves after release cannot reacquire a striker", () => {
+  pointer(surface, "pointermove", 11, 180, 760);
+  const snapshot = input.sampleForStep();
+  assert.equal(snapshot.players[1].held, false);
+  assert.equal(input.getDiagnostics().owners[1], null);
+  assert.equal(input.getDiagnostics().owners[2], 22);
 });
 
 scenario("pointer cancellation clears only its owner", () => {

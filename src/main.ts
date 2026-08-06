@@ -6,6 +6,8 @@ import { installDiagnostics } from "./diagnostics.ts";
 import { createHockeyInput } from "./input.ts";
 import { createCatHockeyPresenter } from "./presentation.ts";
 import { createCatHockeyScene } from "./scene.ts";
+import { DEFAULT_MATCH_SETTINGS, normalizeMatchSettings, settingsEqual, settingsSummary, type MatchSettings } from "./settings.ts";
+import { clearTheme, loadTheme, makeThemeAsset, saveTheme, validateTheme, type ValidTheme } from "./theme.ts";
 import type { HockeyGameState } from "./state.ts";
 
 function required<ElementType extends Element>(selector: string): ElementType {
@@ -19,156 +21,147 @@ const host = required<HTMLElement>("#pixi-host");
 const capability = required<HTMLElement>("#capability-page");
 const orientationGate = required<HTMLElement>("#orientation-gate");
 const status = required<HTMLOutputElement>("#runtime-status");
+const settingsOverlay = required<HTMLElement>("#settings-overlay");
+const settingsLive = required<HTMLOutputElement>("#settings-live");
+const themeFile = required<HTMLInputElement>("#theme-file");
 const muteButtons = [...document.querySelectorAll<HTMLButtonElement>("[data-action='mute']")];
 const pauseButtons = [...document.querySelectorAll<HTMLButtonElement>("[data-action='pause']")];
-const effectsButtons = [...document.querySelectorAll<HTMLButtonElement>("[data-action='effects']")];
+const menuButtons = [...document.querySelectorAll<HTMLButtonElement>("[data-action='menu']")];
+const fullscreenButtons = [...document.querySelectorAll<HTMLButtonElement>("[data-action='fullscreen']")];
+const captureButtons = [...document.querySelectorAll<HTMLButtonElement>("[data-action='capture']")];
+const menuViews = [...document.querySelectorAll<HTMLElement>("[data-menu-view]")];
 
 let runtime: SfhsPixiGameRuntime<HockeyGameState> | undefined;
 let hiddenPaused = false;
 let orientationPaused = false;
+let menuOpen = false;
+let captureInProgress = false;
+let viewportFrame = 0;
 let reducedEffects = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
+let currentTheme: ValidTheme | undefined;
+const settingsStorageKey = "cat-paw-air-hockey.settings.v1";
+function loadSettings(): MatchSettings { try { return normalizeMatchSettings(JSON.parse(localStorage.getItem(settingsStorageKey) ?? "null")); } catch { return DEFAULT_MATCH_SETTINGS; } }
+let menuSettings = loadSettings();
+try { const stored = localStorage.getItem("cat-paw-air-hockey.reduced-motion.v1"); if (stored !== null) reducedEffects = stored === "true"; } catch { /* session fallback */ }
+
 const audio = createHockeyAudioController();
 const scene = createCatHockeyScene();
 const presenter = createCatHockeyPresenter({ onEvents: (events) => audio.consume(events) });
-const presentation = createSfhsPixiV8Presentation<HockeyGameState>({
-  backgroundColor: 0x172331,
-  presenter
-});
-const input = createHockeyInput({
-  initialSurface: host,
-  getCanvas: () => runtime?.getPrimarySurface(),
-  onIntentionalGesture: () => { void audio.unlock().then(updateControls); }
-});
+const presentation = createSfhsPixiV8Presentation<HockeyGameState>({ backgroundColor: 0x172331, presenter });
+const input = createHockeyInput({ initialSurface: host, getCanvas: () => runtime?.getPrimarySurface(), onIntentionalGesture: () => { void audio.unlock().then(updateControls); } });
 
-function isLandscape(): boolean {
-  const width = window.visualViewport?.width ?? window.innerWidth;
-  const height = window.visualViewport?.height ?? window.innerHeight;
-  return width > height;
+const menuMarkup = `<h2>Cat Paw settings</h2><p class="settings-summary" data-summary></p><fieldset><legend>Gameplay</legend>
+${[["puckSpeed", "Puck speed", 70, 130], ["pawSpeed1", "Player 1 paw speed", 70, 130], ["pawSpeed2", "Player 2 paw speed", 70, 130], ["returnSpeed1", "Player 1 return speed", 70, 130], ["returnSpeed2", "Player 2 return speed", 70, 130], ["puckSize", "Puck size", 75, 125], ["pawSize1", "Player 1 paw size", 75, 125], ["pawSize2", "Player 2 paw size", 75, 125], ["goalSize1", "Player 1 goal opening", 75, 125], ["goalSize2", "Player 2 goal opening", 75, 125]].map(([key, label, min, max]) => `<label>${label}<output data-value="${key}"></output><input data-setting="${key}" type="range" min="${min}" max="${max}" step="5"></label>`).join("")}
+<button type="button" data-menu-action="reset">Reset Gameplay Defaults</button></fieldset><fieldset><legend>Display</legend><label>Reduced motion <input data-menu-action="reduced" type="checkbox"></label><p data-fullscreen-status></p></fieldset><fieldset><legend>Theme</legend><button type="button" data-menu-action="template">Download Template</button><button type="button" data-menu-action="guide">Download Guide</button><button type="button" data-menu-action="load-theme">Load Theme PNG</button><button type="button" data-menu-action="reset-theme">Reset Default Theme</button><p data-theme-status>Classic theme</p></fieldset><fieldset><legend>About / Reset</legend><p>Changes during a match apply next serve.</p><button type="button" data-menu-action="close">Close settings</button></fieldset>`;
+for (const view of menuViews) view.innerHTML = menuMarkup;
+
+function settingValue(key: string): number {
+  const values: Record<string, number> = { puckSpeed: menuSettings.puckSpeed, pawSpeed1: menuSettings.pawSpeed[1], pawSpeed2: menuSettings.pawSpeed[2], returnSpeed1: menuSettings.returnSpeed[1], returnSpeed2: menuSettings.returnSpeed[2], puckSize: menuSettings.puckSize, pawSize1: menuSettings.pawSize[1], pawSize2: menuSettings.pawSize[2], goalSize1: menuSettings.goalSize[1], goalSize2: menuSettings.goalSize[2] };
+  return values[key] ?? 100;
+}
+function syncMenuViews(): void {
+  const state = runtime?.getState();
+  for (const view of menuViews) {
+    for (const range of view.querySelectorAll<HTMLInputElement>("input[data-setting]")) { range.value = String(settingValue(range.dataset.setting ?? "")); range.setAttribute("aria-valuetext", `${range.value}%`); range.dataset.default = String(range.value === "100"); }
+    for (const output of view.querySelectorAll<HTMLOutputElement>("output[data-value]")) output.value = `${settingValue(output.dataset.value ?? "")}%`;
+    const checkbox = view.querySelector<HTMLInputElement>("input[data-menu-action='reduced']"); if (checkbox !== null) checkbox.checked = reducedEffects;
+    const summary = view.querySelector<HTMLElement>("[data-summary]"); if (summary !== null) summary.textContent = settingsEqual(state?.activeMatchSettings ?? menuSettings, menuSettings) ? settingsSummary(menuSettings) : `${settingsSummary(menuSettings)} · Applies next serve`;
+    const fullscreenStatus = view.querySelector<HTMLElement>("[data-fullscreen-status]"); if (fullscreenStatus !== null) fullscreenStatus.textContent = document.fullscreenEnabled ? (document.fullscreenElement === null ? "Fullscreen available" : "Fullscreen active") : "Fullscreen unavailable";
+  }
+}
+function persistPreferences(): void { try { localStorage.setItem(settingsStorageKey, JSON.stringify(menuSettings)); localStorage.setItem("cat-paw-air-hockey.reduced-motion.v1", String(reducedEffects)); } catch { /* session fallback */ } }
+function updateSetting(key: string, value: number): void {
+  const next = { puckSpeed: menuSettings.puckSpeed, puckSize: menuSettings.puckSize, pawSpeed: { ...menuSettings.pawSpeed }, returnSpeed: { ...menuSettings.returnSpeed }, pawSize: { ...menuSettings.pawSize }, goalSize: { ...menuSettings.goalSize } };
+  if (key === "puckSpeed" || key === "puckSize") next[key] = value;
+  else if (key === "pawSpeed1") next.pawSpeed[1] = value; else if (key === "pawSpeed2") next.pawSpeed[2] = value;
+  else if (key === "returnSpeed1") next.returnSpeed[1] = value; else if (key === "returnSpeed2") next.returnSpeed[2] = value;
+  else if (key === "pawSize1") next.pawSize[1] = value; else if (key === "pawSize2") next.pawSize[2] = value;
+  else if (key === "goalSize1") next.goalSize[1] = value; else if (key === "goalSize2") next.goalSize[2] = value;
+  menuSettings = normalizeMatchSettings(next); input.requestSettings(menuSettings); persistPreferences(); syncMenuViews();
 }
 
-function updateControls(): void {
-  const muted = audio.isMuted();
-  for (const button of muteButtons) {
-    button.textContent = muted ? "🔇" : "🔊";
-    const soundLabel = muted ? "Sound off" : "Sound on";
-    button.setAttribute("aria-label", soundLabel);
-    button.title = soundLabel;
-    button.setAttribute("aria-pressed", String(muted));
-  }
-  for (const button of effectsButtons) {
-    button.textContent = reducedEffects ? "◌" : "✨";
-    const effectsLabel = reducedEffects ? "Reduced effects" : "Full effects";
-    button.setAttribute("aria-label", effectsLabel);
-    button.title = effectsLabel;
-    button.setAttribute("aria-pressed", String(reducedEffects));
-  }
-  const paused = runtime?.getState().phase === "paused";
-  for (const button of pauseButtons) {
-    button.textContent = paused ? "▶" : "Ⅱ";
-    const pauseLabel = paused ? "Resume" : "Pause";
-    button.setAttribute("aria-label", pauseLabel);
-    button.title = pauseLabel;
-  }
-  status.value = `Audio ${audio.getStatus()} · ${reducedEffects ? "reduced" : "full"} effects`;
-}
-
+function isLandscape(): boolean { const width = window.visualViewport?.width ?? window.innerWidth; const height = window.visualViewport?.height ?? window.innerHeight; return width > height; }
 function applyOrientationGate(): void {
-  const landscape = isLandscape();
-  orientationGate.hidden = !landscape;
-  shell.dataset.orientation = landscape ? "landscape" : "portrait";
+  const landscape = isLandscape(); orientationGate.hidden = !landscape; shell.dataset.orientation = landscape ? "landscape" : "portrait";
   if (runtime === undefined) return;
-  if (landscape && !orientationPaused) {
-    orientationPaused = true;
-    runtime.pause();
-    input.clear();
-  } else if (!landscape && orientationPaused) {
-    orientationPaused = false;
-    if (!document.hidden) runtime.resume();
-  }
+  if (landscape && !orientationPaused) { orientationPaused = true; runtime.pause(); input.clear(); }
+  else if (!landscape && orientationPaused) { orientationPaused = false; if (!document.hidden) runtime.resume(); }
 }
-
-for (const button of muteButtons) {
-  button.addEventListener("pointerdown", () => { void audio.unlock(); }, { passive: true });
-  button.addEventListener("click", () => { audio.playUi("mute"); audio.toggleMuted(); updateControls(); });
+function scheduleViewport(): void { if (viewportFrame !== 0) return; viewportFrame = requestAnimationFrame(() => { viewportFrame = 0; applyOrientationGate(); updateControls(); }); }
+function setMenuOpen(open: boolean): void {
+  if (open) { input.clear(); if (runtime?.getState().phase !== "paused") input.requestPause(); menuOpen = true; settingsOverlay.hidden = false; settingsLive.value = "Settings open. Match paused."; }
+  else { input.clear(); menuOpen = false; settingsOverlay.hidden = true; settingsLive.value = "Settings closed. Press Resume to continue."; }
+  updateControls();
 }
-for (const button of pauseButtons) {
-  button.addEventListener("pointerdown", () => { void audio.unlock(); }, { passive: true });
-  button.addEventListener("click", () => { input.requestPause(); audio.playUi("pause"); setTimeout(updateControls, 40); });
+function themeStatus(message: string): void { for (const view of menuViews) { const statusElement = view.querySelector<HTMLElement>("[data-theme-status]"); if (statusElement !== null) statusElement.textContent = message; } settingsLive.value = message; }
+async function downloadTheme(guide: boolean): Promise<void> {
+  try { const blob = await makeThemeAsset(guide); const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = guide ? "cat-paw-theme-guide.png" : "cat-paw-theme-template.png"; link.click(); setTimeout(() => URL.revokeObjectURL(link.href), 1_000); themeStatus(`${guide ? "Theme guide" : "Theme template"} downloaded`); }
+  catch (error) { themeStatus(error instanceof Error ? error.message : "Theme download failed"); }
 }
-for (const button of effectsButtons) {
-  button.addEventListener("click", () => {
-    reducedEffects = !reducedEffects;
-    scene.setReducedEffects(reducedEffects);
-    presenter.setReducedEffects(reducedEffects);
-    updateControls();
-  });
+async function acceptTheme(file: File): Promise<void> {
+  try { const next = await validateTheme(file); const previous = currentTheme; currentTheme = next; presenter.setTheme(next); try { await saveTheme(next); themeStatus(`Theme loaded: ${next.filename}`); } catch { themeStatus(`Theme loaded for this session: ${next.filename}`); } if (previous !== undefined) URL.revokeObjectURL(previous.url); }
+  catch (error) { themeStatus(error instanceof Error ? error.message : "Theme was not accepted"); }
 }
-
-const removeDiagnostics = installDiagnostics({
-  getRuntime: () => runtime,
-  input,
-  getAudioStatus: () => audio.getStatus(),
-  getOrientationGate: () => !orientationGate.hidden
-});
-
-async function boot(): Promise<void> {
-  if (!supportsRequiredWebGl(document)) {
-    capability.hidden = false;
-    host.hidden = true;
-    status.value = "WebGL unavailable";
-    return;
-  }
+function updateControls(): void {
+  const muted = audio.isMuted(); const state = runtime?.getState(); const paused = state?.phase === "paused";
+  for (const button of muteButtons) { button.textContent = muted ? "🔇" : "🔊"; button.setAttribute("aria-label", muted ? "Sound off" : "Sound on"); button.title = muted ? "Sound off" : "Sound on"; button.setAttribute("aria-pressed", String(muted)); }
+  for (const button of pauseButtons) { button.textContent = paused ? "▶" : "Ⅱ"; button.setAttribute("aria-label", paused ? "Resume" : "Pause"); button.title = paused ? "Resume" : "Pause"; }
+  for (const button of pauseButtons) button.hidden = state?.phase === "won";
+  for (const button of menuButtons) { button.setAttribute("aria-label", menuOpen ? "Close settings" : "Open settings"); button.title = menuOpen ? "Close settings" : "Open settings"; button.setAttribute("aria-pressed", String(menuOpen)); }
+  const fullscreenAvailable = document.fullscreenEnabled && typeof shell.requestFullscreen === "function";
+  for (const button of fullscreenButtons) { button.disabled = !fullscreenAvailable; button.hidden = false; button.setAttribute("aria-label", document.fullscreenElement === null ? "Enter fullscreen" : "Exit fullscreen"); button.title = fullscreenAvailable ? button.getAttribute("aria-label") ?? "Fullscreen" : "Fullscreen unavailable"; button.setAttribute("aria-pressed", String(document.fullscreenElement !== null)); }
+  for (const button of captureButtons) { button.hidden = state?.phase !== "won"; button.disabled = captureInProgress; }
+  status.value = `Audio ${audio.getStatus()} · ${reducedEffects ? "reduced motion" : "full effects"}${menuOpen ? " · settings open" : ""}`; syncMenuViews();
+}
+async function toggleFullscreen(): Promise<void> {
+  if (!document.fullscreenEnabled) { settingsLive.value = "Fullscreen unavailable"; return; }
+  input.clear();
+  try { if (document.fullscreenElement === null) await shell.requestFullscreen(); else await document.exitFullscreen(); }
+  catch { settingsLive.value = "Fullscreen was not allowed"; }
+  scheduleViewport();
+}
+async function captureScore(): Promise<void> {
+  const state = runtime?.getState(); const canvas = runtime?.getPrimarySurface(); if (state?.phase !== "won" || canvas === undefined || captureInProgress) return;
+  captureInProgress = true; updateControls();
   try {
-    runtime = await createSfhsPixiGameRuntime({
-      host,
-      presentation,
-      scene,
-      actions: input,
-      viewport: {
-        mode: "fixed",
-        logicalWidth: 540,
-        logicalHeight: 960,
-        maximumDevicePixelRatio: 2,
-        scalePolicy: "contain"
-      },
-      simulationHz: SIMULATION_HZ,
-      maximumFrameDeltaMilliseconds: MAXIMUM_FRAME_DELTA_MS
-    });
-    input.setSurface(host, () => runtime?.getPrimarySurface());
-    scene.setReducedEffects(reducedEffects);
-    presenter.setReducedEffects(reducedEffects);
-    runtime.start();
-    status.value = "Ready — both players hold a paw";
-    applyOrientationGate();
-    updateControls();
-  } catch (error) {
-    capability.hidden = false;
-    capability.querySelector("p")!.textContent = "The required PixiJS WebGL renderer could not initialize.";
-    host.hidden = true;
-    status.value = error instanceof Error ? error.message : "Renderer initialization failed";
-  }
+    const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/png")); if (blob === null) throw new Error("PNG capture failed");
+    const file = new File([blob], `cat-paw-${state.scores[1]}-${state.scores[2]}.png`, { type: "image/png" });
+    if (navigator.canShare?.({ files: [file] }) && navigator.share !== undefined) { try { await navigator.share({ files: [file], title: "Cat Paw Air Hockey" }); settingsLive.value = "Final score image shared"; } catch { settingsLive.value = "Score image share cancelled"; } }
+    else { const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = file.name; link.click(); setTimeout(() => URL.revokeObjectURL(link.href), 1_000); settingsLive.value = "Final score PNG saved"; }
+  } finally { captureInProgress = false; updateControls(); }
 }
 
-document.addEventListener("visibilitychange", () => {
-  if (runtime === undefined) return;
-  if (document.hidden) {
-    hiddenPaused = true;
-    runtime.pause();
-    input.clear();
-  } else if (hiddenPaused) {
-    hiddenPaused = false;
-    if (!orientationPaused) runtime.resume();
-  }
+for (const button of muteButtons) { button.addEventListener("pointerdown", () => { void audio.unlock(); }, { passive: true }); button.addEventListener("click", () => { audio.playUi("mute"); audio.toggleMuted(); updateControls(); }); }
+for (const button of pauseButtons) { button.addEventListener("pointerdown", () => { void audio.unlock(); }, { passive: true }); button.addEventListener("click", () => { input.requestPause(); audio.playUi("pause"); setTimeout(updateControls, 40); }); }
+for (const button of menuButtons) button.addEventListener("click", () => setMenuOpen(!menuOpen));
+for (const button of fullscreenButtons) button.addEventListener("click", () => { void toggleFullscreen(); });
+for (const button of captureButtons) button.addEventListener("click", () => { void captureScore(); });
+for (const view of menuViews) {
+  view.addEventListener("input", (event) => { const target = event.target as HTMLInputElement; if (target.dataset.setting !== undefined) updateSetting(target.dataset.setting, Number(target.value)); if (target.dataset.menuAction === "reduced") { reducedEffects = target.checked; scene.setReducedEffects(reducedEffects); presenter.setReducedEffects(reducedEffects); persistPreferences(); updateControls(); } });
+  view.addEventListener("click", (event) => { const action = (event.target as HTMLElement).closest<HTMLElement>("[data-menu-action]")?.dataset.menuAction; if (action === "close") setMenuOpen(false); if (action === "reset") { menuSettings = DEFAULT_MATCH_SETTINGS; input.requestSettings(menuSettings); persistPreferences(); updateControls(); } if (action === "template") void downloadTheme(false); if (action === "guide") void downloadTheme(true); if (action === "load-theme") themeFile.click(); if (action === "reset-theme") { presenter.setTheme(undefined); currentTheme = undefined; void clearTheme().catch(() => undefined); themeStatus("Classic theme restored"); } });
+}
+themeFile.addEventListener("change", () => { const file = themeFile.files?.[0]; if (file !== undefined) void acceptTheme(file); themeFile.value = ""; });
+document.addEventListener("keydown", (event) => {
+  if (!menuOpen || event.key !== "Tab") return;
+  const focusable = [...settingsOverlay.querySelectorAll<HTMLElement>("button:not([disabled]), input:not([disabled])")];
+  if (focusable.length === 0) return;
+  const index = focusable.indexOf(document.activeElement as HTMLElement);
+  const next = event.shiftKey ? (index <= 0 ? focusable.length - 1 : index - 1) : (index === focusable.length - 1 ? 0 : index + 1);
+  event.preventDefault(); focusable[next]!.focus();
 });
-window.addEventListener("resize", applyOrientationGate);
-window.addEventListener("orientationchange", applyOrientationGate);
-window.visualViewport?.addEventListener("resize", applyOrientationGate);
-window.addEventListener("pagehide", () => {
-  removeDiagnostics();
-  runtime?.destroy();
-  input.destroy();
-  void audio.dispose();
-}, { once: true });
 
-updateControls();
-void boot();
+const removeDiagnostics = installDiagnostics({ getRuntime: () => runtime, input, getAudioStatus: () => audio.getStatus(), getOrientationGate: () => !orientationGate.hidden });
+async function boot(): Promise<void> {
+  if (!supportsRequiredWebGl(document)) { capability.hidden = false; host.hidden = true; status.value = "WebGL unavailable"; return; }
+  try {
+    runtime = await createSfhsPixiGameRuntime({ host, presentation, scene, actions: input, viewport: { mode: "fixed", logicalWidth: 540, logicalHeight: 960, maximumDevicePixelRatio: 2, scalePolicy: "contain" }, simulationHz: SIMULATION_HZ, maximumFrameDeltaMilliseconds: MAXIMUM_FRAME_DELTA_MS });
+    input.setSurface(host, () => runtime?.getPrimarySurface()); scene.setReducedEffects(reducedEffects); presenter.setReducedEffects(reducedEffects); input.requestSettings(menuSettings); runtime.start(); status.value = "Ready — both players hold a paw"; applyOrientationGate(); updateControls();
+    void loadTheme().then((file) => { if (file !== undefined) void acceptTheme(file); }).catch(() => themeStatus("Classic theme (theme storage unavailable)"));
+  } catch (error) { capability.hidden = false; capability.querySelector("p")!.textContent = "The required PixiJS WebGL renderer could not initialize."; host.hidden = true; status.value = error instanceof Error ? error.message : "Renderer initialization failed"; }
+}
+document.addEventListener("visibilitychange", () => { if (runtime === undefined) return; if (document.hidden) { hiddenPaused = true; runtime.pause(); input.clear(); } else if (hiddenPaused) { hiddenPaused = false; if (!orientationPaused) runtime.resume(); void audio.unlock().then(updateControls); } });
+document.addEventListener("fullscreenchange", () => { input.clear(); if (document.fullscreenElement === null && runtime?.getState().phase === "playing") input.requestPause(); scheduleViewport(); });
+document.addEventListener("fullscreenerror", () => { settingsLive.value = "Fullscreen was not allowed"; updateControls(); });
+window.addEventListener("resize", scheduleViewport); window.addEventListener("orientationchange", scheduleViewport); window.visualViewport?.addEventListener("resize", scheduleViewport); window.visualViewport?.addEventListener("scroll", scheduleViewport);
+window.addEventListener("pagehide", () => { removeDiagnostics(); runtime?.destroy(); input.destroy(); void audio.dispose(); }, { once: true });
+updateControls(); void boot();

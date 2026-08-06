@@ -1,0 +1,15 @@
+{
+  "schema": "cat-paw.release-manifest@1",
+  "status": "PROPOSED",
+  "source": { "branch": "codex/fullscreen-menu-theme-001", "commit": "8552f7a60ea9f0284588120b8f20656540337e24" },
+  "artifact": {
+    "buildId": "cat-paw-air-hockey-64741220be29",
+    "path": "dist/index.html",
+    "bytes": 581644,
+    "sha256": "0d18270c36ff36987c8653579693a3dca3fc62b4271ea2cb55be0c13816f6b53",
+    "sourceSha256": "64741220be29f0db3a3044f977d4cbba8acb0fb92d4c181c571d11f8f3afeeca"
+  },
+  "sfhsCommit": "5acd8fc9a24834d9416a6e615bb78b8012962e30",
+  "physicalDevice": "UNTESTED",
+  "pages": "PROPOSED"
+}

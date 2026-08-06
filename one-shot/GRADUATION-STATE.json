@@ -1,14 +1,14 @@
 {
   "deferredWork": [],
   "evidenceStatus": "VERIFIED",
-  "nextAction": "Graduation complete; move optional work into a separately authorized backlog.",
-  "physicalStatus": "REPORTED",
-  "productStatus": "PRODUCT_USER_ACCEPTED",
+  "nextAction": "Collect the CATPAW-EXPANSION-001-R1 exact-artifact Samsung session with return-speed, split goal-side control, fullscreen-apron, capture, and theme evidence.",
+  "physicalStatus": "UNTESTED",
+  "productStatus": "PRODUCT_COMPLETE",
   "projectRoot": ".",
   "records": {
     "physicalSeed": {
       "path": "one-shot/GRADUATION-PHYSICAL-TEST-SEED.json",
-      "sha256": "92ce92f5aa4f409484ef972fe1d83301c7414b2aaa4372d95cc36799d3b5d45e"
+      "sha256": "40f6f64b06387fd9c689e7b6782146489e41a5d764741c035529c5dfe7ac538b"
     },
     "plan": {
       "path": "one-shot/MIGRATION-PLAN.json",
@@ -16,18 +16,18 @@
     },
     "report": {
       "path": "one-shot/GRADUATION-REPORT.json",
-      "sha256": "b13ce3c590e9b249620a1429645c9737f0882ab536ff3fc281f6bb7bc863c708"
+      "sha256": "1e74eea5fe16ab082db4b71cff4a0bd3964d210946d6c1be3175652dd6bd8132"
     },
     "source": {
       "path": "SOURCE-IDENTITY.json",
-      "sha256": "4c65148a24419c3941bfecc79cf851a882ab23a369a0dae2ce0c18dfa39e12ea"
+      "sha256": "505daf5b8b0b9ec3e139409fd2cf5e0ba4bb036a53f678ee6021618d6a237cb9"
     }
   },
   "requiredRepairs": [],
   "schema": "sfhs.graduation-state@1",
   "sfhsStatus": "SFHS_CANONICAL",
   "sourceId": "source-1-ea74d7d29909",
-  "stage": "GRADUATION_COMPLETE",
+  "stage": "GRADUATION_PHYSICAL_PENDING",
   "strategy": "DIRECT_CANONICALIZATION",
   "version": 1
 }

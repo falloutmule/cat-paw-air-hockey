@@ -7,3 +7,5 @@ The game is a local, shared-phone, two-player air-hockey game. Preserve independ
 Canonical work uses the SFHS pin in `one-shot/SFHS-PIN.json` and the SFHS graduation materializer. Its disposable project is not authoritative source. A candidate artifact is historical only and cannot be copied into `dist/` or used as canonical evidence.
 
 The exact physical-device gate is separate. Never claim physical acceptance without an artifact-bound user report.
+
+Remote actions require explicit current user authorization. When authorized, use a non-force push, pass source tests and the canonical SFHS gates, and prove the deployed Pages bytes match the verified packed artifact before claiming deployment parity.

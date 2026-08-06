@@ -1,0 +1,5 @@
+# CATPAW-EXPANSION-001 physical test packet
+
+Status: **UNTESTED**. Current Linux/Pages target: `cat-paw-air-hockey-64741220be29`, 581,644 bytes, SHA-256 `0d18270c36ff36987c8653579693a3dca3fc62b4271ea2cb55be0c13816f6b53`. The former `cat-paw-air-hockey-9bbbce7fdf80` Samsung session remains **REPORTED — NEEDS REPAIR**; the first R1 artifact and the Windows-only `95ed3…` materialization are superseded. Bind this packet to the exact packed artifact reported by canonical SFHS verification.
+
+Test on Samsung Galaxy S21 Ultra in Android Chrome: baseline 100% return parity; Player 1 return at 70% then Player 2 at 100%; confirm Player 1's return is gentler and wall bounces do not reapply the reduction; swap handicaps; briefly test both returns at 130%; inspect both split goal-side control layouts and goal/input clearance; enter/exit fullscreen; inspect themed end aprons; finish/capture a match and confirm both return settings appear; rematch; background/restore; mute, audio, heat, and responsiveness. Record Android/Chrome versions, portrait and landscape dimensions/DPR, artifact bytes/SHA/build ID, screenshots, and a REPORTED PASS or REPORTED FAIL result.

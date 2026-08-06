@@ -1,9 +1,9 @@
 {
   "artifact": {
-    "buildId": "cat-paw-air-hockey-e1a629b12b42",
-    "bytes": 560146,
+    "buildId": "cat-paw-air-hockey-64741220be29",
+    "bytes": 581644,
     "path": "dist/index.html",
-    "sha256": "ecfd57a25c19c3347618cc72dca667a95d5a8c3206a4599bed2833e7af499f5e",
+    "sha256": "0d18270c36ff36987c8653579693a3dca3fc62b4271ea2cb55be0c13816f6b53",
     "verifier": "sfhs verify"
   },
   "classification": "canonical",

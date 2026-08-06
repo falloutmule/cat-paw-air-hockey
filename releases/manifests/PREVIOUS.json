@@ -1,0 +1,11 @@
+{
+  "schema": "cat-paw.release-manifest@1",
+  "status": "SUPERSEDED",
+  "artifact": {
+    "buildId": "cat-paw-air-hockey-63565c6a8410",
+    "path": "dist/index.html",
+    "bytes": 581838,
+    "sha256": "27f6fa3daccb99256f5a2ea01a3c45618846c02e87b0f9e1cfe0e061c66a25ba"
+  },
+  "reason": "Fullscreen persistence and end-space/goal-label correction changed the artifact; physical acceptance does not transfer."
+}
