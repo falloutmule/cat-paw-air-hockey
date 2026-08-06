@@ -1,6 +1,6 @@
 # Repository Graduation Plan — verified-main-publish
 
-Status: **IN PROGRESS**. This plan is additive and idempotent: it documents and publishes the existing game without redesigning its behavior.
+Status: **VERIFIED**. This plan is additive and idempotent: it documents and publishes the existing game without redesigning its behavior.
 
 ## Authority and output
 
@@ -11,7 +11,7 @@ Status: **IN PROGRESS**. This plan is additive and idempotent: it documents and 
 | Working lineage | `codex/fullscreen-menu-theme-001`, descendant of the settled source branch | VERIFIED |
 | Toolchain | SFHS commit `5acd8fc9a24834d9416a6e615bb78b8012962e30` from `one-shot/SFHS-PIN.json` | VERIFIED |
 | Canonical output | Packer-created `dist/index.html`; never committed or hand-edited | VERIFIED |
-| Publication | GitHub Pages from verified `main` only | PROPOSED |
+| Publication | GitHub Pages from verified `main` only | VERIFIED - workflow run `31099501221` deployed and byte-compared the canonical artifact |
 
 ## Changes
 
