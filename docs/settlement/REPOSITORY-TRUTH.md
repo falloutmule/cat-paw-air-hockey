@@ -71,3 +71,9 @@ Historical Samsung acceptance applies to a prior exact artifact only. The R1 art
 
 - Quality runs `30932222927` and `30932492091` remained unable to expose the project-owned browser child's stderr after the prior wrapper repairs. Run `30932824397` retained `test-results/browser-smoke-error.txt` and proved the failure was `canonical-browser.ts:93`: a 30-second wait for the transient `countdown` phase after resuming.
 - This was a browser-smoke assertion race, not a gameplay or SFHS defect. On a slower Linux runner, the live three-second countdown can advance to `playing` between resume and the phase poll. The smoke now proves the UI pause state is reached, the control changes to Resume, resume leaves the paused state, and the control returns to Pause. The deterministic match-flow suite continues to prove exact phase restoration.
+
+## VERIFIED publication line-ending correction
+
+- Quality run `31096529379` (canonical job `92599774436`) passed source tests, materialization, Chromium installation, SFHS check, Linux pack, and exact verify, then failed One-Shot audit because the checked-in report named a Windows CRLF materialization. Linux packed `cat-paw-air-hockey-64741220be29`, 581,644 bytes, SHA-256 `0d18270c36ff36987c8653579693a3dca3fc62b4271ea2cb55be0c13816f6b53`.
+- The earlier same-size Windows artifact `cat-paw-air-hockey-95ed3f8aa868` / `816c04a93ac85d7653ab6a6af6ea61f3a80b0d47a0cf4569174f95a6d5fa1adf` is **SUPERSEDED** for canonical and Pages claims. It remains the immediately prior browser record; physical acceptance does not transfer.
+- `.gitattributes` now requires LF text checkout. Graduation state hashes are bound to LF Git bytes, and an isolated clean LF checkout passed inspect, validate, pack, verify, One-Shot audit, and graduation audit before the replacement Quality run.
