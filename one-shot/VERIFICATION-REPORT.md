@@ -3,4 +3,4 @@
 ---
 # Verification Report
 
-The corrected CATPAW-EXPANSION-001-R1 materialization passed One-Shot inspect/audit, inspect, validate, check, pack, exact `sfhs verify`, and packed Chromium evidence with one Pixi WebGL canvas and no external references. The former 581,838-byte R1 artifact is **SUPERSEDED** after fullscreen persistence and goal-label/end-table correction. Physical status remains **UNTESTED** pending a new exact-artifact Samsung session.
+The corrected CATPAW-EXPANSION-001-R1 materialization passed One-Shot inspect/audit, inspect, validate, check, pack, exact `sfhs verify`, and packed Chromium evidence with one Pixi WebGL canvas and no external references. The former 581,838-byte R1 artifact is **SUPERSEDED** after fullscreen persistence and goal-label/end-table correction. Repository graduation reran the same pinned materialized gates on 2026-08-06 and reproduced the identical 581,644-byte `816c04…1adf` artifact. GitHub Pages publication is authorized but not yet recorded. Physical status remains **UNTESTED** pending a new exact-artifact Samsung session.

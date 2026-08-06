@@ -11,4 +11,5 @@
 - Required visual evidence: packed-artifact boot/play/landscape gate, one WebGL canvas, zero unexpected runtime requests.
 - Required-before-completion tests: input, physics, match flow, audio, orientation, lifecycle/browser smoke, pack and exact verify.
 - Deferred: exact-artifact Samsung retest remains REPORTED historical acceptance until new device metadata/evidence is supplied.
-- Stop condition: clean checkpoint and draft PR; no fullscreen work begins.
+- Publication condition: a normal canonical-branch change runs the durable quality and Pages workflows; Pages serves only verified packed HTML whose downloaded SHA-256 matches the recorded canonical artifact.
+- Physical-device condition: Samsung acceptance remains separate and artifact-bound; it is not implied by publication.

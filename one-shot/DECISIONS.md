@@ -14,3 +14,5 @@
 | D-007 | VERIFIED | Committed readable source is authoritative; archives and candidates are historical only. | `docs/migration/SOURCE-LINEAGE.md`. | Bootstrap recovery route |
 | D-008 | VERIFIED | Only the real SFHS packer may produce `dist/index.html`; it remains ignored. | `AGENTS.md`, project manifest, verifier. | Candidate delivery |
 | D-009 | VERIFIED | The materialized project owns `browser-smoke`; it uses only the pinned SFHS workspace overlay to pack its own exact artifact before running the existing Chromium test. | SFHS PR #14 project-root repair and R2 direct materialized command/check evidence. | Old check execution from the SFHS checkout |
+| D-010 | VERIFIED | The existing local expansion source is the current publication lineage; graduation does not alter its gameplay. | It descends from the settled source and has current local canonical verification. | Base-game-only publication framing |
+| D-011 | PROPOSED | GitHub Pages receives only the packed verified HTML from canonical `main`, then the deployed bytes are compared to the workflow's artifact hash. | Repository-graduation authorization and `pages.yml`. | No prior Pages configuration |

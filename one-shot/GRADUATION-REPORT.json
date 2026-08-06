@@ -8,7 +8,7 @@
     "verifier": "sfhs verify"
   },
   "physical": "UNTESTED",
-  "remoteActions": "not-authorized",
+  "remoteActions": "authorized-pending-verified-main-publish",
   "schema": "sfhs.graduation-report@1",
   "stage": "GRADUATION_PHYSICAL_PENDING"
 }

@@ -16,7 +16,7 @@
     },
     "report": {
       "path": "one-shot/GRADUATION-REPORT.json",
-      "sha256": "6d9ac53bb7026985f61c09f676e32cafebb9afb3023971cf7b133514a4d8febb"
+      "sha256": "c8bf2df161ceb4af1de6876db68540aa1693632efc68a66eac5370c4254b57fb"
     },
     "source": {
       "path": "SOURCE-IDENTITY.json",

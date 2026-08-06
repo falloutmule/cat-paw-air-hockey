@@ -1,21 +1,61 @@
 # Cat Paw Air Hockey
 
-Two people place one phone between them and use one finger each, from opposite ends, to control cat-paw strikers. First to five goals wins.
+> A local, shared-phone air-hockey match where two players at opposite ends control cat-paw strikers and race to five goals.
 
-The game is portrait-first. In landscape it deliberately pauses behind a rotate-to-portrait guide; this remains responsive to viewport and lifecycle changes under the current adaptive SFHS contract.
-
-## Controls
-
-Both players hold their ready paw to begin. During play, drag one finger on your own half of the rink. The top player uses the top half; the bottom player uses the bottom half. Each edge has mute, pause, and reduced-effects controls.
-
-## Development
-
-Authoritative source is this repository. The exact SFHS toolchain is pinned in [one-shot/SFHS-PIN.json](one-shot/SFHS-PIN.json). Run source regressions with `pnpm test`. Use the SFHS graduation materializer for canonical inspect, validate, pack, verify, and browser evidence; it creates a disposable workspace copy rather than modifying this source tree.
-
-`dist/index.html` is produced only by the real SFHS packer. Historical Chat candidates are retained only by identity in the graduation records.
+**Play:** GitHub Pages deployment is being established by the verified-main publication workflow. The exact URL and deployed artifact hash are recorded in [Project Status](docs/PROJECT-STATUS.md) once deployment succeeds.
 
 ## Status
 
-The current migration is expected to become canonical after SFHS verification and browser evidence. A fresh device session must test the exact new artifact before physical acceptance can be claimed.
+The readable source, tests, and SFHS project are authoritative. The current local canonical artifact is verified by the real SFHS packer and exact verifier; its Samsung Galaxy S21 Ultra session is still **UNTESTED**. GitHub Pages publication is **PROPOSED** until the canonical-branch workflow and byte-for-byte deployment check pass.
 
-Non-goals: AI, online play, progression systems, new art themes, and publication.
+| Current local artifact | Value |
+| --- | --- |
+| Build ID | `cat-paw-air-hockey-95ed3f8aa868` |
+| Source SHA-256 | `95ed3f8aa86811085394b277816344c229a42a0696aa37cac313a3554a3ea72e` |
+| Artifact SHA-256 | `816c04a93ac85d7653ab6a6af6ea61f3a80b0d47a0cf4569174f95a6d5fa1adf` |
+| Bytes | 581,644 |
+| Verification | SFHS inspect, validate, check, pack, exact verify, and packed Chromium smoke |
+
+## Play
+
+Place one phone flat in portrait orientation, one player at each short end. Both players hold their ready paw, wait for the countdown, then each drags one finger inside their own half of the rink. Score through the opposite cat goal; first to five wins. Both players hold again for a rematch.
+
+The top player reads the top controls upside down. Each end has Sound and Pause on one side of the goal, and Settings and Fullscreen on the other. The final-score capture control appears only after a match. The game intentionally shows a rotate-to-portrait gate in landscape.
+
+## Implemented
+
+- Simultaneous independent two-player touch ownership, cancellation cleanup, and third-touch rejection.
+- Fixed-step renderer-neutral air-hockey simulation with cat-paw strikers, yarn puck, posts, goals, winner, and rematch flow.
+- Pause, mute, user-gesture audio unlock, background recovery, reduced effects, and accessible instructions.
+- Shared mirrored settings: puck speed/size, individual paw speed/size, goal opening, and return-speed handicaps (70–130%).
+- Optional local PNG theme, fullscreen controls, and final-score PNG capture.
+- One required Pixi v8 WebGL canvas, no runtime external requests, and a portrait-first adaptive viewport.
+
+## Limits
+
+The primary device target is Samsung Galaxy S21 Ultra in stable Android Chrome. Automated Chromium evidence does not replace an artifact-bound physical session. The current artifact has no reported Samsung result. WebGL is required; there is deliberately no hidden Canvas fallback.
+
+## Architecture and verification
+
+Editable product source is `src/`, with `tests/`, `public/`, `sfhs.project.json`, and `one-shot/` as authoritative product records. The canonical `dist/index.html` is generated only by the SFHS packer and is ignored by Git. The project uses the fixed SFHS revision in [one-shot/SFHS-PIN.json](one-shot/SFHS-PIN.json), Pixi v8, a 60 Hz fixed-step simulation, and a single WebGL presentation surface.
+
+```powershell
+pnpm install --frozen-lockfile
+pnpm test
+```
+
+Use the pinned SFHS graduation materializer for linting, typechecking, canonical inspection, packing, verification, and browser evidence. See [Testing](docs/TESTING.md) for the exact release sequence.
+
+## Project records
+
+- [Game specification](docs/GAME-SPEC.md)
+- [Project status](docs/PROJECT-STATUS.md)
+- [Roadmap](docs/ROADMAP.md)
+- [Architecture](docs/ARCHITECTURE.md)
+- [Testing and release verification](docs/TESTING.md)
+- [Decisions](docs/DECISIONS.md)
+- [Source authority](docs/SOURCE-AUTHORITY.md)
+- [Evidence retention](docs/EVIDENCE-RETENTION.md)
+- [Rights](RIGHTS.md)
+
+No reuse license has been granted; see [RIGHTS.md](RIGHTS.md).
