@@ -8,7 +8,7 @@
   "records": {
     "physicalSeed": {
       "path": "one-shot/GRADUATION-PHYSICAL-TEST-SEED.json",
-      "sha256": "fe7558f27c80154cba1064ceca23abe5372b8598721f766a1a9c42c0e5d01fa5"
+      "sha256": "1ac2186243a7d99cde274c227d284de090e48dd3b160a69de8e3d535fb1c5349"
     },
     "plan": {
       "path": "one-shot/MIGRATION-PLAN.json",
@@ -16,7 +16,7 @@
     },
     "report": {
       "path": "one-shot/GRADUATION-REPORT.json",
-      "sha256": "c8bf2df161ceb4af1de6876db68540aa1693632efc68a66eac5370c4254b57fb"
+      "sha256": "32350700af7f301d68294aaf91507792076a299b030118b9291a2fdc00c40ffb"
     },
     "source": {
       "path": "SOURCE-IDENTITY.json",

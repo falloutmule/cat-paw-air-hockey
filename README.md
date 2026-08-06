@@ -10,9 +10,9 @@ The readable source, tests, and SFHS project are authoritative. The current loca
 
 | Current local artifact | Value |
 | --- | --- |
-| Build ID | `cat-paw-air-hockey-95ed3f8aa868` |
-| Source SHA-256 | `95ed3f8aa86811085394b277816344c229a42a0696aa37cac313a3554a3ea72e` |
-| Artifact SHA-256 | `816c04a93ac85d7653ab6a6af6ea61f3a80b0d47a0cf4569174f95a6d5fa1adf` |
+| Build ID | `cat-paw-air-hockey-64741220be29` |
+| Source SHA-256 | `64741220be29f0db3a3044f977d4cbba8acb0fb92d4c181c571d11f8f3afeeca` |
+| Artifact SHA-256 | `0d18270c36ff36987c8653579693a3dca3fc62b4271ea2cb55be0c13816f6b53` |
 | Bytes | 581,644 |
 | Verification | SFHS inspect, validate, check, pack, exact verify, and packed Chromium smoke |
 

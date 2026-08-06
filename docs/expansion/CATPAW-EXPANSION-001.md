@@ -22,4 +22,6 @@ The prior expansion artifact is **SUPERSEDED**. Its Samsung session is **REPORTE
 
 **SUPERSEDED locally:** the first R1 artifact was 581,838 bytes, SHA-256 `27f6fa3daccb99256f5a2ea01a3c45618846c02e87b0f9e1cfe0e061c66a25ba`, build `cat-paw-air-hockey-63565c6a8410`.
 
-**VERIFIED locally:** the corrected `dist/index.html` is 581,644 bytes, SHA-256 `816c04a93ac85d7653ab6a6af6ea61f3a80b0d47a0cf4569174f95a6d5fa1adf`, build `cat-paw-air-hockey-95ed3f8aa868`, source SHA-256 `95ed3f8aa86811085394b277816344c229a42a0696aa37cac313a3554a3ea72e`. Fullscreen remains visible while playing; the goal itself says GOAL; the continuous tabletop fills the end space. It remains local only and requires a new Samsung session.
+**SUPERSEDED Windows materialization:** `cat-paw-air-hockey-95ed3f8aa868` / `816c04…1adf` was produced from CRLF working-copy source files. It remains retained browser evidence but cannot be the GitHub Pages identity.
+
+**VERIFIED Linux canonical result:** the corrected `dist/index.html` is 581,644 bytes, SHA-256 `0d18270c36ff36987c8653579693a3dca3fc62b4271ea2cb55be0c13816f6b53`, build `cat-paw-air-hockey-64741220be29`, source SHA-256 `64741220be29f0db3a3044f977d4cbba8acb0fb92d4c181c571d11f8f3afeeca`. Fullscreen remains visible while playing; the goal itself says GOAL; the continuous tabletop fills the end space. It requires a new Samsung session.
