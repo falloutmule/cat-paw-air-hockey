@@ -17,16 +17,16 @@
 
     <div id="pixi-host" role="application" aria-label="Air hockey rink. Player 2 controls the top half. Player 1 controls the bottom half."></div>
 
-    <nav class="edge-controls edge-controls--top" aria-label="Player 2 match controls">
-      <div class="control-pair control-pair--left"><button type="button" data-action="mute" aria-label="Sound on" title="Sound on">🔊</button><button type="button" data-action="pause" aria-label="Pause" title="Pause">Ⅱ</button><button type="button" data-action="capture" aria-label="Save final score image" title="Save final score image" hidden><span class="icon icon--capture" aria-hidden="true"></span></button></div>
-      <div class="goal-apron" aria-hidden="true"></div>
-      <div class="control-pair control-pair--right"><button type="button" data-action="menu" aria-label="Open settings" title="Open settings"><span class="icon icon--menu" aria-hidden="true"></span></button><button type="button" data-action="fullscreen" aria-label="Enter fullscreen" title="Enter fullscreen"><span class="icon icon--fullscreen" aria-hidden="true"></span></button></div>
+    <nav class="shared-controls" aria-label="Shared match controls">
+      <button class="shared-control shared-control--upper-left" type="button" data-action="mute" data-position="upper-left" aria-label="Sound on" title="Sound on">🔊</button>
+      <span class="shared-control-slot shared-control-slot--lower-left">
+        <button class="shared-control" type="button" data-action="pause" data-position="lower-left" aria-label="Pause" title="Pause">Ⅱ</button>
+        <button class="shared-control" type="button" data-action="capture" data-position="lower-left" aria-label="Save final score image" title="Save final score image" hidden><span class="icon icon--capture" aria-hidden="true"></span></button>
+      </span>
+      <button class="shared-control shared-control--upper-right" type="button" data-action="menu" data-position="upper-right" aria-label="Open settings" title="Open settings"><span class="icon icon--menu" aria-hidden="true"></span></button>
+      <button class="shared-control shared-control--lower-right" type="button" data-action="fullscreen" data-position="lower-right" aria-label="Enter fullscreen" title="Enter fullscreen"><span class="icon icon--fullscreen" aria-hidden="true"></span></button>
     </nav>
-    <nav class="edge-controls edge-controls--bottom" aria-label="Player 1 match controls">
-      <div class="control-pair control-pair--left"><button type="button" data-action="mute" aria-label="Sound on" title="Sound on">🔊</button><button type="button" data-action="pause" aria-label="Pause" title="Pause">Ⅱ</button><button type="button" data-action="capture" aria-label="Save final score image" title="Save final score image" hidden><span class="icon icon--capture" aria-hidden="true"></span></button></div>
-      <div class="goal-apron" aria-hidden="true"></div>
-      <div class="control-pair control-pair--right"><button type="button" data-action="menu" aria-label="Open settings" title="Open settings"><span class="icon icon--menu" aria-hidden="true"></span></button><button type="button" data-action="fullscreen" aria-label="Enter fullscreen" title="Enter fullscreen"><span class="icon icon--fullscreen" aria-hidden="true"></span></button></div>
-    </nav>
+    <output id="control-feedback" class="control-feedback" hidden aria-live="assertive"></output>
 
     <section id="orientation-gate" hidden aria-live="assertive">
       <div class="rotate-card">
@@ -48,6 +48,7 @@
       <output id="settings-live" class="sr-only" aria-live="polite"></output>
     </section>
     <input id="theme-file" type="file" accept="image/png" hidden>
+    <input id="board-file" type="file" accept="image/png" hidden>
   </main>
   <script type="module" src="./main.ts"></script>
 </body>

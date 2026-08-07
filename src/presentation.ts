@@ -1,9 +1,10 @@
 import { Container, Graphics, Rectangle, Sprite, Text, TextStyle, Texture } from "pixi.js";
 import type { SfhsPixiPresenter, SfhsPixiStageLayers } from "@sfhs/adapter-pixi-v8";
-import { LOGICAL_HEIGHT, LOGICAL_WIDTH, PUCK_RADIUS, READY_TARGET, RINK, STRIKER_RADIUS } from "./constants.ts";
+import { BOARD, LOGICAL_HEIGHT, LOGICAL_WIDTH, PUCK_RADIUS, READY_TARGET, RINK, STRIKER_RADIUS } from "./constants.ts";
 import { goalBounds, puckRadius, settingsSummary, strikerRadius } from "./settings.ts";
-import type { ThemeSlot, ValidTheme } from "./theme.ts";
+import type { ThemeSlot, ValidBoard, ValidTheme } from "./theme.ts";
 import type { HockeyGameState, PresentationEvent } from "./state.ts";
+import defaultBoardTemplateUrl from "../art/theme/cat-paw-board-template.png";
 
 interface ActiveImpact {
   readonly event: PresentationEvent;
@@ -18,6 +19,8 @@ interface ConfettiPiece {
 export interface CatHockeyPresenter extends SfhsPixiPresenter<HockeyGameState> {
   setReducedEffects(value: boolean): void;
   setTheme(theme: ValidTheme | undefined): void;
+  setBoard(board: ValidBoard | undefined): void;
+  getBoardDiagnostics(): Readonly<{ mode: "default" | "custom"; spriteCount: 1; replacementCount: number; disposedOwnedTextureCount: number }>;
 }
 
 const COLORS = Object.freeze({
@@ -100,12 +103,21 @@ function asPixiColor(value: string): number {
 
 export function createCatHockeyPresenter(options: {
   readonly onEvents?: (events: readonly PresentationEvent[]) => void;
+  readonly boardTemplateMode?: boolean;
 } = {}): CatHockeyPresenter {
   let initialized = false;
   let destroyed = false;
   let reducedEffects = false;
   let lastEventId = 0;
   let staticRoot: Container;
+  let proceduralBoardRoot: Container;
+  let foregroundRoot: Container;
+  let boardSprite: Sprite;
+  let boardTexture: Texture | undefined;
+  let defaultBoardTexture: Texture;
+  let board: ValidBoard | undefined;
+  let boardReplacementCount = 0;
+  let disposedOwnedTextureCount = 0;
   let actorRoot: Container;
   let effectsRoot: Container;
   let hudRoot: Container;
@@ -151,10 +163,14 @@ export function createCatHockeyPresenter(options: {
     if (initialized) return;
     initialized = true;
     staticRoot = new Container({ label: "cat-hockey-static" });
+    proceduralBoardRoot = new Container({ label: "cat-hockey-procedural-board" });
+    foregroundRoot = new Container({ label: "cat-hockey-board-foreground" });
     actorRoot = new Container({ label: "cat-hockey-actors" });
     effectsRoot = new Container({ label: "cat-hockey-effects" });
     hudRoot = new Container({ label: "cat-hockey-hud" });
     staticRoot.eventMode = "none";
+    proceduralBoardRoot.eventMode = "none";
+    foregroundRoot.eventMode = "none";
     actorRoot.eventMode = "none";
     effectsRoot.eventMode = "none";
     effectsRoot.interactiveChildren = false;
@@ -166,6 +182,16 @@ export function createCatHockeyPresenter(options: {
     themeRoot = new Container({ label: "cat-hockey-theme" });
     themeRoot.eventMode = "none";
     layers.actorLayer.addChild(themeRoot);
+
+    defaultBoardTexture = Texture.from(defaultBoardTemplateUrl);
+    boardSprite = new Sprite(defaultBoardTexture);
+    boardSprite.label = "cat-hockey-board-bitmap";
+    boardSprite.eventMode = "none";
+    boardSprite.position.set(BOARD.x, BOARD.y);
+    boardSprite.width = BOARD.width;
+    boardSprite.height = BOARD.height;
+    boardSprite.visible = true;
+    staticRoot.addChild(proceduralBoardRoot, boardSprite, foregroundRoot);
 
     const backdrop = new Graphics()
       .rect(0, 0, LOGICAL_WIDTH, LOGICAL_HEIGHT).fill({ color: COLORS.table })
@@ -203,7 +229,8 @@ export function createCatHockeyPresenter(options: {
     goalLabelTop.rotation = Math.PI;
     goalLabelBottom = makeText("GOAL", 16, COLORS.cream);
     goalLabelBottom.position.set(LOGICAL_WIDTH / 2, RINK.bottom + 28);
-    staticRoot.addChild(backdrop, paletteOverlay, markings, railDetails, goalTop, goalBottom, posts, goalLabelTop, goalLabelBottom);
+    proceduralBoardRoot.addChild(backdrop, paletteOverlay, markings, railDetails);
+    foregroundRoot.addChild(goalTop, goalBottom, posts, goalLabelTop, goalLabelBottom);
 
     bottomCat = new Graphics();
     topCat = new Graphics();
@@ -220,7 +247,7 @@ export function createCatHockeyPresenter(options: {
     bottomCat.position.set(68, 872);
     topCat.position.set(472, 88);
     topCat.rotation = Math.PI;
-    staticRoot.addChild(bottomCat, topCat);
+    foregroundRoot.addChild(bottomCat, topCat);
 
     paw1 = new Container({ label: "player-1-paw" });
     paw2 = new Container({ label: "player-2-paw" });
@@ -421,6 +448,27 @@ export function createCatHockeyPresenter(options: {
       .roundRect(RINK.left - 8, RINK.top - 8, RINK.right - RINK.left + 16, RINK.bottom - RINK.top + 16, 25).fill({ color: asPixiColor(palette.felt), alpha: 0.46 });
   }
 
+  function applyBoard(): void {
+    if (!initialized) return;
+    if (boardTexture !== undefined) { boardTexture.destroy(true); disposedOwnedTextureCount += 1; }
+    boardTexture = undefined;
+    if (board === undefined) {
+      boardSprite.texture = defaultBoardTexture;
+      boardSprite.width = BOARD.width;
+      boardSprite.height = BOARD.height;
+      boardSprite.visible = true;
+      proceduralBoardRoot.visible = true;
+      return;
+    }
+    boardTexture = Texture.from(board.image);
+    boardSprite.texture = boardTexture;
+    boardSprite.position.set(BOARD.x, BOARD.y);
+    boardSprite.width = BOARD.width;
+    boardSprite.height = BOARD.height;
+    boardSprite.visible = true;
+    proceduralBoardRoot.visible = false;
+  }
+
   function applyTheme(): void {
     if (!initialized) return;
     themeRoot.removeChildren().forEach((child) => child.destroy());
@@ -448,6 +496,22 @@ export function createCatHockeyPresenter(options: {
     present(state, _alpha, layers): void {
       if (destroyed) return;
       initialize(layers);
+      if (options.boardTemplateMode) {
+        proceduralBoardRoot.visible = true;
+        boardSprite.visible = false;
+        foregroundRoot.visible = false;
+        actorRoot.visible = false;
+        effectsRoot.visible = false;
+        hudRoot.visible = false;
+        themeRoot.visible = false;
+        layers.worldRoot.position.set(0, 0);
+        return;
+      }
+      foregroundRoot.visible = true;
+      actorRoot.visible = true;
+      effectsRoot.visible = true;
+      hudRoot.visible = true;
+      themeRoot.visible = true;
       reducedEffects = state.reducedEffects;
       consumeEvents(state);
       paw1.position.set(state.players[1].position.x, state.players[1].position.y);
@@ -473,6 +537,7 @@ export function createCatHockeyPresenter(options: {
       updateImpacts(state);
       updateConfetti(state);
       updateGeometry(state);
+      if (boardSprite.visible) { boardSprite.width = BOARD.width; boardSprite.height = BOARD.height; }
       const themedPaw1 = themeSprites.paw1; const themedPaw2 = themeSprites.paw2; const themedPuck = themeSprites.puck;
       if (themedPaw1 !== undefined) { themedPaw1.position.copyFrom(paw1.position); themedPaw1.width = strikerRadius(state.activeMatchSettings, 1) * 2; themedPaw1.height = strikerRadius(state.activeMatchSettings, 1) * 2; paw1Graphic.visible = false; } else paw1Graphic.visible = true;
       if (themedPaw2 !== undefined) { themedPaw2.position.copyFrom(paw2.position); themedPaw2.width = strikerRadius(state.activeMatchSettings, 2) * 2; themedPaw2.height = strikerRadius(state.activeMatchSettings, 2) * 2; themedPaw2.rotation = Math.PI; paw2Graphic.visible = false; } else paw2Graphic.visible = true;
@@ -522,6 +587,8 @@ export function createCatHockeyPresenter(options: {
     },
     setReducedEffects(value): void { reducedEffects = value; },
     setTheme(value): void { if (theme !== undefined) URL.revokeObjectURL(theme.url); theme = value; applyTheme(); },
+    setBoard(value): void { board = value; boardReplacementCount += 1; applyBoard(); },
+    getBoardDiagnostics: () => Object.freeze({ mode: board === undefined ? "default" : "custom", spriteCount: 1 as const, replacementCount: boardReplacementCount, disposedOwnedTextureCount }),
     destroy(): void {
       if (destroyed) return;
       destroyed = true;
@@ -534,6 +601,8 @@ export function createCatHockeyPresenter(options: {
       confetti.length = 0;
       trail.length = 0;
       themeTexture?.destroy(false);
+      boardTexture?.destroy(true);
+      defaultBoardTexture?.destroy(true);
     }
   };
 }
