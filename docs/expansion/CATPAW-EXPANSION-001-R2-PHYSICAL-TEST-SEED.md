@@ -1,6 +1,6 @@
 # CATPAW-EXPANSION-001-R2 Samsung test seed
 
-Status: **UNTESTED**. Bind the session to repaired build `cat-paw-air-hockey-36b74a1c8988`, 721,605 bytes, SHA-256 `81279cdd3319ea721469ea907461eca1f5c779f90bc6c0a4da388e2ac0d46f9f`.
+Status: **UNTESTED**. Bind the session to repaired build `cat-paw-air-hockey-39c5e8ccab7b`, 722,423 bytes, SHA-256 `7004139e55244f9c733d15af3e8dfee7379a7de613fe9d7524cde43782e4762e`.
 
 On Samsung Galaxy S21 Ultra / stable Android Chrome, record Android and Chrome versions, portrait/landscape viewport and DPR, screenshots, heat/responsiveness, and a **REPORTED PASS** or **REPORTED FAIL** for:
 

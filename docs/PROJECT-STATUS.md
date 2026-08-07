@@ -16,7 +16,7 @@
 
 ## Canonical identity
 
-R2 local canonical target is build `cat-paw-air-hockey-36b74a1c8988`, 721,605 bytes, SHA-256 `81279cdd3319ea721469ea907461eca1f5c779f90bc6c0a4da388e2ac0d46f9f`, source SHA-256 `36b74a1c898885a2b9fee592cdaf133c44db2bf8bd3ebeedde62becc4430cc00`. It includes the bounded mobile fullscreen compatibility repair at `c554523bb556d9ed875971c1f1cc035ac99d450b`. The first R2 build `cat-paw-air-hockey-eb95d3516717` is **SUPERSEDED** after the user reported its fullscreen control did not work on the target device. R2 is not pushed or deployed and has no transferred physical acceptance.
+R2 local canonical target is build `cat-paw-air-hockey-39c5e8ccab7b`, 722,423 bytes, SHA-256 `7004139e55244f9c733d15af3e8dfee7379a7de613fe9d7524cde43782e4762e`, source SHA-256 `39c5e8ccab7b992643c8ad3fd51081362a52392e17f3916542bcab0148b681c8`. It includes direct pointer-activation fullscreen at `4a11bb8511a40d00029ffd32ad9cae732de922d5` and displays an explicit message when an embedding viewer blocks fullscreen. Both earlier R2 fullscreen artifacts are **SUPERSEDED** after target-device failure reports. R2 is not pushed or deployed and has no transferred physical acceptance.
 
 ## Known limitations and blockers
 

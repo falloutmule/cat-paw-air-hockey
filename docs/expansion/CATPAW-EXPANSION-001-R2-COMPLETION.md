@@ -6,22 +6,24 @@ Implementation commit: `dfb8b330b0a64164bb280757d1bc82c8126d7b88`
 
 Mobile fullscreen repair commit: `c554523bb556d9ed875971c1f1cc035ac99d450b`
 
+Direct touch-activation repair commit: `4a11bb8511a40d00029ffd32ad9cae732de922d5`
+
 The R2 implementation replaces duplicated end controls with four shared center-edge controls, retains the settled defensive and goal geometry, and adds one persistent texture-backed Board sprite with strict local PNG replacement, reset, and persistence. Procedural Board art remains the fallback. Dynamic goals and all gameplay objects remain separate above the Board.
 
 ## Canonical local artifact
 
 - Path: `dist/index.html`
-- Bytes: `721605`
-- SHA-256: `81279cdd3319ea721469ea907461eca1f5c779f90bc6c0a4da388e2ac0d46f9f`
-- Build ID: `cat-paw-air-hockey-36b74a1c8988`
-- Source SHA-256: `36b74a1c898885a2b9fee592cdaf133c44db2bf8bd3ebeedde62becc4430cc00`
+- Bytes: `722423`
+- SHA-256: `7004139e55244f9c733d15af3e8dfee7379a7de613fe9d7524cde43782e4762e`
+- Build ID: `cat-paw-air-hockey-39c5e8ccab7b`
+- Source SHA-256: `39c5e8ccab7b992643c8ad3fd51081362a52392e17f3916542bcab0148b681c8`
 - SFHS pin: `5acd8fc9a24834d9416a6e615bb78b8012962e30`
 - Renderer: Pixi v8 / WebGL
 - External references: none
 - Exact verifier: passed
 - Packed touch-enabled Chromium scenarios: passed, including tap-driven fullscreen entry/exit; one canvas; no page or console errors; no external runtime requests
 
-The first R2 artifact (`720601` bytes, SHA-256 `50663604dfafb35cee2bc457daadd9f7420947b8f36532a93b1b3a952f12f88d`, Build ID `cat-paw-air-hockey-eb95d3516717`) is `SUPERSEDED`: its desktop fullscreen automation passed, but the user reported that its fullscreen button did not work on the target device. That report is retained as `REPORTED — NEEDS REPAIR`; no acceptance transfers to the repaired artifact.
+The first two R2 fullscreen artifacts are `SUPERSEDED`: desktop/touch automation passed, but the user reported that fullscreen still did not work on the target device. The current artifact invokes fullscreen from the direct `pointerdown` activation on the root document and visibly explains when an embedding viewer blocks the permission. No acceptance transfers to it.
 
 ## Verification
 

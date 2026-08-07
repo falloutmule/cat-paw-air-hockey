@@ -1,5 +1,5 @@
 ---
-{"schema":"sfhs.one-shot-report@1","status":"VERIFIED","facts":{"artifact":{"classification":"canonical","path":"dist/index.html","bytes":721605,"sha256":"81279cdd3319ea721469ea907461eca1f5c779f90bc6c0a4da388e2ac0d46f9f","buildId":"cat-paw-air-hockey-36b74a1c8988","verifier":"sfhs verify","sourceSha256":"36b74a1c898885a2b9fee592cdaf133c44db2bf8bd3ebeedde62becc4430cc00"},"sfhsCommit":"5acd8fc9a24834d9416a6e615bb78b8012962e30","renderer":"PIXI WebGL","externalReferences":"none","browserSmoke":"VERIFIED","physicalDevice":"UNTESTED"}}
+{"schema":"sfhs.one-shot-report@1","status":"VERIFIED","facts":{"artifact":{"classification":"canonical","path":"dist/index.html","bytes":722423,"sha256":"7004139e55244f9c733d15af3e8dfee7379a7de613fe9d7524cde43782e4762e","buildId":"cat-paw-air-hockey-39c5e8ccab7b","verifier":"sfhs verify","sourceSha256":"39c5e8ccab7b992643c8ad3fd51081362a52392e17f3916542bcab0148b681c8"},"sfhsCommit":"5acd8fc9a24834d9416a6e615bb78b8012962e30","renderer":"PIXI WebGL","externalReferences":"none","browserSmoke":"VERIFIED","physicalDevice":"UNTESTED"}}
 ---
 # Verification Report
 
