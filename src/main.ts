@@ -4,6 +4,7 @@ import { createHockeyAudioController } from "./audio.ts";
 import { makeBoardTemplateBlob } from "./board-art.ts";
 import { MAXIMUM_FRAME_DELTA_MS, SIMULATION_HZ } from "./constants.ts";
 import { lowerLeftControl } from "./controls.ts";
+import { fullscreenAvailable, fullscreenElement, toggleElementFullscreen } from "./fullscreen.ts";
 import { installDiagnostics } from "./diagnostics.ts";
 import { createHockeyInput } from "./input.ts";
 import { createCatHockeyPresenter } from "./presentation.ts";
@@ -74,7 +75,7 @@ function syncMenuViews(): void {
     for (const output of view.querySelectorAll<HTMLOutputElement>("output[data-value]")) output.value = `${settingValue(output.dataset.value ?? "")}%`;
     const checkbox = view.querySelector<HTMLInputElement>("input[data-menu-action='reduced']"); if (checkbox !== null) checkbox.checked = reducedEffects;
     const summary = view.querySelector<HTMLElement>("[data-summary]"); if (summary !== null) summary.textContent = settingsEqual(state?.activeMatchSettings ?? menuSettings, menuSettings) ? settingsSummary(menuSettings) : `${settingsSummary(menuSettings)} · Applies next serve`;
-    const fullscreenStatus = view.querySelector<HTMLElement>("[data-fullscreen-status]"); if (fullscreenStatus !== null) fullscreenStatus.textContent = document.fullscreenEnabled ? (document.fullscreenElement === null ? "Fullscreen available" : "Fullscreen active") : "Fullscreen unavailable";
+    const fullscreenStatus = view.querySelector<HTMLElement>("[data-fullscreen-status]"); if (fullscreenStatus !== null) fullscreenStatus.textContent = fullscreenAvailable(shell) ? (fullscreenElement() === null ? "Fullscreen available" : "Fullscreen active") : "Fullscreen unavailable in this browser view";
   }
 }
 function persistPreferences(): void { try { localStorage.setItem(settingsStorageKey, JSON.stringify(menuSettings)); localStorage.setItem("cat-paw-air-hockey.reduced-motion.v1", String(reducedEffects)); } catch { /* session fallback */ } }
@@ -124,16 +125,16 @@ function updateControls(): void {
   const lowerLeft = lowerLeftControl(state?.phase);
   for (const button of pauseButtons) button.hidden = lowerLeft !== "pause";
   for (const button of menuButtons) { button.setAttribute("aria-label", menuOpen ? "Close settings" : "Open settings"); button.title = menuOpen ? "Close settings" : "Open settings"; button.setAttribute("aria-pressed", String(menuOpen)); }
-  const fullscreenAvailable = document.fullscreenEnabled && typeof shell.requestFullscreen === "function";
-  for (const button of fullscreenButtons) { button.disabled = !fullscreenAvailable; button.hidden = false; button.setAttribute("aria-label", document.fullscreenElement === null ? "Enter fullscreen" : "Exit fullscreen"); button.title = fullscreenAvailable ? button.getAttribute("aria-label") ?? "Fullscreen" : "Fullscreen unavailable"; button.setAttribute("aria-pressed", String(document.fullscreenElement !== null)); }
+  const canFullscreen = fullscreenAvailable(shell); const fullscreenActive = fullscreenElement() !== null;
+  for (const button of fullscreenButtons) { button.disabled = !canFullscreen; button.hidden = false; button.setAttribute("aria-label", fullscreenActive ? "Exit fullscreen" : "Enter fullscreen"); button.title = canFullscreen ? button.getAttribute("aria-label") ?? "Fullscreen" : "Fullscreen unavailable in this browser view"; button.setAttribute("aria-pressed", String(fullscreenActive)); }
   for (const button of captureButtons) { button.hidden = lowerLeft !== "capture"; button.disabled = captureInProgress; }
   status.value = `Audio ${audio.getStatus()} · ${reducedEffects ? "reduced motion" : "full effects"}${menuOpen ? " · settings open" : ""}`; syncMenuViews();
 }
 async function toggleFullscreen(): Promise<void> {
-  if (!document.fullscreenEnabled) { settingsLive.value = "Fullscreen unavailable"; return; }
+  if (!fullscreenAvailable(shell)) { settingsLive.value = "Fullscreen unavailable in this browser view. Open the downloaded HTML directly in Chrome."; return; }
   input.clear();
-  try { if (document.fullscreenElement === null) await shell.requestFullscreen(); else await document.exitFullscreen(); }
-  catch { settingsLive.value = "Fullscreen was not allowed"; }
+  try { await toggleElementFullscreen(shell); }
+  catch { settingsLive.value = "Fullscreen was not allowed. Open the downloaded HTML directly in Chrome and try again."; }
   scheduleViewport();
 }
 async function captureScore(): Promise<void> {
@@ -178,8 +179,12 @@ async function boot(): Promise<void> {
   } catch (error) { capability.hidden = false; capability.querySelector("p")!.textContent = "The required PixiJS WebGL renderer could not initialize."; host.hidden = true; status.value = error instanceof Error ? error.message : "Renderer initialization failed"; }
 }
 document.addEventListener("visibilitychange", () => { if (runtime === undefined) return; if (document.hidden) { hiddenPaused = true; runtime.pause(); input.clear(); } else if (hiddenPaused) { hiddenPaused = false; if (!orientationPaused) runtime.resume(); void audio.unlock().then(updateControls); } });
-document.addEventListener("fullscreenchange", () => { input.clear(); if (document.fullscreenElement === null && runtime?.getState().phase === "playing") input.requestPause(); scheduleViewport(); });
-document.addEventListener("fullscreenerror", () => { settingsLive.value = "Fullscreen was not allowed"; updateControls(); });
+const onFullscreenChange = (): void => { input.clear(); if (fullscreenElement() === null && runtime?.getState().phase === "playing") input.requestPause(); updateControls(); scheduleViewport(); };
+const onFullscreenError = (): void => { settingsLive.value = "Fullscreen was not allowed. Open the downloaded HTML directly in Chrome and try again."; updateControls(); };
+document.addEventListener("fullscreenchange", onFullscreenChange);
+document.addEventListener("webkitfullscreenchange", onFullscreenChange);
+document.addEventListener("fullscreenerror", onFullscreenError);
+document.addEventListener("webkitfullscreenerror", onFullscreenError);
 window.addEventListener("resize", scheduleViewport); window.addEventListener("orientationchange", scheduleViewport); window.visualViewport?.addEventListener("resize", scheduleViewport); window.visualViewport?.addEventListener("scroll", scheduleViewport);
 window.addEventListener("pagehide", () => { removeDiagnostics(); runtime?.destroy(); input.destroy(); if (currentBoard !== undefined) URL.revokeObjectURL(currentBoard.url); void audio.dispose(); }, { once: true });
 syncBoardViews(); updateControls(); void boot();

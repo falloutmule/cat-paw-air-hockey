@@ -123,10 +123,10 @@ try {
   await page.waitForFunction(() => (document.querySelector("#settings-overlay") as HTMLElement).hidden);
   await page.locator("[data-action='pause']").last().click();
   await page.waitForFunction(() => (window.__CAT_AIR_HOCKEY__!.snapshot() as any).state.phase === "ready");
-  await page.locator("[data-action='fullscreen']").click();
+  await page.locator("[data-action='fullscreen']").tap();
   await page.waitForFunction(() => document.fullscreenElement !== null);
   assert.equal(await page.locator("[data-action='fullscreen']").getAttribute("aria-pressed"), "true");
-  await page.locator("[data-action='fullscreen']").click();
+  await page.locator("[data-action='fullscreen']").tap();
   await page.waitForFunction(() => document.fullscreenElement === null);
   assert.equal(await page.locator("[data-action='fullscreen']").getAttribute("aria-pressed"), "false");
 
