@@ -37,6 +37,7 @@ const pauseButtons = [...document.querySelectorAll<HTMLButtonElement>("[data-act
 const menuButtons = [...document.querySelectorAll<HTMLButtonElement>("[data-action='menu']")];
 const fullscreenButtons = [...document.querySelectorAll<HTMLButtonElement>("[data-action='fullscreen']")];
 const captureButtons = [...document.querySelectorAll<HTMLButtonElement>("[data-action='capture']")];
+const controlFeedback = required<HTMLOutputElement>("#control-feedback");
 const menuViews = [...document.querySelectorAll<HTMLElement>("[data-menu-view]")];
 
 let runtime: SfhsPixiGameRuntime<HockeyGameState> | undefined;
@@ -44,6 +45,8 @@ let hiddenPaused = false;
 let orientationPaused = false;
 let menuOpen = false;
 let captureInProgress = false;
+let feedbackTimer: ReturnType<typeof setTimeout> | undefined;
+let suppressFullscreenClickUntil = 0;
 let viewportFrame = 0;
 let reducedEffects = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
 let currentTheme: ValidTheme | undefined;
@@ -75,7 +78,7 @@ function syncMenuViews(): void {
     for (const output of view.querySelectorAll<HTMLOutputElement>("output[data-value]")) output.value = `${settingValue(output.dataset.value ?? "")}%`;
     const checkbox = view.querySelector<HTMLInputElement>("input[data-menu-action='reduced']"); if (checkbox !== null) checkbox.checked = reducedEffects;
     const summary = view.querySelector<HTMLElement>("[data-summary]"); if (summary !== null) summary.textContent = settingsEqual(state?.activeMatchSettings ?? menuSettings, menuSettings) ? settingsSummary(menuSettings) : `${settingsSummary(menuSettings)} · Applies next serve`;
-    const fullscreenStatus = view.querySelector<HTMLElement>("[data-fullscreen-status]"); if (fullscreenStatus !== null) fullscreenStatus.textContent = fullscreenAvailable(shell) ? (fullscreenElement() === null ? "Fullscreen available" : "Fullscreen active") : "Fullscreen unavailable in this browser view";
+    const fullscreenStatus = view.querySelector<HTMLElement>("[data-fullscreen-status]"); if (fullscreenStatus !== null) fullscreenStatus.textContent = fullscreenAvailable(document.documentElement) ? (fullscreenElement() === null ? "Fullscreen available" : "Fullscreen active") : "Fullscreen unavailable in this browser view";
   }
 }
 function persistPreferences(): void { try { localStorage.setItem(settingsStorageKey, JSON.stringify(menuSettings)); localStorage.setItem("cat-paw-air-hockey.reduced-motion.v1", String(reducedEffects)); } catch { /* session fallback */ } }
@@ -103,6 +106,7 @@ function setMenuOpen(open: boolean): void {
   updateControls();
 }
 function themeStatus(message: string): void { for (const view of menuViews) { const statusElement = view.querySelector<HTMLElement>("[data-theme-status]"); if (statusElement !== null) statusElement.textContent = message; } settingsLive.value = message; }
+function showControlFeedback(message: string): void { controlFeedback.value = message; controlFeedback.hidden = false; if (feedbackTimer !== undefined) clearTimeout(feedbackTimer); feedbackTimer = setTimeout(() => { controlFeedback.hidden = true; }, 4_000); }
 function syncBoardViews(): void { for (const view of menuViews) { const preview = view.querySelector<HTMLImageElement>("[data-board-preview]"); if (preview !== null) preview.src = currentBoard?.url ?? defaultBoardTemplateUrl; const boardStatusElement = view.querySelector<HTMLElement>("[data-board-status]"); if (boardStatusElement !== null) boardStatusElement.textContent = currentBoard === undefined ? "Default Board · 1080 × 1920 PNG" : `${currentBoard.filename} · 1080 × 1920 PNG`; } shell.dataset.board = currentBoard === undefined ? "default" : "custom"; }
 function boardStatus(message: string): void { syncBoardViews(); for (const view of menuViews) { const statusElement = view.querySelector<HTMLElement>("[data-board-status]"); if (statusElement !== null) statusElement.textContent = message; } settingsLive.value = message; }
 async function downloadBoardTemplate(): Promise<void> {
@@ -125,16 +129,16 @@ function updateControls(): void {
   const lowerLeft = lowerLeftControl(state?.phase);
   for (const button of pauseButtons) button.hidden = lowerLeft !== "pause";
   for (const button of menuButtons) { button.setAttribute("aria-label", menuOpen ? "Close settings" : "Open settings"); button.title = menuOpen ? "Close settings" : "Open settings"; button.setAttribute("aria-pressed", String(menuOpen)); }
-  const canFullscreen = fullscreenAvailable(shell); const fullscreenActive = fullscreenElement() !== null;
+  const canFullscreen = fullscreenAvailable(document.documentElement); const fullscreenActive = fullscreenElement() !== null;
   for (const button of fullscreenButtons) { button.disabled = !canFullscreen; button.hidden = false; button.setAttribute("aria-label", fullscreenActive ? "Exit fullscreen" : "Enter fullscreen"); button.title = canFullscreen ? button.getAttribute("aria-label") ?? "Fullscreen" : "Fullscreen unavailable in this browser view"; button.setAttribute("aria-pressed", String(fullscreenActive)); }
   for (const button of captureButtons) { button.hidden = lowerLeft !== "capture"; button.disabled = captureInProgress; }
   status.value = `Audio ${audio.getStatus()} · ${reducedEffects ? "reduced motion" : "full effects"}${menuOpen ? " · settings open" : ""}`; syncMenuViews();
 }
 async function toggleFullscreen(): Promise<void> {
-  if (!fullscreenAvailable(shell)) { settingsLive.value = "Fullscreen unavailable in this browser view. Open the downloaded HTML directly in Chrome."; return; }
+  if (!fullscreenAvailable(document.documentElement)) { const message = "This preview blocks fullscreen. Download the HTML and open it directly in Chrome."; settingsLive.value = message; showControlFeedback(message); return; }
   input.clear();
-  try { await toggleElementFullscreen(shell); }
-  catch { settingsLive.value = "Fullscreen was not allowed. Open the downloaded HTML directly in Chrome and try again."; }
+  try { await toggleElementFullscreen(document.documentElement); }
+  catch { const message = "Fullscreen was blocked by this viewer. Open the downloaded HTML directly in Chrome."; settingsLive.value = message; showControlFeedback(message); }
   scheduleViewport();
 }
 async function captureScore(): Promise<void> {
@@ -151,7 +155,10 @@ async function captureScore(): Promise<void> {
 for (const button of muteButtons) { button.addEventListener("pointerdown", () => { void audio.unlock(); }, { passive: true }); button.addEventListener("click", () => { audio.playUi("mute"); audio.toggleMuted(); updateControls(); }); }
 for (const button of pauseButtons) { button.addEventListener("pointerdown", () => { void audio.unlock(); }, { passive: true }); button.addEventListener("click", () => { input.requestPause(); audio.playUi("pause"); setTimeout(updateControls, 40); }); }
 for (const button of menuButtons) button.addEventListener("click", () => setMenuOpen(!menuOpen));
-for (const button of fullscreenButtons) button.addEventListener("click", () => { void toggleFullscreen(); });
+for (const button of fullscreenButtons) {
+  button.addEventListener("pointerdown", (event) => { if (event.pointerType === "mouse" && event.button !== 0) return; event.preventDefault(); event.stopPropagation(); suppressFullscreenClickUntil = performance.now() + 1_000; void toggleFullscreen(); });
+  button.addEventListener("click", (event) => { if (performance.now() < suppressFullscreenClickUntil) { event.preventDefault(); return; } void toggleFullscreen(); });
+}
 for (const button of captureButtons) button.addEventListener("click", () => { void captureScore(); });
 for (const view of menuViews) {
   view.addEventListener("input", (event) => { const target = event.target as HTMLInputElement; if (target.dataset.setting !== undefined) updateSetting(target.dataset.setting, Number(target.value)); if (target.dataset.menuAction === "reduced") { reducedEffects = target.checked; scene.setReducedEffects(reducedEffects); presenter.setReducedEffects(reducedEffects); persistPreferences(); updateControls(); } });

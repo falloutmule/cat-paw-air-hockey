@@ -37,7 +37,7 @@ export async function toggleElementFullscreen(target: HTMLElement, documentTarge
     throw new Error("Fullscreen exit is unavailable");
   }
   if (typeof target.requestFullscreen === "function") {
-    await target.requestFullscreen({ navigationUI: "hide" });
+    await target.requestFullscreen();
     return;
   }
   if (typeof compatibleTarget.webkitRequestFullscreen === "function") {

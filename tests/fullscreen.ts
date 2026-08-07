@@ -6,7 +6,7 @@ function fakeDocument(overrides: Record<string, unknown> = {}): Document {
 }
 
 let standardRequested = 0;
-const standardTarget = { requestFullscreen: async (options: FullscreenOptions) => { standardRequested += 1; assert.equal(options.navigationUI, "hide"); } } as unknown as HTMLElement;
+const standardTarget = { requestFullscreen: async () => { standardRequested += 1; } } as unknown as HTMLElement;
 const standardDocument = fakeDocument();
 assert.equal(fullscreenAvailable(standardTarget, standardDocument), true);
 assert.equal(fullscreenElement(standardDocument), null);

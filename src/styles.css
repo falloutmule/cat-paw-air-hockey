@@ -51,6 +51,8 @@ button { font: inherit; }
 .shared-control[aria-pressed="true"] .icon--menu::after { transform: rotate(-45deg); }
 .icon--fullscreen { border: 3px solid #fff4d6; border-radius: .18rem; }
 .shared-control[aria-pressed="true"] .icon--fullscreen { transform: scale(.72); box-shadow: 0 0 0 2px #fff4d6; }
+.control-feedback { position: absolute; z-index: 40; left: 50%; top: 50%; width: min(82%, 22rem); transform: translate(-50%, -50%); padding: .8rem 1rem; border: 2px solid #ffd45c; border-radius: .7rem; color: #fff4d6; background: rgb(7 16 24 / 96%); text-align: center; pointer-events: none; }
+.control-feedback[hidden] { display: none; }
 .icon--capture { border: 2px solid #fff4d6; border-radius: .18rem; }
 .icon--capture::before { content: ""; position: absolute; width: .3rem; height: .18rem; left: .34rem; top: -.22rem; background: #fff4d6; }
 #settings-overlay { position: absolute; z-index: 30; inset: 0; display: grid; grid-template-rows: 1fr 1fr; gap: .5rem; padding: max(.65rem, env(safe-area-inset-top)) max(.65rem, env(safe-area-inset-right)) max(.65rem, env(safe-area-inset-bottom)) max(.65rem, env(safe-area-inset-left)); background: rgb(6 13 19 / 91%); pointer-events: auto; }
