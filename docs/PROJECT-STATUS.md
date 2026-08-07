@@ -16,12 +16,12 @@
 
 ## Canonical identity
 
-R2 Git-LF canonical target is build `cat-paw-air-hockey-8115d17dfa2c`, 722,423 bytes, SHA-256 `1ca4e332244149bcd3cb3db4893cfc9e4e79b715ae81bd870f9b8fb5acaff34f`, source SHA-256 `8115d17dfa2c6cfa453fc36262905a398d822d78460e1c54418191909c47d41d`. It includes direct pointer-activation fullscreen at `4a11bb8511a40d00029ffd32ad9cae732de922d5` and displays an explicit message when an embedding viewer blocks fullscreen. Earlier R2 Windows-working-copy artifacts are **SUPERSEDED**. The branch and draft PR are pushed; Pages deployment remains gated and physical acceptance has not transferred.
+The verified touch-activation repair target is build `cat-paw-air-hockey-e15fc84c48fb`, 722,382 bytes, SHA-256 `2a45ce59d5a976a2196276de05d9672554f25467af6e44e3cbebda3f59d5d261`, source SHA-256 `e15fc84c48fb44ca4c8e6ddba9280c0586fde84e714e2e263d2b8e4f9d232cda`. Commit `eb7b3ce50e77aeec84c9d3144a3aa0d771f6270e` requests fullscreen from the trusted post-touch click instead of the pre-activation pointerdown. The prior Pages artifact is **SUPERSEDED** by the artifact-bound Samsung failure screenshot; physical acceptance has not transferred.
 
 ## Known limitations and blockers
 
 - A physical Samsung Galaxy S21 Ultra report must name the exact packed build, byte size, and SHA-256; no prior acceptance transfers automatically.
 - WebGL is mandatory.
-- A new exact-artifact Samsung Galaxy S21 Ultra session remains required, specifically confirming fullscreen entry and exit from the downloaded HTML opened directly in stable Android Chrome.
+- A new exact-artifact Samsung Galaxy S21 Ultra session remains required, specifically confirming fullscreen entry and exit from the HTTPS GitHub Pages game in stable Android Chrome.
 
 Release terminology remains deliberately limited: automated and deployment gates pass, while artifact-bound physical-device acceptance is still UNTESTED.

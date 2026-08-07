@@ -10,12 +10,12 @@ The readable source, tests, and SFHS project are authoritative. The current cano
 
 | Current canonical artifact | Value |
 | --- | --- |
-| Build ID | `cat-paw-air-hockey-64741220be29` |
-| Source SHA-256 | `64741220be29f0db3a3044f977d4cbba8acb0fb92d4c181c571d11f8f3afeeca` |
-| Artifact SHA-256 | `0d18270c36ff36987c8653579693a3dca3fc62b4271ea2cb55be0c13816f6b53` |
+| Build ID | `cat-paw-air-hockey-e15fc84c48fb` |
+| Source SHA-256 | `e15fc84c48fb44ca4c8e6ddba9280c0586fde84e714e2e263d2b8e4f9d232cda` |
+| Artifact SHA-256 | `2a45ce59d5a976a2196276de05d9672554f25467af6e44e3cbebda3f59d5d261` |
 | Bytes | 581,644 |
 | Verification | SFHS inspect, validate, check, pack, exact verify, packed Chromium smoke, and Pages byte parity |
-| Pages | [https://falloutmule.github.io/cat-paw-air-hockey/](https://falloutmule.github.io/cat-paw-air-hockey/) (workflow run `31099501221`) |
+| Pages | [https://falloutmule.github.io/cat-paw-air-hockey/](https://falloutmule.github.io/cat-paw-air-hockey/) (deployment workflow enforces exact artifact parity) |
 
 ## Play
 
