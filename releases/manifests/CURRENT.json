@@ -1,7 +1,7 @@
 {
   "schema": "cat-paw.release-manifest@1",
-  "status": "PROPOSED",
-  "source": { "branch": "codex/fullscreen-menu-theme-001", "commit": "8552f7a60ea9f0284588120b8f20656540337e24" },
+  "status": "VERIFIED",
+  "source": { "branch": "main", "commit": "a85b2b05c23ff5a1e8dc2e718ed33ae85b2a15e1" },
   "artifact": {
     "buildId": "cat-paw-air-hockey-64741220be29",
     "path": "dist/index.html",
@@ -11,5 +11,10 @@
   },
   "sfhsCommit": "5acd8fc9a24834d9416a6e615bb78b8012962e30",
   "physicalDevice": "UNTESTED",
-  "pages": "PROPOSED"
+  "pages": {
+    "status": "VERIFIED",
+    "url": "https://falloutmule.github.io/cat-paw-air-hockey/",
+    "workflowRun": "31099501221",
+    "deployedSha256": "0d18270c36ff36987c8653579693a3dca3fc62b4271ea2cb55be0c13816f6b53"
+  }
 }

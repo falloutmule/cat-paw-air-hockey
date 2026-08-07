@@ -2,19 +2,20 @@
 
 > A local, shared-phone air-hockey match where two players at opposite ends control cat-paw strikers and race to five goals.
 
-**Play:** GitHub Pages deployment is being established by the verified-main publication workflow. The exact URL and deployed artifact hash are recorded in [Project Status](docs/PROJECT-STATUS.md) once deployment succeeds.
+**Play:** [Cat Paw Air Hockey on GitHub Pages](https://falloutmule.github.io/cat-paw-air-hockey/)
 
 ## Status
 
-The readable source, tests, and SFHS project are authoritative. The current local canonical artifact is verified by the real SFHS packer and exact verifier; its Samsung Galaxy S21 Ultra session is still **UNTESTED**. GitHub Pages publication is **PROPOSED** until the canonical-branch workflow and byte-for-byte deployment check pass.
+The readable source, tests, and SFHS project are authoritative. The current canonical artifact is verified by the real SFHS packer and exact verifier, and GitHub Pages serves byte-for-byte identical output. Its Samsung Galaxy S21 Ultra session is still **UNTESTED**.
 
-| Current local artifact | Value |
+| Current canonical artifact | Value |
 | --- | --- |
 | Build ID | `cat-paw-air-hockey-64741220be29` |
 | Source SHA-256 | `64741220be29f0db3a3044f977d4cbba8acb0fb92d4c181c571d11f8f3afeeca` |
 | Artifact SHA-256 | `0d18270c36ff36987c8653579693a3dca3fc62b4271ea2cb55be0c13816f6b53` |
 | Bytes | 581,644 |
-| Verification | SFHS inspect, validate, check, pack, exact verify, and packed Chromium smoke |
+| Verification | SFHS inspect, validate, check, pack, exact verify, packed Chromium smoke, and Pages byte parity |
+| Pages | [https://falloutmule.github.io/cat-paw-air-hockey/](https://falloutmule.github.io/cat-paw-air-hockey/) (workflow run `31099501221`) |
 
 ## Play
 

@@ -89,6 +89,10 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          # First-time Pages provisioning can remain queued beyond the action's
+          # default ten-minute wait; this does not relax any build gate.
+          timeout: 1200000
       - name: Verify deployed bytes match the verified artifact
         shell: bash
         env:
