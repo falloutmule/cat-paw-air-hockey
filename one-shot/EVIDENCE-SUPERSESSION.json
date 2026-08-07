@@ -4,7 +4,7 @@
       "earlier": "cat-paw-air-hockey-36b74a1c8988 / 81279cdd3319ea721469ea907461eca1f5c779f90bc6c0a4da388e2ac0d46f9f",
       "status": "SUPERSEDED",
       "treatment": "The user reported fullscreen still did not work on the target device. The next repair invokes fullscreen from direct pointer activation on the root document, removes optional request arguments, and visibly identifies an embedding-policy block. Physical acceptance does not transfer.",
-      "currentArtifact": "cat-paw-air-hockey-39c5e8ccab7b / 7004139e55244f9c733d15af3e8dfee7379a7de613fe9d7524cde43782e4762e"
+      "currentArtifact": "cat-paw-air-hockey-8115d17dfa2c / 1ca4e332244149bcd3cb3db4893cfc9e4e79b715ae81bd870f9b8fb5acaff34f"
     },
     {
       "earlier": "cat-paw-air-hockey-eb95d3516717 / 50663604dfafb35cee2bc457daadd9f7420947b8f36532a93b1b3a952f12f88d",

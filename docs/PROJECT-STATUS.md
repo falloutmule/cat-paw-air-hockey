@@ -16,7 +16,7 @@
 
 ## Canonical identity
 
-R2 local canonical target is build `cat-paw-air-hockey-39c5e8ccab7b`, 722,423 bytes, SHA-256 `7004139e55244f9c733d15af3e8dfee7379a7de613fe9d7524cde43782e4762e`, source SHA-256 `39c5e8ccab7b992643c8ad3fd51081362a52392e17f3916542bcab0148b681c8`. It includes direct pointer-activation fullscreen at `4a11bb8511a40d00029ffd32ad9cae732de922d5` and displays an explicit message when an embedding viewer blocks fullscreen. Both earlier R2 fullscreen artifacts are **SUPERSEDED** after target-device failure reports. R2 is not pushed or deployed and has no transferred physical acceptance.
+R2 Git-LF canonical target is build `cat-paw-air-hockey-8115d17dfa2c`, 722,423 bytes, SHA-256 `1ca4e332244149bcd3cb3db4893cfc9e4e79b715ae81bd870f9b8fb5acaff34f`, source SHA-256 `8115d17dfa2c6cfa453fc36262905a398d822d78460e1c54418191909c47d41d`. It includes direct pointer-activation fullscreen at `4a11bb8511a40d00029ffd32ad9cae732de922d5` and displays an explicit message when an embedding viewer blocks fullscreen. Earlier R2 Windows-working-copy artifacts are **SUPERSEDED**. The branch and draft PR are pushed; Pages deployment remains gated and physical acceptance has not transferred.
 
 ## Known limitations and blockers
 

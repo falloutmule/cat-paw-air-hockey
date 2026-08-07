@@ -14,9 +14,9 @@ The R2 implementation replaces duplicated end controls with four shared center-e
 
 - Path: `dist/index.html`
 - Bytes: `722423`
-- SHA-256: `7004139e55244f9c733d15af3e8dfee7379a7de613fe9d7524cde43782e4762e`
-- Build ID: `cat-paw-air-hockey-39c5e8ccab7b`
-- Source SHA-256: `39c5e8ccab7b992643c8ad3fd51081362a52392e17f3916542bcab0148b681c8`
+- SHA-256: `1ca4e332244149bcd3cb3db4893cfc9e4e79b715ae81bd870f9b8fb5acaff34f`
+- Build ID: `cat-paw-air-hockey-8115d17dfa2c`
+- Source SHA-256: `8115d17dfa2c6cfa453fc36262905a398d822d78460e1c54418191909c47d41d`
 - SFHS pin: `5acd8fc9a24834d9416a6e615bb78b8012962e30`
 - Renderer: Pixi v8 / WebGL
 - External references: none
