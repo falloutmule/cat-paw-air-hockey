@@ -2,7 +2,7 @@ import { createSfhsPixiV8Presentation, supportsRequiredWebGl } from "@sfhs/adapt
 import { createSfhsPixiGameRuntime, type SfhsPixiGameRuntime } from "@sfhs/pixi-runtime";
 import { createHockeyAudioController } from "./audio.ts";
 import { makeBoardTemplateBlob } from "./board-art.ts";
-import { MAXIMUM_FRAME_DELTA_MS, SIMULATION_HZ } from "./constants.ts";
+import { LOGICAL_HEIGHT, LOGICAL_WIDTH, MAXIMUM_FRAME_DELTA_MS, SIMULATION_HZ } from "./constants.ts";
 import { lowerLeftControl } from "./controls.ts";
 import { fullscreenAvailable, fullscreenElement, toggleElementFullscreen } from "./fullscreen.ts";
 import { installDiagnostics } from "./diagnostics.ts";
@@ -91,14 +91,29 @@ function updateSetting(key: string, value: number): void {
   menuSettings = normalizeMatchSettings(next); input.requestSettings(menuSettings); persistPreferences(); syncMenuViews();
 }
 
-function isLandscape(): boolean { const width = window.visualViewport?.width ?? window.innerWidth; const height = window.visualViewport?.height ?? window.innerHeight; return width > height; }
+function applyViewportGeometry(): void {
+  const viewport = runtime?.getViewport();
+  if (viewport === undefined) return;
+  const playfieldWidth = viewport.logicalWidth * viewport.scaleX;
+  const playfieldHeight = viewport.logicalHeight * viewport.scaleY;
+  shell.style.width = `${viewport.presentedWidth}px`;
+  shell.style.height = `${viewport.presentedHeight}px`;
+  shell.style.setProperty("--viewport-width", `${viewport.presentedWidth}px`);
+  shell.style.setProperty("--viewport-height", `${viewport.presentedHeight}px`);
+  shell.style.setProperty("--playfield-left", `${viewport.offsetX}px`);
+  shell.style.setProperty("--playfield-right", `${viewport.offsetX + playfieldWidth}px`);
+  shell.style.setProperty("--playfield-top", `${viewport.offsetY}px`);
+  shell.style.setProperty("--playfield-bottom", `${viewport.offsetY + playfieldHeight}px`);
+  shell.style.setProperty("--playfield-center-y", `${viewport.offsetY + playfieldHeight / 2}px`);
+  shell.dataset.orientation = viewport.orientation;
+}
 function applyOrientationGate(): void {
-  const landscape = isLandscape(); orientationGate.hidden = !landscape; shell.dataset.orientation = landscape ? "landscape" : "portrait";
+  const landscape = runtime?.getViewport().orientation === "landscape"; orientationGate.hidden = !landscape;
   if (runtime === undefined) return;
   if (landscape && !orientationPaused) { orientationPaused = true; runtime.pause(); input.clear(); }
   else if (!landscape && orientationPaused) { orientationPaused = false; if (!document.hidden) runtime.resume(); }
 }
-function scheduleViewport(): void { if (viewportFrame !== 0) return; viewportFrame = requestAnimationFrame(() => { viewportFrame = 0; applyOrientationGate(); updateControls(); }); }
+function scheduleViewport(): void { if (viewportFrame !== 0) return; viewportFrame = requestAnimationFrame(() => { viewportFrame = 0; applyViewportGeometry(); applyOrientationGate(); updateControls(); }); }
 function setMenuOpen(open: boolean): void {
   if (open) { input.clear(); if (runtime?.getState().phase !== "paused") input.requestPause(); menuOpen = true; settingsOverlay.hidden = false; settingsLive.value = "Settings open. Match paused."; }
   else { input.clear(); menuOpen = false; settingsOverlay.hidden = true; settingsLive.value = "Settings closed. Press Resume to continue."; }
@@ -181,8 +196,8 @@ const removeDiagnostics = installDiagnostics({ getRuntime: () => runtime, input,
 async function boot(): Promise<void> {
   if (!supportsRequiredWebGl(document)) { capability.hidden = false; host.hidden = true; status.value = "WebGL unavailable"; return; }
   try {
-    runtime = await createSfhsPixiGameRuntime({ host, presentation, scene, actions: input, viewport: { mode: "fixed", logicalWidth: 540, logicalHeight: 960, maximumDevicePixelRatio: 2, scalePolicy: "contain" }, simulationHz: SIMULATION_HZ, maximumFrameDeltaMilliseconds: MAXIMUM_FRAME_DELTA_MS });
-    input.setSurface(host, () => runtime?.getPrimarySurface()); scene.setReducedEffects(reducedEffects); presenter.setReducedEffects(reducedEffects); input.requestSettings(menuSettings); runtime.start(); status.value = "Ready — both players hold a paw"; applyOrientationGate(); updateControls();
+    runtime = await createSfhsPixiGameRuntime({ host, presentation, scene, actions: input, viewport: { mode: "fixed", logicalWidth: LOGICAL_WIDTH, logicalHeight: LOGICAL_HEIGHT, maximumDevicePixelRatio: 2, scalePolicy: "contain" }, simulationHz: SIMULATION_HZ, maximumFrameDeltaMilliseconds: MAXIMUM_FRAME_DELTA_MS });
+    applyViewportGeometry(); input.setSurface(host, () => runtime?.getPrimarySurface()); scene.setReducedEffects(reducedEffects); presenter.setReducedEffects(reducedEffects); input.requestSettings(menuSettings); runtime.start(); status.value = "Ready — both players hold a paw"; applyOrientationGate(); updateControls();
     void loadTheme().then((file) => { if (file !== undefined) void acceptTheme(file); }).catch(() => themeStatus("Classic legacy theme (storage unavailable)"));
     void loadBoard().then((file) => { if (file !== undefined) void acceptBoard(file); else syncBoardViews(); }).catch(() => boardStatus("Default Board · storage unavailable"));
   } catch (error) { capability.hidden = false; capability.querySelector("p")!.textContent = "The required PixiJS WebGL renderer could not initialize."; host.hidden = true; status.value = error instanceof Error ? error.message : "Renderer initialization failed"; }
@@ -194,6 +209,6 @@ document.addEventListener("fullscreenchange", onFullscreenChange);
 document.addEventListener("webkitfullscreenchange", onFullscreenChange);
 document.addEventListener("fullscreenerror", onFullscreenError);
 document.addEventListener("webkitfullscreenerror", onFullscreenError);
-window.addEventListener("resize", scheduleViewport); window.addEventListener("orientationchange", scheduleViewport); window.visualViewport?.addEventListener("resize", scheduleViewport); window.visualViewport?.addEventListener("scroll", scheduleViewport);
+window.addEventListener("resize", scheduleViewport); window.addEventListener("orientationchange", scheduleViewport); window.visualViewport?.addEventListener("resize", scheduleViewport);
 window.addEventListener("pagehide", () => { removeDiagnostics(); runtime?.destroy(); input.destroy(); if (currentBoard !== undefined) URL.revokeObjectURL(currentBoard.url); void audio.dispose(); }, { once: true });
 syncBoardViews(); updateControls(); void boot();

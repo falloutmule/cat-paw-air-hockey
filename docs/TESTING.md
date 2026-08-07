@@ -26,7 +26,7 @@ pnpm test:browser
 
 `pnpm run lint` and `pnpm run typecheck` are deliberately materialized-project commands: the source imports the pinned SFHS adapter/runtime packages and the graduation materializer provides the approved tool overlay without vendoring framework source into this repository. Direct-source regression tests remain project-owned.
 
-`SFHS_TEST_SELECTION_REVIEW_REQUIRED` can be a non-fatal warning for changed paths with broad runtime impact; it is recorded, never suppressed. A canonical result requires pack and exact verify of the same `dist/index.html` plus packed-artifact Chromium evidence. The browser evidence checks boot, one WebGL canvas, control layout, fullscreen, settings, capture, lifecycle/orientation, errors, and runtime requests.
+`SFHS_TEST_SELECTION_REVIEW_REQUIRED` can be a non-fatal warning for changed paths with broad runtime impact; it is recorded, never suppressed. A canonical result requires pack and exact verify of the same `dist/index.html` plus packed-artifact Chromium evidence. The browser evidence checks boot, one WebGL canvas, control layout, fullscreen, settings, capture, lifecycle/orientation, errors, and runtime requests. R2A additionally measures several portrait viewports, menu/document containment, independent half scrolling, Board pixel/logical independence, and post-fullscreen screen-to-logical mapping.
 
 ## Pages release
 

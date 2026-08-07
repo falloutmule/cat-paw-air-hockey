@@ -55,9 +55,57 @@ try {
   assert.equal(initial.state.phase, "ready");
   assert.equal(initial.board.mode, "default");
   assert.equal(initial.board.spriteCount, 1);
+  assert.deepEqual(initial.board.logicalBounds, { x: 0, y: 0, width: 540, height: 960 });
+  assert.deepEqual(initial.board.spriteLogicalSize, { width: 540, height: 960 });
+  assert.deepEqual(initial.board.bitmapPixels, { width: 1080, height: 1920 });
+  assert.notEqual(initial.board.logicalBounds.width, initial.board.bitmapPixels.width, "Board bitmap pixels do not become logical layout units");
   assert.equal(await page.locator("#game-shell").getAttribute("data-board"), "default");
   assert.equal(await page.locator("#pixi-host canvas").count(), 1);
   assert.equal(await page.locator("canvas").count(), 1);
+
+  const assertSettingsGeometry = async (width: number, height: number): Promise<void> => {
+    await page.setViewportSize({ width, height });
+    await page.waitForFunction(([expectedWidth, expectedHeight]) => {
+      const viewport = (window.__CAT_AIR_HOCKEY__?.snapshot() as any)?.renderer?.viewport;
+      return viewport?.presentedWidth === expectedWidth && viewport?.presentedHeight === expectedHeight;
+    }, [width, height]);
+    await page.locator("[data-action='menu']").click();
+    await page.waitForFunction(() => !(document.querySelector("#settings-overlay") as HTMLElement).hidden);
+    const geometry = await page.evaluate(() => {
+      const rect = (selector: string) => { const value = document.querySelector<HTMLElement>(selector)!.getBoundingClientRect(); return { x: value.x, y: value.y, width: value.width, height: value.height, right: value.right, bottom: value.bottom }; };
+      const top = document.querySelector<HTMLElement>(".settings-view--top")!;
+      const bottom = document.querySelector<HTMLElement>(".settings-view--bottom")!;
+      const visual = window.visualViewport;
+      return {
+        visual: { width: visual?.width ?? innerWidth, height: visual?.height ?? innerHeight },
+        document: { width: document.documentElement.scrollWidth, height: document.documentElement.scrollHeight, clientWidth: document.documentElement.clientWidth, clientHeight: document.documentElement.clientHeight },
+        shell: rect("#game-shell"), canvas: rect("#pixi-host canvas"), settings: rect("#settings-overlay"), top: rect(".settings-half--top"), bottom: rect(".settings-half--bottom"),
+        controls: ["mute", "pause", "menu", "fullscreen"].map((action) => rect(`[data-action='${action}']`)),
+        topScroll: { clientHeight: top.clientHeight, scrollHeight: top.scrollHeight }, bottomScroll: { clientHeight: bottom.clientHeight, scrollHeight: bottom.scrollHeight }
+      };
+    });
+    const epsilon = 1;
+    assert.ok(geometry.settings.width <= geometry.visual.width + epsilon && geometry.settings.height <= geometry.visual.height + epsilon);
+    assert.equal(geometry.document.width, geometry.document.clientWidth, "settings own horizontal containment");
+    assert.equal(geometry.document.height, geometry.document.clientHeight, "settings own vertical scrolling without growing the document");
+    for (const half of [geometry.top, geometry.bottom]) { assert.ok(half.x >= -epsilon && half.y >= -epsilon && half.right <= geometry.visual.width + epsilon && half.bottom <= geometry.visual.height + epsilon); }
+    assert.ok(geometry.topScroll.scrollHeight > geometry.topScroll.clientHeight && geometry.bottomScroll.scrollHeight > geometry.bottomScroll.clientHeight, "both settings halves own internal scrolling");
+    assert.ok(geometry.canvas.x >= -epsilon && geometry.canvas.y >= -epsilon && geometry.canvas.right <= geometry.visual.width + epsilon && geometry.canvas.bottom <= geometry.visual.height + epsilon);
+    for (const control of geometry.controls) assert.ok(control.x >= -epsilon && control.y >= -epsilon && control.right <= geometry.visual.width + epsilon && control.bottom <= geometry.visual.height + epsilon, "shared controls remain inside the current safe screen bounds");
+    const bottomScrollBeforeTop = await page.locator(".settings-view--bottom").evaluate((element) => element.scrollTop);
+    await page.locator(".settings-view--top").evaluate((element) => { element.scrollTop = 120; });
+    assert.ok(await page.locator(".settings-view--top").evaluate((element) => element.scrollTop) > 0);
+    assert.equal(await page.locator(".settings-view--bottom").evaluate((element) => element.scrollTop), bottomScrollBeforeTop);
+    const topScroll = await page.locator(".settings-view--top").evaluate((element) => element.scrollTop);
+    await page.locator(".settings-view--bottom").evaluate((element) => { element.scrollTop = 140; });
+    assert.equal(await page.locator(".settings-view--top").evaluate((element) => element.scrollTop), topScroll);
+    assert.ok(await page.locator(".settings-view--bottom").evaluate((element) => element.scrollTop) > 0);
+    await page.locator(".settings-view--bottom [data-menu-action='close']").click();
+    await page.waitForFunction(() => (document.querySelector("#settings-overlay") as HTMLElement).hidden);
+  };
+  for (const portrait of [{ width: 412, height: 915 }, { width: 360, height: 800 }, { width: 412, height: 1000 }]) await assertSettingsGeometry(portrait.width, portrait.height);
+  await page.setViewportSize({ width: 412, height: 915 });
+  await page.waitForFunction(() => (window.__CAT_AIR_HOCKEY__?.snapshot() as any)?.renderer?.viewport?.presentedHeight === 915);
 
   const viewport = page.viewportSize()!;
   assert.equal(await page.locator(".shared-controls").count(), 1);
@@ -126,9 +174,21 @@ try {
   await page.locator("[data-action='fullscreen']").tap();
   await page.waitForFunction(() => document.fullscreenElement !== null);
   assert.equal(await page.locator("[data-action='fullscreen']").getAttribute("aria-pressed"), "true");
+  const cdp = await context.newCDPSession(page);
+  await cdp.send("Emulation.setDeviceMetricsOverride", { width: 412, height: 1000, deviceScaleFactor: 2, mobile: true });
+  await page.waitForFunction(() => (window.__CAT_AIR_HOCKEY__?.snapshot() as any)?.renderer?.viewport?.presentedHeight === 1000);
+  const resizedCanvas = await page.locator("#pixi-host canvas").boundingBox();
+  assert.ok(resizedCanvas);
+  await page.locator("#pixi-host").dispatchEvent("pointerdown", { pointerId: 909, pointerType: "touch", isPrimary: true, clientX: resizedCanvas.x + resizedCanvas.width / 2, clientY: resizedCanvas.y + resizedCanvas.height * 0.75, bubbles: true, cancelable: true });
+  await page.waitForFunction(() => (window.__CAT_AIR_HOCKEY__?.snapshot() as any)?.input?.owners?.[1] === 909);
+  const mappedAfterFullscreenResize = await page.evaluate(() => (window.__CAT_AIR_HOCKEY__!.snapshot() as any).input.targets[1]);
+  assert.ok(Math.abs(mappedAfterFullscreenResize.x - 270) < 0.01 && Math.abs(mappedAfterFullscreenResize.y - 720) < 0.01, "input consumes the resized canvas transform");
+  await page.locator("#pixi-host").dispatchEvent("pointerup", { pointerId: 909, pointerType: "touch", isPrimary: true, clientX: resizedCanvas.x + resizedCanvas.width / 2, clientY: resizedCanvas.y + resizedCanvas.height * 0.75, bubbles: true, cancelable: true });
   await page.locator("[data-action='fullscreen']").tap();
   await page.waitForFunction(() => document.fullscreenElement === null);
   assert.equal(await page.locator("[data-action='fullscreen']").getAttribute("aria-pressed"), "false");
+  await cdp.send("Emulation.setDeviceMetricsOverride", { width: 412, height: 915, deviceScaleFactor: 2, mobile: true });
+  await page.waitForFunction(() => (window.__CAT_AIR_HOCKEY__?.snapshot() as any)?.renderer?.viewport?.presentedHeight === 915);
 
   const rink = await page.locator("#pixi-host").boundingBox();
   assert.ok(rink);

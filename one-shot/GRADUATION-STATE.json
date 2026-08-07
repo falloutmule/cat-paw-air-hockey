@@ -1,14 +1,14 @@
 {
   "deferredWork": [],
   "evidenceStatus": "VERIFIED",
-  "nextAction": "Collect the CATPAW-EXPANSION-001-R1 exact-artifact Samsung session with return-speed, split goal-side control, fullscreen-apron, capture, and theme evidence.",
+  "nextAction": "Run the CATPAW-EXPANSION-001-R2A layout-first Samsung seed against the exact repaired artifact before resuming full gameplay acceptance.",
   "physicalStatus": "UNTESTED",
   "productStatus": "PRODUCT_COMPLETE",
   "projectRoot": ".",
   "records": {
     "physicalSeed": {
       "path": "one-shot/GRADUATION-PHYSICAL-TEST-SEED.json",
-      "sha256": "40f6f64b06387fd9c689e7b6782146489e41a5d764741c035529c5dfe7ac538b"
+      "sha256": "efb2384e3392883312a72eededeea7cbfaaefad3aabc02c1ec10a4f2b261fadc"
     },
     "plan": {
       "path": "one-shot/MIGRATION-PLAN.json",
@@ -16,7 +16,7 @@
     },
     "report": {
       "path": "one-shot/GRADUATION-REPORT.json",
-      "sha256": "1e74eea5fe16ab082db4b71cff4a0bd3964d210946d6c1be3175652dd6bd8132"
+      "sha256": "643ded0af9940275b8c04ccc9e5a5c8a495736880c14c63e96339a1e52f86247"
     },
     "source": {
       "path": "SOURCE-IDENTITY.json",

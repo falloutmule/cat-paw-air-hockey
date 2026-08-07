@@ -1,6 +1,12 @@
 {
   "records": [
     {
+      "earlier": "cat-paw-air-hockey-e15fc84c48fb / 2a45ce59d5a976a2196276de05d9672554f25467af6e44e3cbebda3f59d5d261",
+      "status": "SUPERSEDED",
+      "treatment": "The local post-touch fullscreen candidate is superseded by the mechanics-first viewport repair. The remotely verified 8115d17 artifact remains deployed, but its artifact-bound Samsung session reported the settings presentation physically wrong-sized and stopped testing. It is REPORTED FAIL / NEEDS REPAIR; physical acceptance did not occur and does not transfer.",
+      "currentArtifact": "cat-paw-air-hockey-5735c4c572c2 / acb55aec6d8d8d8d6bf1afa4634eefe5caeec51d77d95a743e4ddd29950e9c9c"
+    },
+    {
       "earlier": "cat-paw-air-hockey-8115d17dfa2c / 1ca4e332244149bcd3cb3db4893cfc9e4e79b715ae81bd870f9b8fb5acaff34f",
       "status": "SUPERSEDED",
       "treatment": "The artifact passed automated touch Chromium, but an artifact-bound Samsung HTTPS Pages screenshot proved fullscreen was requested before Android granted touch activation. Physical acceptance did not occur and does not transfer.",

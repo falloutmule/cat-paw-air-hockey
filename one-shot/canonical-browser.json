@@ -3,9 +3,9 @@
   "valid": true,
   "artifact": {
     "path": "dist/index.html",
-    "bytes": 722382,
-    "sha256": "2a45ce59d5a976a2196276de05d9672554f25467af6e44e3cbebda3f59d5d261",
-    "buildId": "cat-paw-air-hockey-e15fc84c48fb"
+    "bytes": 724123,
+    "sha256": "acb55aec6d8d8d8d6bf1afa4634eefe5caeec51d77d95a743e4ddd29950e9c9c",
+    "buildId": "cat-paw-air-hockey-5735c4c572c2"
   },
   "browser": "Chromium 149.0.7827.55",
   "checks": [
@@ -20,6 +20,10 @@
     "one persistent Board sprite and owned superseded texture disposal",
     "Board replacement leaves simulation and stage object count unchanged",
     "independent pointers, release, cancellation, and third-touch rejection",
-    "ready/countdown, pause/resume, touch-driven fullscreen entry/exit, landscape gate, and portrait return"
+    "ready/countdown, pause/resume, touch-driven fullscreen entry/exit, landscape gate, and portrait return",
+    "settings and document containment at 412 x 915, 360 x 800, and 412 x 1000",
+    "independent scrolling in each bounded mirrored settings half",
+    "1080 x 1920 Board pixels remain independent from the 540 x 960 logical sprite",
+    "exact screen-to-logical pointer mapping after fullscreen viewport resize"
   ]
 }

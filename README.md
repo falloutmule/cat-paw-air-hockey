@@ -6,22 +6,22 @@
 
 ## Status
 
-The readable source, tests, and SFHS project are authoritative. The current canonical artifact is verified by the real SFHS packer and exact verifier, and GitHub Pages serves byte-for-byte identical output. Its Samsung Galaxy S21 Ultra session is still **UNTESTED**.
+The readable source, tests, and SFHS project are authoritative. The current R2A artifact is locally verified by the real SFHS packer and exact verifier. It is not deployed under this local-only repair boundary, and its Samsung Galaxy S21 Ultra session is **UNTESTED**. The currently deployed earlier artifact has a `REPORTED FAIL / NEEDS REPAIR` physical layout result.
 
 | Current canonical artifact | Value |
 | --- | --- |
-| Build ID | `cat-paw-air-hockey-e15fc84c48fb` |
-| Source SHA-256 | `e15fc84c48fb44ca4c8e6ddba9280c0586fde84e714e2e263d2b8e4f9d232cda` |
-| Artifact SHA-256 | `2a45ce59d5a976a2196276de05d9672554f25467af6e44e3cbebda3f59d5d261` |
-| Bytes | 581,644 |
-| Verification | SFHS inspect, validate, check, pack, exact verify, packed Chromium smoke, and Pages byte parity |
-| Pages | [https://falloutmule.github.io/cat-paw-air-hockey/](https://falloutmule.github.io/cat-paw-air-hockey/) (deployment workflow enforces exact artifact parity) |
+| Build ID | `cat-paw-air-hockey-5735c4c572c2` |
+| Source SHA-256 | `5735c4c572c28fedac73ab0eb2308ca2b983c66170c525dc40f2a714df50c5dd` |
+| Artifact SHA-256 | `acb55aec6d8d8d8d6bf1afa4634eefe5caeec51d77d95a743e4ddd29950e9c9c` |
+| Bytes | 724,123 |
+| Verification | SFHS inspect, validate, check, pack, exact verify, and multi-viewport packed Chromium smoke |
+| Pages | [Currently deployed earlier build](https://falloutmule.github.io/cat-paw-air-hockey/); R2A was not deployed |
 
 ## Play
 
 Place one phone flat in portrait orientation, one player at each short end. Both players hold their ready paw, wait for the countdown, then each drags one finger inside their own half of the rink. Score through the opposite cat goal; first to five wins. Both players hold again for a rematch.
 
-The top player reads the top controls upside down. Each end has Sound and Pause on one side of the goal, and Settings and Fullscreen on the other. The final-score capture control appears only after a match. The game intentionally shows a rotate-to-portrait gate in landscape.
+The four shared controls straddle the center edges: Mute upper-left, Pause lower-left, Menu upper-right, and Fullscreen lower-right. Capture replaces Pause only after a win. The game intentionally shows a rotate-to-portrait gate in landscape.
 
 ## Implemented
 

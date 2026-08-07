@@ -588,7 +588,15 @@ export function createCatHockeyPresenter(options: {
     setReducedEffects(value): void { reducedEffects = value; },
     setTheme(value): void { if (theme !== undefined) URL.revokeObjectURL(theme.url); theme = value; applyTheme(); },
     setBoard(value): void { board = value; boardReplacementCount += 1; applyBoard(); },
-    getBoardDiagnostics: () => Object.freeze({ mode: board === undefined ? "default" : "custom", spriteCount: 1 as const, replacementCount: boardReplacementCount, disposedOwnedTextureCount }),
+    getBoardDiagnostics: () => Object.freeze({
+      mode: board === undefined ? "default" : "custom",
+      spriteCount: 1 as const,
+      replacementCount: boardReplacementCount,
+      disposedOwnedTextureCount,
+      logicalBounds: Object.freeze({ x: BOARD.x, y: BOARD.y, width: BOARD.width, height: BOARD.height }),
+      bitmapPixels: Object.freeze({ width: board?.width ?? BOARD.bitmapWidth, height: board?.height ?? BOARD.bitmapHeight }),
+      spriteLogicalSize: Object.freeze({ width: initialized ? boardSprite.width : BOARD.width, height: initialized ? boardSprite.height : BOARD.height })
+    }),
     destroy(): void {
       if (destroyed) return;
       destroyed = true;

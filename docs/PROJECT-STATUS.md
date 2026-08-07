@@ -11,17 +11,17 @@
 | Fullscreen, mirrored settings, return-speed handicaps, score capture, local themes | VERIFIED IMPLEMENTED | Canonical packed artifact and browser smoke; Samsung evidence pending |
 | Shared center controls and independent Board PNG reskinning | VERIFIED IMPLEMENTED | Exactly four live shared controls; strict 1080×1920 Board loader/persistence/reset and packed browser proof |
 | One Pixi WebGL canvas / no runtime external requests | VERIFIED IMPLEMENTED | SFHS manifest and packed Chromium smoke |
-| GitHub Pages | VERIFIED IMPLEMENTED | [Live site](https://falloutmule.github.io/cat-paw-air-hockey/) from Pages workflow run `31099501221`; downloaded bytes match the canonical artifact |
-| Current-artifact Samsung acceptance | UNTESTED | Earlier device results are artifact-specific and SUPERSEDED |
+| GitHub Pages | VERIFIED IMPLEMENTED / SUPERSEDED ARTIFACT | [Live site](https://falloutmule.github.io/cat-paw-air-hockey/) serves an earlier verified build whose Samsung layout result is REPORTED FAIL / NEEDS REPAIR; R2A is local only |
+| Current-artifact Samsung acceptance | UNTESTED | Earlier device results are artifact-specific and do not transfer |
 
 ## Canonical identity
 
-The verified touch-activation repair target is build `cat-paw-air-hockey-e15fc84c48fb`, 722,382 bytes, SHA-256 `2a45ce59d5a976a2196276de05d9672554f25467af6e44e3cbebda3f59d5d261`, source SHA-256 `e15fc84c48fb44ca4c8e6ddba9280c0586fde84e714e2e263d2b8e4f9d232cda`. Commit `eb7b3ce50e77aeec84c9d3144a3aa0d771f6270e` requests fullscreen from the trusted post-touch click instead of the pre-activation pointerdown. The prior Pages artifact is **SUPERSEDED** by the artifact-bound Samsung failure screenshot; physical acceptance has not transferred.
+The locally verified mechanics-first R2A target is build `cat-paw-air-hockey-5735c4c572c2`, 724,123 bytes, SHA-256 `acb55aec6d8d8d8d6bf1afa4634eefe5caeec51d77d95a743e4ddd29950e9c9c`, source SHA-256 `5735c4c572c28fedac73ab0eb2308ca2b983c66170c525dc40f2a714df50c5dd`. It replaces competing product viewport calculations with the SFHS runtime snapshot as sole authority and bounds each mirrored settings half to the visible viewport. The deployed `cat-paw-air-hockey-8115d17dfa2c` artifact remains preserved with a **REPORTED FAIL / NEEDS REPAIR** physical layout result; acceptance does not transfer.
 
 ## Known limitations and blockers
 
 - A physical Samsung Galaxy S21 Ultra report must name the exact packed build, byte size, and SHA-256; no prior acceptance transfers automatically.
 - WebGL is mandatory.
-- A new exact-artifact Samsung Galaxy S21 Ultra session remains required, specifically confirming fullscreen entry and exit from the HTTPS GitHub Pages game in stable Android Chrome.
+- A new exact-artifact Samsung Galaxy S21 Ultra layout-first session remains required before full gameplay acceptance resumes.
 
 Release terminology remains deliberately limited: automated and deployment gates pass, while artifact-bound physical-device acceptance is still UNTESTED.
