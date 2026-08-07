@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { fullscreenAvailable, fullscreenElement, toggleElementFullscreen } from "../src/fullscreen.ts";
 
 function fakeDocument(overrides: Record<string, unknown> = {}): Document {
@@ -30,4 +31,11 @@ assert.equal(exited, 1);
 assert.equal(fullscreenAvailable({} as HTMLElement, fakeDocument({ fullscreenEnabled: false })), false);
 await assert.rejects(() => toggleElementFullscreen({} as HTMLElement, fakeDocument()), /Fullscreen is unavailable/);
 
-console.log(JSON.stringify({ schema: "cat-air-hockey.fullscreen@1", passed: true, checks: 11 }, null, 2));
+const mainSource = readFileSync(new URL("../src/main.ts", import.meta.url), "utf8");
+const pointerdownHandler = mainSource.match(/button\.addEventListener\("pointerdown",[^\n]+/u)?.[0] ?? "";
+const clickHandler = mainSource.match(/button\.addEventListener\("click",[^\n]+toggleFullscreen\(\)[^\n]+/u)?.[0] ?? "";
+assert.doesNotMatch(pointerdownHandler, /toggleFullscreen/u, "touch pointerdown must not spend fullscreen activation before pointerup");
+assert.match(clickHandler, /toggleFullscreen/u, "trusted click owns the fullscreen request");
+assert.doesNotMatch(mainSource, /suppressFullscreenClickUntil/u, "the valid post-pointerup click is never suppressed");
+
+console.log(JSON.stringify({ schema: "cat-air-hockey.fullscreen@1", passed: true, checks: 14 }, null, 2));
