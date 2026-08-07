@@ -1,6 +1,12 @@
 {
   "records": [
     {
+      "earlier": "cat-paw-air-hockey-8115d17dfa2c / 1ca4e332244149bcd3cb3db4893cfc9e4e79b715ae81bd870f9b8fb5acaff34f",
+      "status": "SUPERSEDED",
+      "treatment": "The artifact passed automated touch Chromium, but an artifact-bound Samsung HTTPS Pages screenshot proved fullscreen was requested before Android granted touch activation. Physical acceptance did not occur and does not transfer.",
+      "currentArtifact": "cat-paw-air-hockey-e15fc84c48fb / 2a45ce59d5a976a2196276de05d9672554f25467af6e44e3cbebda3f59d5d261"
+    },
+    {
       "earlier": "cat-paw-air-hockey-36b74a1c8988 / 81279cdd3319ea721469ea907461eca1f5c779f90bc6c0a4da388e2ac0d46f9f",
       "status": "SUPERSEDED",
       "treatment": "The user reported fullscreen still did not work on the target device. The next repair invokes fullscreen from direct pointer activation on the root document, removes optional request arguments, and visibly identifies an embedding-policy block. Physical acceptance does not transfer.",

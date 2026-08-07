@@ -3,9 +3,9 @@
   "valid": true,
   "artifact": {
     "path": "dist/index.html",
-    "bytes": 722423,
-    "sha256": "1ca4e332244149bcd3cb3db4893cfc9e4e79b715ae81bd870f9b8fb5acaff34f",
-    "buildId": "cat-paw-air-hockey-8115d17dfa2c"
+    "bytes": 722382,
+    "sha256": "2a45ce59d5a976a2196276de05d9672554f25467af6e44e3cbebda3f59d5d261",
+    "buildId": "cat-paw-air-hockey-e15fc84c48fb"
   },
   "browser": "Chromium 149.0.7827.55",
   "checks": [

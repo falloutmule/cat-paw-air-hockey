@@ -46,7 +46,6 @@ let orientationPaused = false;
 let menuOpen = false;
 let captureInProgress = false;
 let feedbackTimer: ReturnType<typeof setTimeout> | undefined;
-let suppressFullscreenClickUntil = 0;
 let viewportFrame = 0;
 let reducedEffects = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
 let currentTheme: ValidTheme | undefined;
@@ -135,10 +134,10 @@ function updateControls(): void {
   status.value = `Audio ${audio.getStatus()} · ${reducedEffects ? "reduced motion" : "full effects"}${menuOpen ? " · settings open" : ""}`; syncMenuViews();
 }
 async function toggleFullscreen(): Promise<void> {
-  if (!fullscreenAvailable(document.documentElement)) { const message = "This preview blocks fullscreen. Download the HTML and open it directly in Chrome."; settingsLive.value = message; showControlFeedback(message); return; }
+  if (!fullscreenAvailable(document.documentElement)) { const message = "Fullscreen is unavailable in this browser view. Keep the HTTPS game open directly in Chrome."; settingsLive.value = message; showControlFeedback(message); return; }
   input.clear();
   try { await toggleElementFullscreen(document.documentElement); }
-  catch { const message = "Fullscreen was blocked by this viewer. Open the downloaded HTML directly in Chrome."; settingsLive.value = message; showControlFeedback(message); }
+  catch { const message = "Fullscreen could not start. Keep this HTTPS game open directly in Chrome and tap Fullscreen again."; settingsLive.value = message; showControlFeedback(message); }
   scheduleViewport();
 }
 async function captureScore(): Promise<void> {
@@ -156,8 +155,11 @@ for (const button of muteButtons) { button.addEventListener("pointerdown", () =>
 for (const button of pauseButtons) { button.addEventListener("pointerdown", () => { void audio.unlock(); }, { passive: true }); button.addEventListener("click", () => { input.requestPause(); audio.playUi("pause"); setTimeout(updateControls, 40); }); }
 for (const button of menuButtons) button.addEventListener("click", () => setMenuOpen(!menuOpen));
 for (const button of fullscreenButtons) {
-  button.addEventListener("pointerdown", (event) => { if (event.pointerType === "mouse" && event.button !== 0) return; event.preventDefault(); event.stopPropagation(); suppressFullscreenClickUntil = performance.now() + 1_000; void toggleFullscreen(); });
-  button.addEventListener("click", (event) => { if (performance.now() < suppressFullscreenClickUntil) { event.preventDefault(); return; } void toggleFullscreen(); });
+  // Touch browsers grant transient activation at pointerup/click, not pointerdown.
+  // Keep pointer ownership away from the rink, then request fullscreen from the
+  // trusted click so Android Chrome accepts it.
+  button.addEventListener("pointerdown", (event) => { if (event.pointerType === "mouse" && event.button !== 0) return; event.stopPropagation(); });
+  button.addEventListener("click", (event) => { event.preventDefault(); event.stopPropagation(); void toggleFullscreen(); });
 }
 for (const button of captureButtons) button.addEventListener("click", () => { void captureScore(); });
 for (const view of menuViews) {
@@ -187,7 +189,7 @@ async function boot(): Promise<void> {
 }
 document.addEventListener("visibilitychange", () => { if (runtime === undefined) return; if (document.hidden) { hiddenPaused = true; runtime.pause(); input.clear(); } else if (hiddenPaused) { hiddenPaused = false; if (!orientationPaused) runtime.resume(); void audio.unlock().then(updateControls); } });
 const onFullscreenChange = (): void => { input.clear(); if (fullscreenElement() === null && runtime?.getState().phase === "playing") input.requestPause(); updateControls(); scheduleViewport(); };
-const onFullscreenError = (): void => { settingsLive.value = "Fullscreen was not allowed. Open the downloaded HTML directly in Chrome and try again."; updateControls(); };
+const onFullscreenError = (): void => { settingsLive.value = "Fullscreen was not allowed. Keep this HTTPS game open directly in Chrome and try again."; updateControls(); };
 document.addEventListener("fullscreenchange", onFullscreenChange);
 document.addEventListener("webkitfullscreenchange", onFullscreenChange);
 document.addEventListener("fullscreenerror", onFullscreenError);
