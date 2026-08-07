@@ -9,13 +9,14 @@
 | Pointer lifecycle, legal halves, third-touch rejection | VERIFIED IMPLEMENTED | 13 input scenarios and browser smoke |
 | Audio, mute, pause, background recovery, reduced effects | VERIFIED IMPLEMENTED | Audio suite and source/browser checks |
 | Fullscreen, mirrored settings, return-speed handicaps, score capture, local themes | VERIFIED IMPLEMENTED | Canonical packed artifact and browser smoke; Samsung evidence pending |
+| Shared center controls and independent Board PNG reskinning | VERIFIED IMPLEMENTED | Exactly four live shared controls; strict 1080×1920 Board loader/persistence/reset and packed browser proof |
 | One Pixi WebGL canvas / no runtime external requests | VERIFIED IMPLEMENTED | SFHS manifest and packed Chromium smoke |
 | GitHub Pages | VERIFIED IMPLEMENTED | [Live site](https://falloutmule.github.io/cat-paw-air-hockey/) from Pages workflow run `31099501221`; downloaded bytes match the canonical artifact |
 | Current-artifact Samsung acceptance | UNTESTED | Earlier device results are artifact-specific and SUPERSEDED |
 
 ## Canonical identity
 
-The Linux canonical record is build `cat-paw-air-hockey-64741220be29`, 581,644 bytes, SHA-256 `0d18270c36ff36987c8653579693a3dca3fc62b4271ea2cb55be0c13816f6b53`, source SHA-256 `64741220be29f0db3a3044f977d4cbba8acb0fb92d4c181c571d11f8f3afeeca`. GitHub Pages workflow run `31099501221` packed, exactly verified, browser-smoked, deployed, and byte-compared that artifact at [the live site](https://falloutmule.github.io/cat-paw-air-hockey/). The prior Windows-only artifact is SUPERSEDED; its physical acceptance does not transfer.
+R2 local canonical target is build `cat-paw-air-hockey-eb95d3516717`, 720,601 bytes, SHA-256 `50663604dfafb35cee2bc457daadd9f7420947b8f36532a93b1b3a952f12f88d`, source SHA-256 `eb95d3516717b08a29efecbbf78287c6215982853a4fcf1953fa21bba15c9a2e`. The previously deployed R1 build `cat-paw-air-hockey-64741220be29` remains available on Pages but is **SUPERSEDED** for current local product claims. R2 is not pushed or deployed and has no transferred physical acceptance.
 
 ## Known limitations and blockers
 

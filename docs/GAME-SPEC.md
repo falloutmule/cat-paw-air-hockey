@@ -16,7 +16,7 @@ Cat Paw Air Hockey is a local two-player air-hockey game for one shared phone. I
 
 Both players hold their ready paw to start. A shared countdown begins once both are ready. During play each player drags a single finger inside their half of the rink; player 2 uses the top half and player 1 the bottom. The game rejects a third touch, clears on release/cancel/lost capture, resets after a goal, ends at five, and requires both players to hold again for a rematch.
 
-Each goal says `GOAL`. Sound and Pause are on one goal side; Settings and Fullscreen are on the other, mirrored for the opposite player. The final-score image control is available only at the end of a match.
+Each goal says `GOAL`. Exactly four shared controls straddle the center side edges: Mute upper-left, Pause lower-left, Menu upper-right, and Fullscreen lower-right. When the match is won, Capture replaces Pause in the same lower-left position until rematch. Both defensive goal zones remain pure play space.
 
 ## Simulation
 
@@ -24,9 +24,9 @@ The renderer observes serializable simulation state; input produces semantic act
 
 ## Accessibility, audio, persistence, and content
 
-Accessible text explains shared-device placement and interaction. Reduced effects retains game-state information. Procedural Web Audio unlocks only after an intentional user gesture; mute and background recovery are supported. Local storage persists valid gameplay settings, reduced-motion preference, and an optional local PNG theme; malformed settings fall back safely. Final score capture uses the existing primary Pixi surface.
+Accessible text explains shared-device placement and interaction. Reduced effects retains game-state information. Procedural Web Audio unlocks only after an intentional user gesture; mute and background recovery are supported. Local storage persists valid gameplay settings, reduced-motion preference, the independent 1080×1920 Board PNG, and the legacy optional local theme; malformed or missing records fall back safely. Final score capture uses the existing primary Pixi surface.
 
-The default art direction is a cat-themed rink with cat-paw strikers, a circular yarn puck, cat goals, and persistent impact effects. Optional user-loaded PNG themes stay local and do not add runtime requests.
+The default art direction is a cat-themed rink with cat-paw strikers, a circular yarn puck, cat goals, and persistent impact effects. The static full-surface Board is a replaceable rectangular bitmap below the dynamic goals, cats, paws, puck, HUD, and effects. The procedural Board remains a safe fallback; all user artwork stays local and adds no runtime requests.
 
 ## Non-goals and open decisions
 

@@ -1,5 +1,12 @@
 {
   "schema": "sfhs.asset-manifest@1",
-  "bundles": [],
-  "notes": "All game art and sound are procedural. No runtime asset URLs are required."
+  "bundles": [
+    {
+      "name": "board",
+      "assets": [
+        { "alias": "default-board-template", "src": "../../art/theme/cat-paw-board-template.png" }
+      ]
+    }
+  ],
+  "notes": "The exact default Board PNG is inlined; actors, goals, effects, and sound remain procedural. No runtime asset URLs are required."
 }

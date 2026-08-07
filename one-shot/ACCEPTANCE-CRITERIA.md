@@ -13,3 +13,6 @@
 - Deferred: exact-artifact Samsung retest remains REPORTED historical acceptance until new device metadata/evidence is supplied.
 - Publication condition: a normal canonical-branch change runs the durable quality and Pages workflows; Pages serves only verified packed HTML whose downloaded SHA-256 matches the recorded canonical artifact.
 - Physical-device condition: Samsung acceptance remains separate and artifact-bound; it is not implied by publication.
+- R2 controls: exactly four shared buttons exist at the center side edges in the locked Mute/Pause/Menu/Fullscreen arrangement; winner Capture replaces only Pause; both defensive goal zones remain free.
+- R2 Board: the full logical 540×960 static board maps to an exact 1080×1920 PNG slot; valid local Board art persists and resets, invalid replacements preserve the prior Board, and dynamic goals/actors/HUD remain separate.
+- R2 renderer proof: Board replacement reuses one persistent Pixi sprite in the sole WebGL canvas, does not mutate simulation, and makes no runtime network request.

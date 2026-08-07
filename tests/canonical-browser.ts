@@ -53,29 +53,26 @@ try {
   const initial = await page.evaluate(() => window.__CAT_AIR_HOCKEY__!.snapshot() as any);
   assert.equal(initial.renderer.renderer, "PIXI");
   assert.equal(initial.state.phase, "ready");
+  assert.equal(initial.board.mode, "default");
+  assert.equal(initial.board.spriteCount, 1);
+  assert.equal(await page.locator("#game-shell").getAttribute("data-board"), "default");
   assert.equal(await page.locator("#pixi-host canvas").count(), 1);
   assert.equal(await page.locator("canvas").count(), 1);
 
   const viewport = page.viewportSize()!;
-  for (const end of ["top", "bottom"] as const) {
-    const apron = page.locator(`.edge-controls--${end} .goal-apron`);
-    const leftPair = page.locator(`.edge-controls--${end} .control-pair--left`);
-    const rightPair = page.locator(`.edge-controls--${end} .control-pair--right`);
-    const [apronBox, leftBox, rightBox] = await Promise.all([apron.boundingBox(), leftPair.boundingBox(), rightPair.boundingBox()]);
-    assert.ok(apronBox && leftBox && rightBox);
-    assert.equal(await apron.textContent(), "");
-    const screenLeft = end === "top" ? rightBox : leftBox;
-    const screenRight = end === "top" ? leftBox : rightBox;
-    assert.ok(screenLeft.x + screenLeft.width <= apronBox.x && apronBox.x + apronBox.width <= screenRight.x, `${end} controls split around the goal apron`);
-    for (const box of [screenLeft, screenRight]) assert.ok(box.x >= 0 && box.y >= 0 && box.x + box.width <= viewport.width && box.y + box.height <= viewport.height, `${end} control pair remains in the viewport`);
-  }
-  const topFullscreen = await page.locator(".edge-controls--top [data-action='fullscreen']").boundingBox();
-  const topPause = await page.locator(".edge-controls--top [data-action='pause']").boundingBox();
-  const bottomMute = await page.locator(".edge-controls--bottom [data-action='mute']").boundingBox();
-  const bottomFullscreen = await page.locator(".edge-controls--bottom [data-action='fullscreen']").boundingBox();
-  assert.ok(topFullscreen && topPause && bottomMute && bottomFullscreen);
-  assert.ok(topFullscreen.x < topPause.x, "top arrangement is mirrored");
-  assert.ok(bottomMute.x < bottomFullscreen.x, "bottom arrangement follows Player 1 reading direction");
+  assert.equal(await page.locator(".shared-controls").count(), 1);
+  assert.equal(await page.locator("[data-action]").count(), 5, "four live controls plus the winner-only Capture alternate");
+  for (const action of ["mute", "pause", "menu", "fullscreen", "capture"] as const) assert.equal(await page.locator(`[data-action='${action}']`).count(), 1, `${action} is not duplicated`);
+  assert.equal(await page.locator("[data-action]:visible").count(), 4);
+  const boxes = Object.fromEntries(await Promise.all((["mute", "pause", "menu", "fullscreen"] as const).map(async (action) => [action, await page.locator(`[data-action='${action}']`).boundingBox()]))) as Record<string, { x: number; y: number; width: number; height: number }>;
+  for (const [action, box] of Object.entries(boxes)) { assert.ok(box); assert.ok(box.x >= 0 && box.y >= 0 && box.x + box.width <= viewport.width && box.y + box.height <= viewport.height, `${action} remains in safe viewport`); assert.ok(box.width >= 42 && box.height >= 42, `${action} keeps a practical touch target`); assert.ok(Math.abs(box.y + box.height / 2 - viewport.height / 2) < 70, `${action} stays at the center edge`); }
+  assert.ok(boxes.mute.x < viewport.width / 2 && boxes.pause.x < viewport.width / 2);
+  assert.ok(boxes.menu.x > viewport.width / 2 && boxes.fullscreen.x > viewport.width / 2);
+  assert.ok(boxes.mute.y < viewport.height / 2 && boxes.menu.y < viewport.height / 2);
+  assert.ok(boxes.pause.y > viewport.height / 2 && boxes.fullscreen.y > viewport.height / 2);
+  const scale = initial.renderer.viewport.scaleY; const offsetY = initial.renderer.viewport.offsetY;
+  const topGoalY = offsetY + 54 * scale; const bottomGoalY = offsetY + 906 * scale;
+  for (const box of Object.values(boxes)) { const centerY = box.y + box.height / 2; assert.ok(Math.abs(centerY - topGoalY) > 180 && Math.abs(centerY - bottomGoalY) > 180, "shared control remains outside both defensive goal zones"); }
 
   await page.locator("[data-action='menu']").last().click();
   await page.waitForFunction(() => !(document.querySelector("#settings-overlay") as HTMLElement).hidden);
@@ -92,10 +89,46 @@ try {
   const returnSpeed2 = page.locator(".settings-view--bottom input[data-setting='returnSpeed2']");
   assert.equal(await returnSpeed2.count(), 1);
   assert.match(await returnSpeed2.evaluate((input) => input.closest("label")?.textContent ?? ""), /Player 2 return speed/);
+  assert.equal(await page.locator(".settings-view--bottom [data-menu-action='board-template']").count(), 1);
+  assert.equal(await page.locator(".settings-view--bottom [data-menu-action='load-board']").count(), 1);
+  assert.equal(await page.locator(".settings-view--bottom [data-menu-action='reset-board']").count(), 1);
+  const physicsBeforeBoard = await page.evaluate(() => { const snapshot = window.__CAT_AIR_HOCKEY__!.snapshot() as any; return { phase: snapshot.state.phase, scores: snapshot.state.scores, puck: snapshot.state.puck, players: snapshot.state.players, settings: snapshot.state.activeMatchSettings, stageObjects: snapshot.renderer.stage.meaningfulObjectCount }; });
+  const boardPng = await page.evaluate(async () => { const canvas = new OffscreenCanvas(1080, 1920); const context = canvas.getContext("2d")!; context.fillStyle = "#13263a"; context.fillRect(0, 0, 1080, 1920); context.fillStyle = "#41d8c7"; context.fillRect(0, 930, 1080, 60); context.fillStyle = "#ff8c78"; context.fillRect(500, 0, 80, 1920); const blob = await canvas.convertToBlob({ type: "image/png" }); return btoa(String.fromCharCode(...new Uint8Array(await blob.arrayBuffer()))); });
+  await page.locator("#board-file").setInputFiles({ name: "r2-custom-board.png", mimeType: "image/png", buffer: Buffer.from(boardPng, "base64") });
+  await page.waitForFunction(() => document.querySelector("#game-shell")?.getAttribute("data-board") === "custom");
+  let boardSnapshot = await page.evaluate(() => window.__CAT_AIR_HOCKEY__!.snapshot() as any);
+  assert.equal(boardSnapshot.board.mode, "custom");
+  assert.equal(boardSnapshot.board.spriteCount, 1);
+  assert.equal(boardSnapshot.renderer.stage.meaningfulObjectCount, physicsBeforeBoard.stageObjects);
+  assert.deepEqual({ phase: boardSnapshot.state.phase, scores: boardSnapshot.state.scores, puck: boardSnapshot.state.puck, players: boardSnapshot.state.players, settings: boardSnapshot.state.activeMatchSettings, stageObjects: boardSnapshot.renderer.stage.meaningfulObjectCount }, physicsBeforeBoard);
+  const wrongPng = await page.evaluate(async () => { const canvas = new OffscreenCanvas(100, 100); const context = canvas.getContext("2d")!; context.fillStyle = "#123456"; context.fillRect(0, 0, 100, 100); const blob = await canvas.convertToBlob({ type: "image/png" }); return btoa(String.fromCharCode(...new Uint8Array(await blob.arrayBuffer()))); });
+  await page.locator("#board-file").setInputFiles({ name: "wrong-size.png", mimeType: "image/png", buffer: Buffer.from(wrongPng, "base64") });
+  await page.waitForFunction(() => [...document.querySelectorAll("[data-board-status]")].some((element) => element.textContent?.includes("received 100 × 100")));
+  assert.equal(await page.locator("#game-shell").getAttribute("data-board"), "custom");
+  await page.locator("#board-file").setInputFiles({ name: "corrupt.png", mimeType: "image/png", buffer: Buffer.from("not-a-png") });
+  await page.waitForFunction(() => [...document.querySelectorAll("[data-board-status]")].some((element) => element.textContent?.includes("could not be decoded")));
+  assert.equal(await page.locator("#game-shell").getAttribute("data-board"), "custom");
+  await page.reload({ waitUntil: "load" });
+  await page.waitForFunction(() => (window.__CAT_AIR_HOCKEY__?.snapshot() as any)?.state != null);
+  await page.waitForFunction(() => document.querySelector("#game-shell")?.getAttribute("data-board") === "custom");
+  boardSnapshot = await page.evaluate(() => window.__CAT_AIR_HOCKEY__!.snapshot() as any);
+  assert.equal(boardSnapshot.board.mode, "custom");
+  await page.locator("[data-action='menu']").click();
+  await page.locator(".settings-view--bottom [data-menu-action='reset-board']").click();
+  await page.waitForFunction(() => document.querySelector("#game-shell")?.getAttribute("data-board") === "default");
+  boardSnapshot = await page.evaluate(() => window.__CAT_AIR_HOCKEY__!.snapshot() as any);
+  assert.equal(boardSnapshot.board.mode, "default");
+  assert.ok(boardSnapshot.board.disposedOwnedTextureCount >= 1);
   await page.locator("[data-menu-action='close']").last().click();
   await page.waitForFunction(() => (document.querySelector("#settings-overlay") as HTMLElement).hidden);
   await page.locator("[data-action='pause']").last().click();
   await page.waitForFunction(() => (window.__CAT_AIR_HOCKEY__!.snapshot() as any).state.phase === "ready");
+  await page.locator("[data-action='fullscreen']").click();
+  await page.waitForFunction(() => document.fullscreenElement !== null);
+  assert.equal(await page.locator("[data-action='fullscreen']").getAttribute("aria-pressed"), "true");
+  await page.locator("[data-action='fullscreen']").click();
+  await page.waitForFunction(() => document.fullscreenElement === null);
+  assert.equal(await page.locator("[data-action='fullscreen']").getAttribute("aria-pressed"), "false");
 
   const rink = await page.locator("#pixi-host").boundingBox();
   assert.ok(rink);
@@ -128,13 +161,12 @@ try {
   await dispatchPointer("pointerdown", 111, 0.8);
   await dispatchPointer("pointerdown", 222, 0.2);
   await page.waitForFunction(() => (window.__CAT_AIR_HOCKEY__!.snapshot() as any).state.phase === "countdown", undefined, { timeout: 3_000 });
-  assert.equal(await page.locator("[data-action='fullscreen']").count(), 2);
-  assert.equal(await page.locator("[data-action='fullscreen']").first().isVisible(), true);
-  assert.equal(await page.locator("[data-action='fullscreen']").last().isVisible(), true);
-  await page.locator("[data-action='pause']").last().click();
+  assert.equal(await page.locator("[data-action='fullscreen']").count(), 1);
+  assert.equal(await page.locator("[data-action='fullscreen']").isVisible(), true);
+  await page.locator("[data-action='pause']").click();
   await page.waitForFunction(() => (window.__CAT_AIR_HOCKEY__!.snapshot() as any).state.phase === "paused");
   await page.waitForFunction(() => document.querySelector("[data-action='pause']")?.getAttribute("aria-label") === "Resume");
-  await page.locator("[data-action='pause']").last().click();
+  await page.locator("[data-action='pause']").click();
   await page.waitForFunction(() => (window.__CAT_AIR_HOCKEY__!.snapshot() as any).state.phase !== "paused");
   await page.waitForFunction(() => document.querySelector("[data-action='pause']")?.getAttribute("aria-label") === "Pause");
 
@@ -150,7 +182,7 @@ try {
 
   assert.deepEqual(pageErrors, []);
   assert.deepEqual(consoleErrors, []);
-  assert.deepEqual(requests, ["/"]);
+  assert.deepEqual(requests, ["/", "/"]);
   const report = { schema: "cat-air-hockey.canonical-browser@1", valid: true, artifact: { path: "dist/index.html", bytes: bytes.byteLength, sha256 }, browser: await browser.version(), canvasCount: 1, requests, pageErrors, consoleErrors, snapshot };
   if (process.env.SFHS_BROWSER_REPORT !== undefined) {
     const reportPath = resolve(process.env.SFHS_BROWSER_REPORT);

@@ -7,9 +7,9 @@
 
 Two people share one portrait phone, controlling cat-paw strikers from opposite ends in a first-to-five air-hockey match.
 
-## Current authorized goal
+## Current authorized goal — CATPAW-EXPANSION-001-R2
 
-Publish the already implemented Cat Paw source through a clean, documented, independently verifiable GitHub Pages workflow. This is repository graduation, not a product-development card.
+Locally replace duplicated goal-side controls with four shared center-edge controls and prove one exact, replaceable Board PNG workflow while preserving the settled game and single-renderer SFHS architecture. Remote publication is explicitly excluded.
 
 ## Central verb and highest-risk mechanic
 

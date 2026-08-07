@@ -3,10 +3,10 @@
 ---
 # Authorized Scope
 
-## Allowed work
+## R2 allowed work
 
-Audit and document readable source, One-Shot records, migration history, focused tests, canonical SFHS verification, browser evidence, durable CI, GitHub repository presentation, a verified normal push/merge to `main`, and GitHub Pages deployment with exact-byte comparison.
+On local branch `codex/fullscreen-menu-theme-001`, implement exactly four shared center-edge controls, a presentation-only rectangular Board bitmap layer, strict local Board PNG replace/reset/persistence, the exact derived Board template, focused proof, canonical SFHS verification, packed Chromium evidence, and one local commit.
 
 ## Explicit exclusions
 
-No new gameplay, product redesign, SFHS-core change, force push, tag, release attachment, or deployment of anything except the verified packed Pages artifact. Physical acceptance remains a separately reported device gate.
+No physics, controls semantics, goal geometry, cats/paws/puck/goal bitmap work, atlas expansion, gameplay redesign, SFHS-core change, push, PR, merge, tag, release, publication, or deployment. Physical acceptance remains a separately reported artifact-bound device gate.

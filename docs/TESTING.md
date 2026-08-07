@@ -7,7 +7,7 @@ pnpm install --frozen-lockfile
 pnpm test
 ```
 
-The suite covers 13 input lifecycle scenarios, 16 physics scenarios, 6 match-flow scenarios, 6 audio scenarios, orientation, settings migration/synchronization, and return-speed behavior.
+The suite covers 13 input lifecycle scenarios, 16 physics scenarios, 6 match-flow scenarios, 6 audio scenarios, orientation, settings migration/synchronization, return-speed behavior, and the exact shared-control contract. Packed Chromium additionally covers strict Board dimensions/decode, failed-replacement preservation, IndexedDB reload, reset, texture disposal, one persistent sprite, fullscreen, and goal-zone clearance.
 
 ## Canonical SFHS sequence
 

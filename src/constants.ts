@@ -32,6 +32,16 @@ export const COUNTDOWN_SECONDS = 3.15;
 export const CENTER_EXCLUSION = 11;
 export const FINGER_OFFSET = 0;
 
+export const BOARD = Object.freeze({
+  x: 0,
+  y: 0,
+  width: LOGICAL_WIDTH,
+  height: LOGICAL_HEIGHT,
+  bitmapScale: 2,
+  bitmapWidth: LOGICAL_WIDTH * 2,
+  bitmapHeight: LOGICAL_HEIGHT * 2
+});
+
 export const PLAYER_HOME = Object.freeze({
   1: Object.freeze({ x: LOGICAL_WIDTH / 2, y: RINK.bottom - 132 }),
   2: Object.freeze({ x: LOGICAL_WIDTH / 2, y: RINK.top + 132 })
