@@ -1,6 +1,12 @@
 {
   "records": [
     {
+      "earlier": "cat-paw-air-hockey-eb95d3516717 / 50663604dfafb35cee2bc457daadd9f7420947b8f36532a93b1b3a952f12f88d",
+      "status": "SUPERSEDED",
+      "treatment": "The user reported that the shared Fullscreen button did not work on the target device. Desktop automation had passed the standard mouse-click path, so the repair adds prefixed mobile compatibility and touch-tap browser proof. Physical acceptance does not transfer.",
+      "currentArtifact": "cat-paw-air-hockey-36b74a1c8988 / 81279cdd3319ea721469ea907461eca1f5c779f90bc6c0a4da388e2ac0d46f9f"
+    },
+    {
       "earlier": "cat-paw-air-hockey-64741220be29 / 0d18270c36ff36987c8653579693a3dca3fc62b4271ea2cb55be0c13816f6b53",
       "status": "SUPERSEDED",
       "treatment": "R1 is superseded locally by R2 shared center controls and the independent Board bitmap workflow. Its Pages deployment remains historical; physical acceptance does not transfer.",

@@ -16,12 +16,12 @@
 
 ## Canonical identity
 
-R2 local canonical target is build `cat-paw-air-hockey-eb95d3516717`, 720,601 bytes, SHA-256 `50663604dfafb35cee2bc457daadd9f7420947b8f36532a93b1b3a952f12f88d`, source SHA-256 `eb95d3516717b08a29efecbbf78287c6215982853a4fcf1953fa21bba15c9a2e`. The previously deployed R1 build `cat-paw-air-hockey-64741220be29` remains available on Pages but is **SUPERSEDED** for current local product claims. R2 is not pushed or deployed and has no transferred physical acceptance.
+R2 local canonical target is build `cat-paw-air-hockey-36b74a1c8988`, 721,605 bytes, SHA-256 `81279cdd3319ea721469ea907461eca1f5c779f90bc6c0a4da388e2ac0d46f9f`, source SHA-256 `36b74a1c898885a2b9fee592cdaf133c44db2bf8bd3ebeedde62becc4430cc00`. It includes the bounded mobile fullscreen compatibility repair at `c554523bb556d9ed875971c1f1cc035ac99d450b`. The first R2 build `cat-paw-air-hockey-eb95d3516717` is **SUPERSEDED** after the user reported its fullscreen control did not work on the target device. R2 is not pushed or deployed and has no transferred physical acceptance.
 
 ## Known limitations and blockers
 
 - A physical Samsung Galaxy S21 Ultra report must name the exact packed build, byte size, and SHA-256; no prior acceptance transfers automatically.
 - WebGL is mandatory.
-- A new exact-artifact Samsung Galaxy S21 Ultra session remains required.
+- A new exact-artifact Samsung Galaxy S21 Ultra session remains required, specifically confirming fullscreen entry and exit from the downloaded HTML opened directly in stable Android Chrome.
 
 Release terminology remains deliberately limited: automated and deployment gates pass, while artifact-bound physical-device acceptance is still UNTESTED.

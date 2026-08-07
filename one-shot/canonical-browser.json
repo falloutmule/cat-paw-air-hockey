@@ -3,9 +3,9 @@
   "valid": true,
   "artifact": {
     "path": "dist/index.html",
-    "bytes": 720601,
-    "sha256": "50663604dfafb35cee2bc457daadd9f7420947b8f36532a93b1b3a952f12f88d",
-    "buildId": "cat-paw-air-hockey-eb95d3516717"
+    "bytes": 721605,
+    "sha256": "81279cdd3319ea721469ea907461eca1f5c779f90bc6c0a4da388e2ac0d46f9f",
+    "buildId": "cat-paw-air-hockey-36b74a1c8988"
   },
   "browser": "Chromium 149.0.7827.55",
   "checks": [
@@ -20,6 +20,6 @@
     "one persistent Board sprite and owned superseded texture disposal",
     "Board replacement leaves simulation and stage object count unchanged",
     "independent pointers, release, cancellation, and third-touch rejection",
-    "ready/countdown, pause/resume, fullscreen entry/exit, landscape gate, and portrait return"
+    "ready/countdown, pause/resume, touch-driven fullscreen entry/exit, landscape gate, and portrait return"
   ]
 }
