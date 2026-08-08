@@ -9,7 +9,7 @@ import { installDiagnostics } from "./diagnostics.ts";
 import { createHockeyInput } from "./input.ts";
 import { createCatHockeyPresenter, prepareCatHockeyPresentationAssets } from "./presentation.ts";
 import { createCatHockeyScene } from "./scene.ts";
-import { DEFAULT_MATCH_SETTINGS, normalizeMatchSettings, settingsEqual, settingsSummary, type MatchSettings } from "./settings.ts";
+import { DEFAULT_MATCH_SETTINGS, normalizeMatchSettings, settingsEqual, type MatchSettings } from "./settings.ts";
 import { clearBoard, clearTheme, loadBoard, loadTheme, saveBoard, saveTheme, validateBoard, validateTheme, type LegacyBoardRecord, type ValidBoard, type ValidTheme } from "./theme.ts";
 import type { HockeyGameState } from "./state.ts";
 import defaultBoardTemplateUrl from "../art/theme/cat-paw-board-template.png";
@@ -63,9 +63,11 @@ const presenter = createCatHockeyPresenter({ onEvents: (events) => { audio.consu
 const presentation = createSfhsPixiV8Presentation<HockeyGameState>({ backgroundColor: 0x172331, presenter });
 const input = createHockeyInput({ initialSurface: host, getCanvas: () => runtime?.getPrimarySurface(), onIntentionalGesture: () => { void audio.unlock().then(updateControls); } });
 
-const menuMarkup = `<h2>Cat Paw settings</h2><p class="settings-summary" data-summary></p><fieldset><legend>Gameplay</legend>
-${[["puckSpeed", "Puck speed", 70, 130], ["pawSpeed1", "Player 1 paw speed", 70, 130], ["pawSpeed2", "Player 2 paw speed", 70, 130], ["returnSpeed1", "Player 1 return speed", 70, 130], ["returnSpeed2", "Player 2 return speed", 70, 130], ["puckSize", "Puck size", 75, 125], ["pawSize1", "Player 1 paw size", 75, 125], ["pawSize2", "Player 2 paw size", 75, 125], ["goalSize1", "Player 1 goal opening", 75, 125], ["goalSize2", "Player 2 goal opening", 75, 125]].map(([key, label, min, max]) => `<label>${label}<output data-value="${key}"></output><input data-setting="${key}" type="range" min="${min}" max="${max}" step="5"></label>`).join("")}
-  <button type="button" data-menu-action="reset">Reset Gameplay Defaults</button></fieldset><fieldset><legend>Display</legend><label>Reduced motion <input data-menu-action="reduced" type="checkbox"></label><p data-fullscreen-status></p></fieldset><fieldset><legend>Theme</legend><div class="board-preview"><img data-board-preview alt="Current Board preview"><p data-board-status>Default Board</p></div><button type="button" data-menu-action="board-template">Download Board Template</button><button type="button" data-menu-action="load-board">Replace Board PNG</button><button type="button" data-menu-action="reset-board">Reset Board</button><details class="legacy-theme"><summary>Legacy composite theme</summary><button type="button" data-menu-action="load-theme">Load Legacy Theme PNG</button><button type="button" data-menu-action="reset-theme">Reset Legacy Theme</button><p data-theme-status>Classic legacy theme</p></details></fieldset><fieldset><legend>About / Reset</legend><p>Changes during a match apply next serve.</p><button type="button" data-menu-action="close">Close settings</button></fieldset>`;
+const settingControls = (settings: readonly (readonly [string, string, number, number])[]): string => settings.map(([key, label, min, max]) => `<label>${label}<output data-value="${key}"></output><input data-setting="${key}" aria-label="${label}" type="range" min="${min}" max="${max}" step="5"></label>`).join("");
+const menuMarkup = `<h2>Cat Paw settings</h2><p class="settings-summary" data-summary></p>
+  <fieldset data-settings-group="sizes"><legend>Sizes</legend>${settingControls([["goalSize1", "Player 1 goal size", 75, 125], ["goalSize2", "Player 2 goal size", 75, 125], ["pawSize1", "Player 1 paw size", 75, 125], ["pawSize2", "Player 2 paw size", 75, 125], ["puckSize", "Puck size", 75, 125]])}</fieldset>
+  <fieldset data-settings-group="speeds"><legend>Speeds</legend>${settingControls([["puckSpeed", "Puck speed", 70, 130], ["pawSpeed1", "Player 1 paw speed", 70, 130], ["pawSpeed2", "Player 2 paw speed", 70, 130], ["returnSpeed1", "Player 1 return speed", 70, 130], ["returnSpeed2", "Player 2 return speed", 70, 130]])}<button type="button" data-menu-action="reset">Reset Gameplay Defaults</button></fieldset>
+  <fieldset><legend>Display</legend><label>Reduced motion <input data-menu-action="reduced" type="checkbox"></label><p data-fullscreen-status></p></fieldset><fieldset><legend>Theme</legend><div class="board-preview"><img data-board-preview alt="Current Board preview"><p data-board-status>Default Board</p></div><button type="button" data-menu-action="board-template">Download Board Template</button><button type="button" data-menu-action="load-board">Replace Board PNG</button><button type="button" data-menu-action="reset-board">Reset Board</button><details class="legacy-theme"><summary>Legacy composite theme</summary><button type="button" data-menu-action="load-theme">Load Legacy Theme PNG</button><button type="button" data-menu-action="reset-theme">Reset Legacy Theme</button><p data-theme-status>Classic legacy theme</p></details></fieldset><fieldset><legend>About / Reset</legend><p>Live-match size and speed changes apply after the next goal, before the next serve.</p><button type="button" data-menu-action="close">Close settings</button></fieldset>`;
 for (const view of menuViews) view.innerHTML = menuMarkup;
 
 function settingValue(key: string): number {
@@ -78,7 +80,7 @@ function syncMenuViews(): void {
     for (const range of view.querySelectorAll<HTMLInputElement>("input[data-setting]")) { range.value = String(settingValue(range.dataset.setting ?? "")); range.setAttribute("aria-valuetext", `${range.value}%`); range.dataset.default = String(range.value === "100"); }
     for (const output of view.querySelectorAll<HTMLOutputElement>("output[data-value]")) output.value = `${settingValue(output.dataset.value ?? "")}%`;
     const checkbox = view.querySelector<HTMLInputElement>("input[data-menu-action='reduced']"); if (checkbox !== null) checkbox.checked = reducedEffects;
-    const summary = view.querySelector<HTMLElement>("[data-summary]"); if (summary !== null) summary.textContent = settingsEqual(state?.activeMatchSettings ?? menuSettings, menuSettings) ? settingsSummary(menuSettings) : `${settingsSummary(menuSettings)} · Applies next serve`;
+    const summary = view.querySelector<HTMLElement>("[data-summary]"); if (summary !== null) { const pending = !settingsEqual(state?.activeMatchSettings ?? menuSettings, menuSettings); summary.dataset.pending = String(pending); summary.textContent = pending ? "Pending changes — visible after the next goal, before the next serve." : "All shown settings are active."; }
     const fullscreenStatus = view.querySelector<HTMLElement>("[data-fullscreen-status]"); if (fullscreenStatus !== null) fullscreenStatus.textContent = fullscreenAvailable(document.documentElement) ? (fullscreenElement() === null ? "Fullscreen available" : "Fullscreen active") : "Fullscreen unavailable in this browser view";
   }
 }
@@ -90,7 +92,7 @@ function updateSetting(key: string, value: number): void {
   else if (key === "returnSpeed1") next.returnSpeed[1] = value; else if (key === "returnSpeed2") next.returnSpeed[2] = value;
   else if (key === "pawSize1") next.pawSize[1] = value; else if (key === "pawSize2") next.pawSize[2] = value;
   else if (key === "goalSize1") next.goalSize[1] = value; else if (key === "goalSize2") next.goalSize[2] = value;
-  menuSettings = normalizeMatchSettings(next); input.requestSettings(menuSettings); persistPreferences(); syncMenuViews();
+  menuSettings = normalizeMatchSettings(next); input.requestSettings(menuSettings); persistPreferences(); syncMenuViews(); setTimeout(syncMenuViews, 60);
 }
 
 function applyViewportGeometry(): void {
@@ -118,7 +120,7 @@ function applyOrientationGate(): void {
 function scheduleViewport(): void { if (viewportFrame !== 0) return; viewportFrame = requestAnimationFrame(() => { viewportFrame = 0; applyViewportGeometry(); applyOrientationGate(); updateControls(); }); }
 function setMenuOpen(open: boolean): void {
   if (open) { input.clear(); if (runtime?.getState().phase !== "paused") input.requestPause(); menuOpen = true; settingsOverlay.hidden = false; settingsLive.value = "Settings open. Match paused."; }
-  else { input.clear(); menuOpen = false; settingsOverlay.hidden = true; settingsLive.value = "Settings closed. Press Resume to continue."; }
+  else { input.clear(); menuOpen = false; settingsOverlay.hidden = true; const pending = runtime !== undefined && !settingsEqual(runtime.getState().activeMatchSettings, menuSettings); settingsLive.value = pending ? "Settings saved. Changes apply after the next goal, before the next serve." : "Settings closed. Press Resume to continue."; if (pending) showControlFeedback("Settings saved · size changes appear after the next goal"); }
   updateControls();
 }
 function themeStatus(message: string): void { for (const view of menuViews) { const statusElement = view.querySelector<HTMLElement>("[data-theme-status]"); if (statusElement !== null) statusElement.textContent = message; } settingsLive.value = message; }
@@ -194,7 +196,7 @@ document.addEventListener("keydown", (event) => {
   event.preventDefault(); focusable[next]!.focus();
 });
 
-const removeDiagnostics = installDiagnostics({ getRuntime: () => runtime, input, getAudioStatus: () => audio.getStatus(), getOrientationGate: () => !orientationGate.hidden, getBoardDiagnostics: () => presenter.getBoardDiagnostics(), getGoalDiagnostics: () => presenter.getGoalDiagnostics() });
+const removeDiagnostics = installDiagnostics({ getRuntime: () => runtime, input, getAudioStatus: () => audio.getStatus(), getOrientationGate: () => !orientationGate.hidden, getBoardDiagnostics: () => presenter.getBoardDiagnostics(), getGoalDiagnostics: () => presenter.getGoalDiagnostics(), getPawDiagnostics: () => presenter.getPawDiagnostics() });
 async function boot(): Promise<void> {
   if (!supportsRequiredWebGl(document)) { capability.hidden = false; host.hidden = true; status.value = "WebGL unavailable"; return; }
   try {

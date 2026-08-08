@@ -174,10 +174,13 @@ try {
   await page.locator("[data-action='menu']").click();
   await page.waitForFunction(() => (window.__CAT_AIR_HOCKEY__!.snapshot() as any).state.phase === "paused");
   await setRange("goalSize1", 75);
+  await setRange("pawSize1", 125);
   await setRange("returnSpeed1", 70);
-  await page.waitForFunction(() => { const state = (window.__CAT_AIR_HOCKEY__!.snapshot() as any).state; return state.pendingMatchSettings.goalSize[1] === 75 && state.pendingMatchSettings.returnSpeed[1] === 70; });
+  await page.waitForFunction(() => { const state = (window.__CAT_AIR_HOCKEY__!.snapshot() as any).state; return state.pendingMatchSettings.goalSize[1] === 75 && state.pendingMatchSettings.pawSize[1] === 125 && state.pendingMatchSettings.returnSpeed[1] === 70; });
   let paused = await snapshot();
   assert.equal(paused.state.activeMatchSettings.goalSize[1], 100, "mid-match goal resize waits for the next safe boundary");
+  assert.equal(paused.state.activeMatchSettings.pawSize[1], 100, "mid-match paw resize waits for the next safe boundary");
+  assert.equal(paused.paws.bottom.nominalDiameter, 90, "rendered paw remains at the active size during the paused rally");
   assert.equal(paused.state.activeMatchSettings.returnSpeed[1], 125, "mid-match return handicap waits for the next safe boundary");
 
   const boardPng = await page.evaluate(async () => {
@@ -203,10 +206,12 @@ try {
   await touch("pointerdown", 2, 60, 100);
   await page.locator("[data-action='pause']").click();
   await scoreForPlayerOne(2);
-  await page.waitForFunction(() => { const state = (window.__CAT_AIR_HOCKEY__!.snapshot() as any).state; return state.phase === "countdown" && state.activeMatchSettings.goalSize[1] === 75 && state.activeMatchSettings.returnSpeed[1] === 70; }, undefined, { timeout: 3_000 });
+  await page.waitForFunction(() => { const snapshot = window.__CAT_AIR_HOCKEY__!.snapshot() as any; const state = snapshot.state; return state.phase === "countdown" && state.activeMatchSettings.goalSize[1] === 75 && state.activeMatchSettings.pawSize[1] === 125 && state.activeMatchSettings.returnSpeed[1] === 70 && snapshot.paws.bottom.nominalDiameter === 112.5; }, undefined, { timeout: 3_000 });
   const applied = await snapshot();
   assert.equal(applied.goals.bottom.openingWidth, 138);
   assert.equal(applied.goals.top.openingWidth, 230);
+  assert.equal(applied.paws.bottom.nominalDiameter, 112.5);
+  await page.screenshot({ path: resolve(evidenceDirectory, "11-paw-size-125-active.png") });
 
   await scoreForPlayerOne(3);
   assert.equal((await snapshot()).state.scores[1], 3, "another normal rally completes with the 70% return handicap active");

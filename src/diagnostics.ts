@@ -18,6 +18,7 @@ export function installDiagnostics(options: {
   readonly getOrientationGate: () => boolean;
   readonly getBoardDiagnostics?: () => unknown;
   readonly getGoalDiagnostics?: () => unknown;
+  readonly getPawDiagnostics?: () => unknown;
 }): () => void {
   const diagnostics: CatHockeyDiagnostics = Object.freeze({
     schema: "cat-air-hockey.diagnostics@1",
@@ -33,6 +34,7 @@ export function installDiagnostics(options: {
         orientationGateActive: options.getOrientationGate(),
         board: options.getBoardDiagnostics?.() ?? null,
         goals: options.getGoalDiagnostics?.() ?? null,
+        paws: options.getPawDiagnostics?.() ?? null,
         state: state === undefined ? null : {
           phase: state.phase,
           tick: state.tick,

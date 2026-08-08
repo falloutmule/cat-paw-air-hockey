@@ -62,6 +62,8 @@ try {
   assert.deepEqual(initial.board.spriteLogicalSize, { width: 540, height: 1200 });
   assert.deepEqual(initial.board.bitmapPixels, { width: 1080, height: 2400 });
   assert.deepEqual(initial.goals, { architecture: "pixi-nine-slice", textureSampling: "nearest", top: { openingWidth: 184, visualWidth: 232, labelScale: 1, rotation: Math.PI }, bottom: { openingWidth: 184, visualWidth: 232, labelScale: 1, rotation: 0 } });
+  assert.equal(initial.paws.top.nominalDiameter, 90);
+  assert.equal(initial.paws.bottom.nominalDiameter, 90);
   assert.notEqual(initial.board.logicalBounds.width, initial.board.bitmapPixels.width, "Board bitmap pixels do not become logical layout units");
   assert.equal(await page.locator("#game-shell").getAttribute("data-board"), "default");
   assert.equal(await page.locator("#pixi-host canvas").count(), 1);
@@ -94,6 +96,11 @@ try {
     await page.locator("[data-action='menu']").click();
     await page.waitForFunction(() => !(document.querySelector("#settings-overlay") as HTMLElement).hidden);
     await page.waitForFunction(() => (window.__CAT_AIR_HOCKEY__!.snapshot() as any).state.phase === "paused");
+    if (width === 412 && height === 915) {
+      assert.equal(await page.locator(".settings-view--bottom input[data-setting='goalSize1']").getAttribute("aria-label"), "Player 1 goal size");
+      const immediatelyReachableSizes = await page.evaluate(() => { const view = document.querySelector<HTMLElement>(".settings-view--bottom")!.getBoundingClientRect(); return ["goalSize1", "goalSize2", "pawSize1"].map((key) => { const rect = document.querySelector<HTMLElement>(`.settings-view--bottom input[data-setting='${key}']`)!.getBoundingClientRect(); return rect.top >= view.top && rect.bottom <= view.bottom; }); });
+      assert.ok(immediatelyReachableSizes.every(Boolean), "goal sizes and Player 1 paw size are visible in the initial Samsung settings fold");
+    }
     const geometry = await page.evaluate(() => {
       const rect = (selector: string) => { const value = document.querySelector<HTMLElement>(selector)!.getBoundingClientRect(); return { x: value.x, y: value.y, width: value.width, height: value.height, right: value.right, bottom: value.bottom }; };
       const top = document.querySelector<HTMLElement>(".settings-view--top")!;

@@ -23,9 +23,11 @@ export interface CatHockeyPresenter extends SfhsPixiPresenter<HockeyGameState> {
   setBoard(board: ValidBoard | undefined): void;
   getBoardDiagnostics(): Readonly<{ mode: "default" | "custom"; spriteCount: 1; replacementCount: number; disposedOwnedTextureCount: number }>;
   getGoalDiagnostics(): Readonly<{ architecture: "pixi-nine-slice"; textureSampling: "nearest"; top: GoalDiagnostic; bottom: GoalDiagnostic }>;
+  getPawDiagnostics(): Readonly<{ top: PawDiagnostic; bottom: PawDiagnostic }>;
 }
 
 export interface GoalDiagnostic { readonly openingWidth: number; readonly visualWidth: number; readonly labelScale: number; readonly rotation: number; }
+export interface PawDiagnostic { readonly nominalDiameter: number; readonly renderedScaleX: number; readonly renderedScaleY: number; readonly presentation: "procedural" | "theme"; }
 
 const COUCH_GOAL = Object.freeze({ capWidth: 24, borderHeight: 8, height: 54, visualPadding: 48, outerStroke: 10, innerStroke: 4 });
 
@@ -204,6 +206,7 @@ export function createCatHockeyPresenter(options: {
   const confetti: ConfettiPiece[] = [];
   let shakeEvent: PresentationEvent | undefined;
   let celebrationEvent: PresentationEvent | undefined;
+  let lastPresentedState: Readonly<HockeyGameState> | undefined;
 
   function initialize(layers: SfhsPixiStageLayers): void {
     if (initialized) return;
@@ -575,6 +578,7 @@ export function createCatHockeyPresenter(options: {
     present(state, _alpha, layers): void {
       if (destroyed) return;
       initialize(layers);
+      lastPresentedState = state;
       if (options.boardTemplateMode) {
         proceduralBoardRoot.visible = true;
         boardSprite.visible = false;
@@ -670,6 +674,15 @@ export function createCatHockeyPresenter(options: {
       spriteLogicalSize: Object.freeze({ width: initialized ? boardSprite.width : BOARD.width, height: initialized ? boardSprite.height : BOARD.height })
     }),
     getGoalDiagnostics: () => Object.freeze({ architecture: "pixi-nine-slice" as const, textureSampling: "nearest" as const, top: goalDiagnostics.top, bottom: goalDiagnostics.bottom }),
+    getPawDiagnostics: () => {
+      const settings = lastPresentedState?.activeMatchSettings;
+      const bottomScale = settings === undefined ? 1 : strikerRadius(settings, 1) / STRIKER_RADIUS;
+      const topScale = settings === undefined ? 1 : strikerRadius(settings, 2) / STRIKER_RADIUS;
+      return Object.freeze({
+        top: Object.freeze({ nominalDiameter: STRIKER_RADIUS * 2 * topScale, renderedScaleX: initialized ? paw2.scale.x : topScale, renderedScaleY: initialized ? paw2.scale.y : topScale, presentation: themeSprites.paw2 === undefined ? "procedural" as const : "theme" as const }),
+        bottom: Object.freeze({ nominalDiameter: STRIKER_RADIUS * 2 * bottomScale, renderedScaleX: initialized ? paw1.scale.x : bottomScale, renderedScaleY: initialized ? paw1.scale.y : bottomScale, presentation: themeSprites.paw1 === undefined ? "procedural" as const : "theme" as const })
+      });
+    },
     destroy(): void {
       if (destroyed) return;
       destroyed = true;
