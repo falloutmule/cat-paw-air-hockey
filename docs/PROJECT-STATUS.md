@@ -14,11 +14,12 @@
 | Dynamic couch goals | VERIFIED IMPLEMENTED | Persistent Pixi NineSliceSprite goals; independent 75%–125% mechanics/presentation; thick dual-contrast frame and outlined GOAL text |
 | One Pixi WebGL canvas / no runtime external requests | VERIFIED IMPLEMENTED | SFHS manifest and packed Chromium proof |
 | GitHub Pages | VERIFIED IMPLEMENTED / SUPERSEDED ARTIFACT | [Live site](https://falloutmule.github.io/cat-paw-air-hockey/) remains historical; R3 is local only and no remote action was authorized |
-| Current-artifact Samsung acceptance | UNTESTED | Earlier device results are artifact-specific and do not transfer |
+| Size-setting discoverability and deferred paw application | VERIFIED REPAIRED | Goal Size/Paw Size lead the menu; packed proof checks 90 -> 112.5 paw diameter at the safe boundary |
+| Current-artifact Samsung acceptance | UNTESTED | The prior R3 file received a REPORTED FAIL / NEEDS REPAIR result; that result does not transfer to this repair |
 
 ## Canonical identity
 
-The locally verified R3 target is build `cat-paw-air-hockey-4ed1cb3c5762`, 732,858 bytes, SHA-256 `8bc85d72c1a3a39118fa36db4f9c4ba075ebeec9a8a6cd54b1259777d06afaeb`, source SHA-256 `4ed1cb3c5762f1c4954f20f677623c6df4cadb0252f85ad51137a9493e94d2e8`. It changes actual mechanics to 540×1200 with edge walls and dynamic couch goals while preserving R2A's single SFHS viewport authority. The R2A artifact remains preserved as superseded historical evidence; physical acceptance does not transfer.
+The locally verified R3 repair target is build `cat-paw-air-hockey-32b6e5f50e9d`, 733,730 bytes, SHA-256 `47db45150895e881b94b370ff8b7e6a55b6f6d9d08891cbe420ddd76ed711416`, source SHA-256 `32b6e5f50e9da5437f7e977ebf8d8d5ce99855faf7a0a9e860770e5aa5897ab5`. It retains the real 540×1200 edge-wall mechanics and R2A's single viewport authority. The prior R3 file is superseded after the Samsung report showed that size controls and their deferred application were not clear enough.
 
 ## Known limitations and blockers
 

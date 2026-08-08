@@ -1,14 +1,14 @@
 {
   "deferredWork": [],
   "evidenceStatus": "VERIFIED",
-  "nextAction": "Run the CATPAW-EXPANSION-001-R3 Samsung gameplay seed against the exact local canonical artifact.",
+  "nextAction": "Run the repaired CATPAW-EXPANSION-001-R3 Samsung gameplay seed, including Goal Size/Paw Size visibility and deferred paw application, against the exact local canonical artifact.",
   "physicalStatus": "UNTESTED",
   "productStatus": "PRODUCT_COMPLETE",
   "projectRoot": ".",
   "records": {
     "physicalSeed": {
       "path": "one-shot/GRADUATION-PHYSICAL-TEST-SEED.json",
-      "sha256": "da44e330652ef23ba5f0f2e976132875ce8e9dedd1e4e229c1001b90e540f12c"
+      "sha256": "69cb118d3c24fa250c73f4568a454c7b74b9d8b09590984e7967da00c8aaf165"
     },
     "plan": {
       "path": "one-shot/MIGRATION-PLAN.json",
@@ -16,7 +16,7 @@
     },
     "report": {
       "path": "one-shot/GRADUATION-REPORT.json",
-      "sha256": "80fd610f5e995a861fe01af0793fb228996205bfddaf8803e1fcd2f0daf1343b"
+      "sha256": "0a29e0d8b3eb28485ff53929770958270e88ecec3d1be09ef51fc6f3b7479705"
     },
     "source": {
       "path": "SOURCE-IDENTITY.json",

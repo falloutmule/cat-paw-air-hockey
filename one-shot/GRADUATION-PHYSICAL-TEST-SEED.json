@@ -1,9 +1,9 @@
 {
   "artifact": {
-    "buildId": "cat-paw-air-hockey-4ed1cb3c5762",
-    "bytes": 732858,
+    "buildId": "cat-paw-air-hockey-32b6e5f50e9d",
+    "bytes": 733730,
     "path": "dist/index.html",
-    "sha256": "8bc85d72c1a3a39118fa36db4f9c4ba075ebeec9a8a6cd54b1259777d06afaeb",
+    "sha256": "47db45150895e881b94b370ff8b7e6a55b6f6d9d08891cbe420ddd76ed711416",
     "verifier": "sfhs verify"
   },
   "classification": "canonical",
@@ -14,6 +14,7 @@
     "100-percent and 75/125-percent goal readability",
     "touch mapping before and after fullscreen",
     "return-speed handicap rally",
+    "immediately visible Goal Size/Paw Size controls, pending feedback, and 125-percent paw application after the next goal",
     "mirrored settings and 1080 x 2400 Board copy",
     "first-to-five capture and rematch",
     "screenshots and thermal/performance notes"

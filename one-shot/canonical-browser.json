@@ -3,9 +3,9 @@
   "valid": true,
   "artifact": {
     "path": "dist/index.html",
-    "bytes": 732858,
-    "sha256": "8bc85d72c1a3a39118fa36db4f9c4ba075ebeec9a8a6cd54b1259777d06afaeb",
-    "buildId": "cat-paw-air-hockey-4ed1cb3c5762"
+    "bytes": 733730,
+    "sha256": "47db45150895e881b94b370ff8b7e6a55b6f6d9d08891cbe420ddd76ed711416",
+    "buildId": "cat-paw-air-hockey-32b6e5f50e9d"
   },
   "browser": "Chromium 149.0.7827.55",
   "checks": [
@@ -18,6 +18,8 @@
     "two valid R3 Board swaps leave physics, goals, viewport, controls, and stage object count unchanged",
     "wrong-size and corrupt Board rejection preserves the working Board",
     "persistent nearest-neighbor NineSlice couch goals at 100 percent and independent 75/125 percent",
+    "Goal Size and Paw Size are visible in the initial Samsung settings fold",
+    "deferred 125-percent paw sizing is 90 units during the rally and 112.5 units at the next safe boundary",
     "touch-driven ready, play, deep defense, deferred goal/return settings, fullscreen, first-to-five, capture, and rematch"
   ]
 }

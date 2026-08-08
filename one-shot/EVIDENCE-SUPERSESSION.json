@@ -1,6 +1,12 @@
 {
   "records": [
     {
+      "earlier": "cat-paw-air-hockey-4ed1cb3c5762 / 8bc85d72c1a3a39118fa36db4f9c4ba075ebeec9a8a6cd54b1259777d06afaeb",
+      "status": "SUPERSEDED / REPORTED FAIL / NEEDS REPAIR",
+      "treatment": "The Samsung report showed Goal Size/Paw Size controls were not discoverable in the initial settings fold and a paw-size change did not appear to work because safe-boundary application lacked clear feedback. The report remains bound to the earlier file and does not transfer.",
+      "currentArtifact": "cat-paw-air-hockey-32b6e5f50e9d / 47db45150895e881b94b370ff8b7e6a55b6f6d9d08891cbe420ddd76ed711416"
+    },
+    {
       "earlier": "cat-paw-air-hockey-5735c4c572c2 / acb55aec6d8d8d6bf1afa4634eefe5caeec51d77d95a743e4ddd29950e9c9c",
       "status": "SUPERSEDED",
       "treatment": "R2A remains the required viewport architecture but its 540 x 960 mechanics and 1080 x 1920 Board artifact are superseded by R3. The artifact and evidence remain historical; physical acceptance does not transfer.",

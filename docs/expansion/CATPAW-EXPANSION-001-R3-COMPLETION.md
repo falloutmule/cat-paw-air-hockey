@@ -1,6 +1,8 @@
 # CATPAW-EXPANSION-001-R3 completion record
 
-Status: `VERIFIED` locally / Samsung physical result `UNTESTED`
+Status: `VERIFIED` locally / repaired artifact Samsung physical result `UNTESTED`
+
+Follow-up commit `60783b8` repairs the physical size-setting report. Goal Size and Paw Size are now the first controls in each settings half; the label is exactly `Goal Size`; and a sticky high-contrast message explains that a live-rally size change becomes visible after the next goal, before the next serve. Packed semantic proof records a 125% Player 1 paw remaining at the active 90-unit diameter during the rally and becoming 112.5 units at the safe boundary. The prior 732,858-byte R3 artifact is `REPORTED FAIL / NEEDS REPAIR` for this presentation/feedback issue and is superseded.
 
 Starting authority: branch `codex/fullscreen-menu-theme-001` at `53c3841053d63ac1f0ec7bd336fcc41ac5a8751a`. R2A's SFHS viewport snapshot, one contain transform, one canvas mapping, bounded settings halves, and fullscreen resize path remain intact.
 
@@ -36,6 +38,6 @@ Both dynamic goals use a persistent Pixi v8 `NineSliceSprite` sourced from `art/
 - One-Shot inspect, SFHS inspect/validate/check/pack/verify: passed. The non-fatal `SFHS_TEST_SELECTION_REVIEW_REQUIRED` warning is retained honestly.
 - Packed Chromium: passed responsive/menu, input, Board migration/replacement invariance, independent goal resizing, fullscreen/orientation, deep defense, winner/capture, and rematch scenarios with no page/console errors or unexpected external requests.
 - Production diff from R2A: 246 lines added, 130 deleted across `src/` and `sfhs.project.json`; obsolete 960-height geometry and old procedural goal drawing were removed.
-- Physical Samsung status: `UNTESTED`; use `CATPAW-EXPANSION-001-R3-PHYSICAL-TEST-SEED.md`.
+- Physical Samsung status for the repaired artifact: `UNTESTED`; use `CATPAW-EXPANSION-001-R3-PHYSICAL-TEST-SEED.md`.
 
 The exact final artifact identity is recorded in `one-shot/VERIFICATION-REPORT.md` and `one-shot/canonical-browser.json`.
