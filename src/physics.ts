@@ -3,6 +3,7 @@ import {
   CENTER_EXCLUSION,
   COUNTDOWN_SECONDS,
   GOAL_FREEZE_SECONDS,
+  LOGICAL_CENTER,
   MAX_PHYSICS_SUBSTEPS,
   PLAYER_HOME,
   PUCK_DAMPING_PER_SECOND,
@@ -151,10 +152,10 @@ function resetStriker(player: PlayerId): MutableStriker {
 
 function resetPuck(): MutablePuck {
   return {
-    position: { x: 270, y: 480 },
-    previousPosition: { x: 270, y: 480 },
+    position: { ...LOGICAL_CENTER },
+    previousPosition: { ...LOGICAL_CENTER },
     velocity: { x: 0, y: 0 },
-    trail: [{ x: 270, y: 480 }]
+    trail: [{ ...LOGICAL_CENTER }]
   };
 }
 
@@ -359,11 +360,11 @@ export function stepGame(state: HockeyGameState, action: Readonly<HockeyActionSn
     if (phase === "paused") {
       phase = phaseBeforePause ?? "ready";
       phaseBeforePause = undefined;
-      emit(context, "resume", 270, 480, 0.35);
+      emit(context, "resume", LOGICAL_CENTER.x, LOGICAL_CENTER.y, 0.35);
     } else {
       phaseBeforePause = phase;
       phase = "paused";
-      emit(context, "pause", 270, 480, 0.35);
+      emit(context, "pause", LOGICAL_CENTER.x, LOGICAL_CENTER.y, 0.35);
     }
   }
 
@@ -378,13 +379,13 @@ export function stepGame(state: HockeyGameState, action: Readonly<HockeyActionSn
       phase = "countdown";
       phaseTimer = COUNTDOWN_SECONDS;
       players = { 1: resetStriker(1), 2: resetStriker(2) };
-      emit(context, "countdown", 270, 480, 0.45);
+      emit(context, "countdown", LOGICAL_CENTER.x, LOGICAL_CENTER.y, 0.45);
     }
   } else if (phase === "countdown") {
     const previousTimer = phaseTimer;
     phaseTimer = Math.max(0, phaseTimer - seconds);
     const boundary = countdownBoundary(previousTimer, phaseTimer);
-    if (boundary !== undefined) emit(context, "countdown", 270, 480, boundary / 3);
+    if (boundary !== undefined) emit(context, "countdown", LOGICAL_CENTER.x, LOGICAL_CENTER.y, boundary / 3);
     puck = resetPuck();
     if (phaseTimer <= 0) {
       phase = "playing";
@@ -410,7 +411,7 @@ export function stepGame(state: HockeyGameState, action: Readonly<HockeyActionSn
     if (phaseTimer <= 0) {
       if (winner !== undefined) {
         phase = "won";
-        emit(context, "win", 270, winner === 1 ? 720 : 240, 1, winner);
+        emit(context, "win", LOGICAL_CENTER.x, winner === 1 ? RINK.bottom - 186 : RINK.top + 186, 1, winner);
       } else {
         activeMatchSettings = pendingMatchSettings;
         phase = "countdown";

@@ -12,9 +12,11 @@ const { chromium } = createRequire(realpathSync(playwrightResolver))("playwright
   readonly chromium: { launch(options: { readonly headless: boolean }): Promise<any> };
 };
 
-const artifactPath = resolve(process.cwd(), "dist", "index.html");
+const artifactPath = resolve(process.env.CAT_PAW_ARTIFACT ?? resolve(process.cwd(), "dist", "index.html"));
 const bytes = await readFile(artifactPath);
 const sha256 = createHash("sha256").update(bytes).digest("hex");
+const screenshotDirectory = resolve(process.env.CAT_PAW_SCREENSHOT_DIR ?? "test-results/CATPAW-EXPANSION-001-R3/packed-browser");
+await mkdir(screenshotDirectory, { recursive: true });
 const requests: string[] = [];
 const pageErrors: string[] = [];
 const consoleErrors: string[] = [];
@@ -49,19 +51,38 @@ try {
   assert.equal(createHash("sha256").update(await response.body()).digest("hex"), sha256);
   await page.waitForFunction(() => Boolean(window.__CAT_AIR_HOCKEY__));
   await page.waitForFunction(() => window.__CAT_AIR_HOCKEY__?.snapshot() !== undefined);
+  await page.waitForFunction(() => ((window.__CAT_AIR_HOCKEY__?.snapshot() as any)?.state?.tick ?? 0) > 0);
 
   const initial = await page.evaluate(() => window.__CAT_AIR_HOCKEY__!.snapshot() as any);
   assert.equal(initial.renderer.renderer, "PIXI");
   assert.equal(initial.state.phase, "ready");
   assert.equal(initial.board.mode, "default");
   assert.equal(initial.board.spriteCount, 1);
-  assert.deepEqual(initial.board.logicalBounds, { x: 0, y: 0, width: 540, height: 960 });
-  assert.deepEqual(initial.board.spriteLogicalSize, { width: 540, height: 960 });
-  assert.deepEqual(initial.board.bitmapPixels, { width: 1080, height: 1920 });
+  assert.deepEqual(initial.board.logicalBounds, { x: 0, y: 0, width: 540, height: 1200 });
+  assert.deepEqual(initial.board.spriteLogicalSize, { width: 540, height: 1200 });
+  assert.deepEqual(initial.board.bitmapPixels, { width: 1080, height: 2400 });
+  assert.deepEqual(initial.goals, { architecture: "pixi-nine-slice", textureSampling: "nearest", top: { openingWidth: 184, visualWidth: 232, labelScale: 1, rotation: Math.PI }, bottom: { openingWidth: 184, visualWidth: 232, labelScale: 1, rotation: 0 } });
   assert.notEqual(initial.board.logicalBounds.width, initial.board.bitmapPixels.width, "Board bitmap pixels do not become logical layout units");
   assert.equal(await page.locator("#game-shell").getAttribute("data-board"), "default");
   assert.equal(await page.locator("#pixi-host canvas").count(), 1);
   assert.equal(await page.locator("canvas").count(), 1);
+  await page.screenshot({ path: resolve(screenshotDirectory, "01-ready-412x915.png") });
+  await page.screenshot({ path: resolve(screenshotDirectory, "05-goals-100-percent.png") });
+  const initialCanvas = await page.locator("#pixi-host canvas").boundingBox();
+  assert.ok(initialCanvas);
+  await page.screenshot({ path: resolve(screenshotDirectory, "07-couch-goal-detail.png"), clip: { x: initialCanvas.x, y: initialCanvas.y, width: initialCanvas.width, height: Math.max(1, initialCanvas.height * 0.14) } });
+
+  await page.evaluate(async () => {
+    const db = await new Promise<IDBDatabase>((resolvePromise, reject) => { const request = indexedDB.open("cat-paw-air-hockey-theme-v1", 1); request.onupgradeneeded = () => { if (!request.result.objectStoreNames.contains("themes")) request.result.createObjectStore("themes"); }; request.onsuccess = () => resolvePromise(request.result); request.onerror = () => reject(request.error); });
+    await new Promise<void>((resolvePromise, reject) => { const request = db.transaction("themes", "readwrite").objectStore("themes").put({ filename: "legacy-r2-board.png", blob: new Blob(["legacy-r2"], { type: "image/png" }) }, "board-r2"); request.onsuccess = () => resolvePromise(); request.onerror = () => reject(request.error); });
+    db.close();
+  });
+  await page.reload({ waitUntil: "load" });
+  await page.waitForFunction(() => (window.__CAT_AIR_HOCKEY__?.snapshot() as any)?.state != null);
+  await page.waitForFunction(() => ((window.__CAT_AIR_HOCKEY__?.snapshot() as any)?.state?.tick ?? 0) > 0);
+  await page.waitForFunction(() => document.querySelector("#game-shell")?.getAttribute("data-legacy-board") === "true");
+  assert.equal(await page.locator("#game-shell").getAttribute("data-board"), "default");
+  assert.match((await page.locator(".settings-view--bottom [data-board-status]").textContent()) ?? "", /legacy-r2-board\.png.*incompatible.*1080 × 2400/u);
 
   const assertSettingsGeometry = async (width: number, height: number): Promise<void> => {
     await page.setViewportSize({ width, height });
@@ -69,8 +90,10 @@ try {
       const viewport = (window.__CAT_AIR_HOCKEY__?.snapshot() as any)?.renderer?.viewport;
       return viewport?.presentedWidth === expectedWidth && viewport?.presentedHeight === expectedHeight;
     }, [width, height]);
+    if (width === 360 && height === 640) await page.screenshot({ path: resolve(screenshotDirectory, "09-short-phone-360x640.png") });
     await page.locator("[data-action='menu']").click();
     await page.waitForFunction(() => !(document.querySelector("#settings-overlay") as HTMLElement).hidden);
+    await page.waitForFunction(() => (window.__CAT_AIR_HOCKEY__!.snapshot() as any).state.phase === "paused");
     const geometry = await page.evaluate(() => {
       const rect = (selector: string) => { const value = document.querySelector<HTMLElement>(selector)!.getBoundingClientRect(); return { x: value.x, y: value.y, width: value.width, height: value.height, right: value.right, bottom: value.bottom }; };
       const top = document.querySelector<HTMLElement>(".settings-view--top")!;
@@ -85,6 +108,11 @@ try {
       };
     });
     const epsilon = 1;
+    const expectedScale = Math.min(width / 540, height / 1200);
+    const expectedBoardWidth = 540 * expectedScale;
+    const expectedBoardHeight = 1200 * expectedScale;
+    assert.ok(Math.abs(geometry.canvas.width - expectedBoardWidth) <= epsilon && Math.abs(geometry.canvas.height - expectedBoardHeight) <= epsilon, "logical Board is uniformly contained without crop or stretch");
+    assert.ok(Math.abs(geometry.canvas.x - (width - expectedBoardWidth) / 2) <= epsilon && Math.abs(geometry.canvas.y - (height - expectedBoardHeight) / 2) <= epsilon, "contained Board is centered in neutral screen margins");
     assert.ok(geometry.settings.width <= geometry.visual.width + epsilon && geometry.settings.height <= geometry.visual.height + epsilon);
     assert.equal(geometry.document.width, geometry.document.clientWidth, "settings own horizontal containment");
     assert.equal(geometry.document.height, geometry.document.clientHeight, "settings own vertical scrolling without growing the document");
@@ -100,10 +128,11 @@ try {
     await page.locator(".settings-view--bottom").evaluate((element) => { element.scrollTop = 140; });
     assert.equal(await page.locator(".settings-view--top").evaluate((element) => element.scrollTop), topScroll);
     assert.ok(await page.locator(".settings-view--bottom").evaluate((element) => element.scrollTop) > 0);
+    if (width === 412 && height === 915) await page.screenshot({ path: resolve(screenshotDirectory, "08-settings-1080x2400.png") });
     await page.locator(".settings-view--bottom [data-menu-action='close']").click();
     await page.waitForFunction(() => (document.querySelector("#settings-overlay") as HTMLElement).hidden);
   };
-  for (const portrait of [{ width: 412, height: 915 }, { width: 360, height: 800 }, { width: 412, height: 1000 }]) await assertSettingsGeometry(portrait.width, portrait.height);
+  for (const portrait of [{ width: 412, height: 915 }, { width: 360, height: 800 }, { width: 390, height: 844 }, { width: 360, height: 640 }]) await assertSettingsGeometry(portrait.width, portrait.height);
   await page.setViewportSize({ width: 412, height: 915 });
   await page.waitForFunction(() => (window.__CAT_AIR_HOCKEY__?.snapshot() as any)?.renderer?.viewport?.presentedHeight === 915);
 
@@ -119,7 +148,7 @@ try {
   assert.ok(boxes.mute.y < viewport.height / 2 && boxes.menu.y < viewport.height / 2);
   assert.ok(boxes.pause.y > viewport.height / 2 && boxes.fullscreen.y > viewport.height / 2);
   const scale = initial.renderer.viewport.scaleY; const offsetY = initial.renderer.viewport.offsetY;
-  const topGoalY = offsetY + 54 * scale; const bottomGoalY = offsetY + 906 * scale;
+  const topGoalY = offsetY + 54 * scale; const bottomGoalY = offsetY + 1146 * scale;
   for (const box of Object.values(boxes)) { const centerY = box.y + box.height / 2; assert.ok(Math.abs(centerY - topGoalY) > 180 && Math.abs(centerY - bottomGoalY) > 180, "shared control remains outside both defensive goal zones"); }
 
   await page.locator("[data-action='menu']").last().click();
@@ -137,18 +166,31 @@ try {
   const returnSpeed2 = page.locator(".settings-view--bottom input[data-setting='returnSpeed2']");
   assert.equal(await returnSpeed2.count(), 1);
   assert.match(await returnSpeed2.evaluate((input) => input.closest("label")?.textContent ?? ""), /Player 2 return speed/);
+  const goalSize1 = page.locator(".settings-view--bottom input[data-setting='goalSize1']");
+  const goalSize2 = page.locator(".settings-view--bottom input[data-setting='goalSize2']");
+  await goalSize1.evaluate((input) => { (input as HTMLInputElement).value = "75"; input.dispatchEvent(new Event("input", { bubbles: true })); });
+  await goalSize2.evaluate((input) => { (input as HTMLInputElement).value = "125"; input.dispatchEvent(new Event("input", { bubbles: true })); });
+  await page.waitForFunction(() => { const goals = (window.__CAT_AIR_HOCKEY__!.snapshot() as any).goals; return goals.bottom.openingWidth === 138 && goals.top.openingWidth === 230; });
+  const resizedGoals = await page.evaluate(() => (window.__CAT_AIR_HOCKEY__!.snapshot() as any).goals);
+  assert.deepEqual(resizedGoals.bottom, { openingWidth: 138, visualWidth: 186, labelScale: 0.9, rotation: 0 });
+  assert.deepEqual(resizedGoals.top, { openingWidth: 230, visualWidth: 278, labelScale: 1.1, rotation: Math.PI });
   assert.equal(await page.locator(".settings-view--bottom [data-menu-action='board-template']").count(), 1);
   assert.equal(await page.locator(".settings-view--bottom [data-menu-action='load-board']").count(), 1);
   assert.equal(await page.locator(".settings-view--bottom [data-menu-action='reset-board']").count(), 1);
   const physicsBeforeBoard = await page.evaluate(() => { const snapshot = window.__CAT_AIR_HOCKEY__!.snapshot() as any; return { phase: snapshot.state.phase, scores: snapshot.state.scores, puck: snapshot.state.puck, players: snapshot.state.players, settings: snapshot.state.activeMatchSettings, stageObjects: snapshot.renderer.stage.meaningfulObjectCount }; });
-  const boardPng = await page.evaluate(async () => { const canvas = new OffscreenCanvas(1080, 1920); const context = canvas.getContext("2d")!; context.fillStyle = "#13263a"; context.fillRect(0, 0, 1080, 1920); context.fillStyle = "#41d8c7"; context.fillRect(0, 930, 1080, 60); context.fillStyle = "#ff8c78"; context.fillRect(500, 0, 80, 1920); const blob = await canvas.convertToBlob({ type: "image/png" }); return btoa(String.fromCharCode(...new Uint8Array(await blob.arrayBuffer()))); });
-  await page.locator("#board-file").setInputFiles({ name: "r2-custom-board.png", mimeType: "image/png", buffer: Buffer.from(boardPng, "base64") });
+  const boardPng = await page.evaluate(async () => { const canvas = new OffscreenCanvas(1080, 2400); const context = canvas.getContext("2d")!; context.fillStyle = "#13263a"; context.fillRect(0, 0, 1080, 2400); context.fillStyle = "#41d8c7"; context.fillRect(0, 1170, 1080, 60); context.fillStyle = "#ff8c78"; context.fillRect(500, 0, 80, 2400); const blob = await canvas.convertToBlob({ type: "image/png" }); return btoa(String.fromCharCode(...new Uint8Array(await blob.arrayBuffer()))); });
+  await page.locator("#board-file").setInputFiles({ name: "r3-custom-board-a.png", mimeType: "image/png", buffer: Buffer.from(boardPng, "base64") });
   await page.waitForFunction(() => document.querySelector("#game-shell")?.getAttribute("data-board") === "custom");
   let boardSnapshot = await page.evaluate(() => window.__CAT_AIR_HOCKEY__!.snapshot() as any);
   assert.equal(boardSnapshot.board.mode, "custom");
   assert.equal(boardSnapshot.board.spriteCount, 1);
   assert.equal(boardSnapshot.renderer.stage.meaningfulObjectCount, physicsBeforeBoard.stageObjects);
   assert.deepEqual({ phase: boardSnapshot.state.phase, scores: boardSnapshot.state.scores, puck: boardSnapshot.state.puck, players: boardSnapshot.state.players, settings: boardSnapshot.state.activeMatchSettings, stageObjects: boardSnapshot.renderer.stage.meaningfulObjectCount }, physicsBeforeBoard);
+  const boardPngB = await page.evaluate(async () => { const canvas = new OffscreenCanvas(1080, 2400); const context = canvas.getContext("2d")!; context.fillStyle = "#2d1937"; context.fillRect(0, 0, 1080, 2400); context.fillStyle = "#ffd45c"; context.fillRect(0, 1188, 1080, 24); const blob = await canvas.convertToBlob({ type: "image/png" }); return btoa(String.fromCharCode(...new Uint8Array(await blob.arrayBuffer()))); });
+  await page.locator("#board-file").setInputFiles({ name: "r3-custom-board-b.png", mimeType: "image/png", buffer: Buffer.from(boardPngB, "base64") });
+  await page.waitForFunction(() => [...document.querySelectorAll("[data-board-status]")].some((element) => element.textContent?.includes("r3-custom-board-b.png")));
+  const secondBoardSnapshot = await page.evaluate(() => window.__CAT_AIR_HOCKEY__!.snapshot() as any);
+  assert.deepEqual({ phase: secondBoardSnapshot.state.phase, scores: secondBoardSnapshot.state.scores, puck: secondBoardSnapshot.state.puck, players: secondBoardSnapshot.state.players, settings: secondBoardSnapshot.state.activeMatchSettings, stageObjects: secondBoardSnapshot.renderer.stage.meaningfulObjectCount, goals: secondBoardSnapshot.goals, viewport: secondBoardSnapshot.renderer.viewport }, { phase: boardSnapshot.state.phase, scores: boardSnapshot.state.scores, puck: boardSnapshot.state.puck, players: boardSnapshot.state.players, settings: boardSnapshot.state.activeMatchSettings, stageObjects: boardSnapshot.renderer.stage.meaningfulObjectCount, goals: boardSnapshot.goals, viewport: boardSnapshot.renderer.viewport });
   const wrongPng = await page.evaluate(async () => { const canvas = new OffscreenCanvas(100, 100); const context = canvas.getContext("2d")!; context.fillStyle = "#123456"; context.fillRect(0, 0, 100, 100); const blob = await canvas.convertToBlob({ type: "image/png" }); return btoa(String.fromCharCode(...new Uint8Array(await blob.arrayBuffer()))); });
   await page.locator("#board-file").setInputFiles({ name: "wrong-size.png", mimeType: "image/png", buffer: Buffer.from(wrongPng, "base64") });
   await page.waitForFunction(() => [...document.querySelectorAll("[data-board-status]")].some((element) => element.textContent?.includes("received 100 × 100")));
@@ -158,15 +200,18 @@ try {
   assert.equal(await page.locator("#game-shell").getAttribute("data-board"), "custom");
   await page.reload({ waitUntil: "load" });
   await page.waitForFunction(() => (window.__CAT_AIR_HOCKEY__?.snapshot() as any)?.state != null);
+  await page.waitForFunction(() => ((window.__CAT_AIR_HOCKEY__?.snapshot() as any)?.state?.tick ?? 0) > 0);
   await page.waitForFunction(() => document.querySelector("#game-shell")?.getAttribute("data-board") === "custom");
   boardSnapshot = await page.evaluate(() => window.__CAT_AIR_HOCKEY__!.snapshot() as any);
   assert.equal(boardSnapshot.board.mode, "custom");
+  assert.equal(await page.evaluate(async () => { const db = await new Promise<IDBDatabase>((resolvePromise, reject) => { const request = indexedDB.open("cat-paw-air-hockey-theme-v1", 1); request.onsuccess = () => resolvePromise(request.result); request.onerror = () => reject(request.error); }); const present = await new Promise<boolean>((resolvePromise, reject) => { const request = db.transaction("themes").objectStore("themes").get("board-r2"); request.onsuccess = () => resolvePromise(request.result !== undefined); request.onerror = () => reject(request.error); }); db.close(); return present; }), true, "launch and R3 save retain the legacy Board Blob");
   await page.locator("[data-action='menu']").click();
   await page.locator(".settings-view--bottom [data-menu-action='reset-board']").click();
   await page.waitForFunction(() => document.querySelector("#game-shell")?.getAttribute("data-board") === "default");
   boardSnapshot = await page.evaluate(() => window.__CAT_AIR_HOCKEY__!.snapshot() as any);
   assert.equal(boardSnapshot.board.mode, "default");
   assert.ok(boardSnapshot.board.disposedOwnedTextureCount >= 1);
+  assert.equal(await page.locator("#game-shell").getAttribute("data-legacy-board"), "true");
   await page.locator("[data-menu-action='close']").last().click();
   await page.waitForFunction(() => (document.querySelector("#settings-overlay") as HTMLElement).hidden);
   await page.locator("[data-action='pause']").last().click();
@@ -182,7 +227,7 @@ try {
   await page.locator("#pixi-host").dispatchEvent("pointerdown", { pointerId: 909, pointerType: "touch", isPrimary: true, clientX: resizedCanvas.x + resizedCanvas.width / 2, clientY: resizedCanvas.y + resizedCanvas.height * 0.75, bubbles: true, cancelable: true });
   await page.waitForFunction(() => (window.__CAT_AIR_HOCKEY__?.snapshot() as any)?.input?.owners?.[1] === 909);
   const mappedAfterFullscreenResize = await page.evaluate(() => (window.__CAT_AIR_HOCKEY__!.snapshot() as any).input.targets[1]);
-  assert.ok(Math.abs(mappedAfterFullscreenResize.x - 270) < 0.01 && Math.abs(mappedAfterFullscreenResize.y - 720) < 0.01, "input consumes the resized canvas transform");
+  assert.ok(Math.abs(mappedAfterFullscreenResize.x - 270) < 0.01 && Math.abs(mappedAfterFullscreenResize.y - 900) < 0.01, "input consumes the resized canvas transform");
   await page.locator("#pixi-host").dispatchEvent("pointerup", { pointerId: 909, pointerType: "touch", isPrimary: true, clientX: resizedCanvas.x + resizedCanvas.width / 2, clientY: resizedCanvas.y + resizedCanvas.height * 0.75, bubbles: true, cancelable: true });
   await page.locator("[data-action='fullscreen']").tap();
   await page.waitForFunction(() => document.fullscreenElement === null);
@@ -221,6 +266,15 @@ try {
   await dispatchPointer("pointerdown", 111, 0.8);
   await dispatchPointer("pointerdown", 222, 0.2);
   await page.waitForFunction(() => (window.__CAT_AIR_HOCKEY__!.snapshot() as any).state.phase === "countdown", undefined, { timeout: 3_000 });
+  await page.waitForFunction(() => (window.__CAT_AIR_HOCKEY__!.snapshot() as any).state.phase === "playing", undefined, { timeout: 5_000 });
+  await page.screenshot({ path: resolve(screenshotDirectory, "02-active-edge-to-edge.png") });
+  await dispatchPointer("pointermove", 111, 0.93);
+  await page.waitForFunction(() => (window.__CAT_AIR_HOCKEY__!.snapshot() as any).state.players[1].position.y > 1_080);
+  await page.screenshot({ path: resolve(screenshotDirectory, "03-player-1-deep-defense.png") });
+  await dispatchPointer("pointermove", 222, 0.07);
+  await page.waitForFunction(() => (window.__CAT_AIR_HOCKEY__!.snapshot() as any).state.players[2].position.y < 120);
+  await page.screenshot({ path: resolve(screenshotDirectory, "04-player-2-deep-defense.png") });
+  await page.screenshot({ path: resolve(screenshotDirectory, "06-goals-75-125.png") });
   assert.equal(await page.locator("[data-action='fullscreen']").count(), 1);
   assert.equal(await page.locator("[data-action='fullscreen']").isVisible(), true);
   await page.locator("[data-action='pause']").click();
@@ -242,7 +296,8 @@ try {
 
   assert.deepEqual(pageErrors, []);
   assert.deepEqual(consoleErrors, []);
-  assert.deepEqual(requests, ["/", "/"]);
+  assert.equal(requests.length, 3);
+  assert.ok(requests.every((request) => request === "/"));
   const report = { schema: "cat-air-hockey.canonical-browser@1", valid: true, artifact: { path: "dist/index.html", bytes: bytes.byteLength, sha256 }, browser: await browser.version(), canvasCount: 1, requests, pageErrors, consoleErrors, snapshot };
   if (process.env.SFHS_BROWSER_REPORT !== undefined) {
     const reportPath = resolve(process.env.SFHS_BROWSER_REPORT);

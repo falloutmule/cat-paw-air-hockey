@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { EMPTY_ACTION_SNAPSHOT, type HockeyActionSnapshot } from "../src/actions.ts";
-import { FIXED_STEP_SECONDS, PUCK_SPEED_CAP, READY_TARGET, RINK, TARGET_SCORE } from "../src/constants.ts";
+import { FIXED_STEP_SECONDS, LOGICAL_CENTER, PUCK_SPEED_CAP, READY_TARGET, RINK, TARGET_SCORE } from "../src/constants.ts";
 import { stepGame } from "../src/physics.ts";
 import { createInitialGameState, type HockeyGameState } from "../src/state.ts";
 
@@ -31,10 +31,10 @@ function forcePlayerOneGoal(state: HockeyGameState): HockeyGameState {
     phaseTimer: 0,
     puck: Object.freeze({
       ...state.puck,
-      position: Object.freeze({ x: 270, y: RINK.top + 2 }),
-      previousPosition: Object.freeze({ x: 270, y: RINK.top + 2 }),
+      position: Object.freeze({ x: LOGICAL_CENTER.x, y: RINK.top + 2 }),
+      previousPosition: Object.freeze({ x: LOGICAL_CENTER.x, y: RINK.top + 2 }),
       velocity: Object.freeze({ x: 0, y: -PUCK_SPEED_CAP }),
-      trail: Object.freeze([{ x: 270, y: RINK.top + 2 }])
+      trail: Object.freeze([{ x: LOGICAL_CENTER.x, y: RINK.top + 2 }])
     })
   });
   let next = playing as HockeyGameState;
@@ -66,7 +66,7 @@ scenario("non-winning goal freezes, resets, and returns to play", () => {
   let state = Object.freeze({ ...createInitialGameState(), phase: "playing" as const }) as HockeyGameState;
   state = forcePlayerOneGoal(state);
   assert.equal(state.scores[1], 1);
-  assert.deepEqual(state.puck.position, { x: 270, y: 480 });
+  assert.deepEqual(state.puck.position, LOGICAL_CENTER);
   state = step(state, EMPTY_ACTION_SNAPSHOT, 70);
   assert.equal(state.phase, "countdown");
   state = step(state, EMPTY_ACTION_SNAPSHOT, 200);

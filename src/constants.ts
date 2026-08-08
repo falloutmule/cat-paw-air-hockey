@@ -1,17 +1,18 @@
 export const LOGICAL_WIDTH = 540;
-export const LOGICAL_HEIGHT = 960;
+export const LOGICAL_HEIGHT = 1200;
+export const LOGICAL_CENTER = Object.freeze({ x: LOGICAL_WIDTH / 2, y: LOGICAL_HEIGHT / 2 });
 export const SIMULATION_HZ = 60;
 export const FIXED_STEP_SECONDS = 1 / SIMULATION_HZ;
 export const MAXIMUM_FRAME_DELTA_MS = 250;
 
 export const RINK = Object.freeze({
-  left: 42,
-  right: 498,
+  left: 0,
+  right: LOGICAL_WIDTH,
   top: 54,
-  bottom: 906,
-  centerY: 480,
-  goalLeft: 178,
-  goalRight: 362,
+  bottom: LOGICAL_HEIGHT - 54,
+  centerY: LOGICAL_CENTER.y,
+  goalLeft: LOGICAL_CENTER.x - 92,
+  goalRight: LOGICAL_CENTER.x + 92,
   goalDepth: 38,
   postRadius: 17
 });
@@ -43,12 +44,12 @@ export const BOARD = Object.freeze({
 });
 
 export const PLAYER_HOME = Object.freeze({
-  1: Object.freeze({ x: LOGICAL_WIDTH / 2, y: RINK.bottom - 132 }),
-  2: Object.freeze({ x: LOGICAL_WIDTH / 2, y: RINK.top + 132 })
+  1: Object.freeze({ x: LOGICAL_CENTER.x, y: RINK.bottom - 132 }),
+  2: Object.freeze({ x: LOGICAL_CENTER.x, y: RINK.top + 132 })
 });
 
 export const READY_TARGET = Object.freeze({
-  1: Object.freeze({ x: LOGICAL_WIDTH / 2, y: RINK.bottom - 118 }),
-  2: Object.freeze({ x: LOGICAL_WIDTH / 2, y: RINK.top + 118 })
+  1: Object.freeze({ x: LOGICAL_CENTER.x, y: RINK.bottom - 118 }),
+  2: Object.freeze({ x: LOGICAL_CENTER.x, y: RINK.top + 118 })
 });
 export const READY_TARGET_RADIUS = 92;

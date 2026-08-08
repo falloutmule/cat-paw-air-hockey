@@ -4,9 +4,10 @@
     {
       "name": "board",
       "assets": [
-        { "alias": "default-board-template", "src": "../../art/theme/cat-paw-board-template.png" }
+        { "alias": "default-board-template", "src": "../../art/theme/cat-paw-board-template.png" },
+        { "alias": "default-couch-goal", "src": "../../art/goals/cat-paw-couch-goal.png" }
       ]
     }
   ],
-  "notes": "The exact default Board PNG is inlined; actors, goals, effects, and sound remain procedural. No runtime asset URLs are required."
+  "notes": "The exact default Board and couch-goal PNGs are inlined; actors, effects, and sound remain procedural. No runtime asset URLs are required."
 }

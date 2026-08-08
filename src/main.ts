@@ -2,15 +2,15 @@ import { createSfhsPixiV8Presentation, supportsRequiredWebGl } from "@sfhs/adapt
 import { createSfhsPixiGameRuntime, type SfhsPixiGameRuntime } from "@sfhs/pixi-runtime";
 import { createHockeyAudioController } from "./audio.ts";
 import { makeBoardTemplateBlob } from "./board-art.ts";
-import { LOGICAL_HEIGHT, LOGICAL_WIDTH, MAXIMUM_FRAME_DELTA_MS, SIMULATION_HZ } from "./constants.ts";
+import { BOARD, LOGICAL_HEIGHT, LOGICAL_WIDTH, MAXIMUM_FRAME_DELTA_MS, SIMULATION_HZ } from "./constants.ts";
 import { lowerLeftControl } from "./controls.ts";
 import { fullscreenAvailable, fullscreenElement, toggleElementFullscreen } from "./fullscreen.ts";
 import { installDiagnostics } from "./diagnostics.ts";
 import { createHockeyInput } from "./input.ts";
-import { createCatHockeyPresenter } from "./presentation.ts";
+import { createCatHockeyPresenter, prepareCatHockeyPresentationAssets } from "./presentation.ts";
 import { createCatHockeyScene } from "./scene.ts";
 import { DEFAULT_MATCH_SETTINGS, normalizeMatchSettings, settingsEqual, settingsSummary, type MatchSettings } from "./settings.ts";
-import { clearBoard, clearTheme, loadBoard, loadTheme, saveBoard, saveTheme, validateBoard, validateTheme, type ValidBoard, type ValidTheme } from "./theme.ts";
+import { clearBoard, clearTheme, loadBoard, loadTheme, saveBoard, saveTheme, validateBoard, validateTheme, type LegacyBoardRecord, type ValidBoard, type ValidTheme } from "./theme.ts";
 import type { HockeyGameState } from "./state.ts";
 import defaultBoardTemplateUrl from "../art/theme/cat-paw-board-template.png";
 
@@ -50,6 +50,8 @@ let viewportFrame = 0;
 let reducedEffects = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
 let currentTheme: ValidTheme | undefined;
 let currentBoard: ValidBoard | undefined;
+let legacyBoard: LegacyBoardRecord | undefined;
+const boardPixelLabel = `${BOARD.bitmapWidth} × ${BOARD.bitmapHeight}`;
 const settingsStorageKey = "cat-paw-air-hockey.settings.v1";
 function loadSettings(): MatchSettings { try { return normalizeMatchSettings(JSON.parse(localStorage.getItem(settingsStorageKey) ?? "null")); } catch { return DEFAULT_MATCH_SETTINGS; } }
 let menuSettings = loadSettings();
@@ -57,7 +59,7 @@ try { const stored = localStorage.getItem("cat-paw-air-hockey.reduced-motion.v1"
 
 const audio = createHockeyAudioController();
 const scene = createCatHockeyScene();
-const presenter = createCatHockeyPresenter({ onEvents: (events) => audio.consume(events), boardTemplateMode });
+const presenter = createCatHockeyPresenter({ onEvents: (events) => { audio.consume(events); if (events.length > 0) updateControls(); }, boardTemplateMode });
 const presentation = createSfhsPixiV8Presentation<HockeyGameState>({ backgroundColor: 0x172331, presenter });
 const input = createHockeyInput({ initialSurface: host, getCanvas: () => runtime?.getPrimarySurface(), onIntentionalGesture: () => { void audio.unlock().then(updateControls); } });
 
@@ -121,10 +123,10 @@ function setMenuOpen(open: boolean): void {
 }
 function themeStatus(message: string): void { for (const view of menuViews) { const statusElement = view.querySelector<HTMLElement>("[data-theme-status]"); if (statusElement !== null) statusElement.textContent = message; } settingsLive.value = message; }
 function showControlFeedback(message: string): void { controlFeedback.value = message; controlFeedback.hidden = false; if (feedbackTimer !== undefined) clearTimeout(feedbackTimer); feedbackTimer = setTimeout(() => { controlFeedback.hidden = true; }, 4_000); }
-function syncBoardViews(): void { for (const view of menuViews) { const preview = view.querySelector<HTMLImageElement>("[data-board-preview]"); if (preview !== null) preview.src = currentBoard?.url ?? defaultBoardTemplateUrl; const boardStatusElement = view.querySelector<HTMLElement>("[data-board-status]"); if (boardStatusElement !== null) boardStatusElement.textContent = currentBoard === undefined ? "Default Board · 1080 × 1920 PNG" : `${currentBoard.filename} · 1080 × 1920 PNG`; } shell.dataset.board = currentBoard === undefined ? "default" : "custom"; }
+function syncBoardViews(): void { for (const view of menuViews) { const preview = view.querySelector<HTMLImageElement>("[data-board-preview]"); if (preview !== null) preview.src = currentBoard?.url ?? defaultBoardTemplateUrl; const boardStatusElement = view.querySelector<HTMLElement>("[data-board-status]"); if (boardStatusElement !== null) boardStatusElement.textContent = currentBoard !== undefined ? `${currentBoard.filename} · ${boardPixelLabel} PNG` : legacyBoard === undefined ? `Default Board · ${boardPixelLabel} PNG` : `Default Board · saved legacy ${legacyBoard.filename} (1080 × 1920) is incompatible; replace with ${boardPixelLabel}`; } shell.dataset.board = currentBoard === undefined ? "default" : "custom"; shell.dataset.legacyBoard = String(legacyBoard !== undefined); }
 function boardStatus(message: string): void { syncBoardViews(); for (const view of menuViews) { const statusElement = view.querySelector<HTMLElement>("[data-board-status]"); if (statusElement !== null) statusElement.textContent = message; } settingsLive.value = message; }
 async function downloadBoardTemplate(): Promise<void> {
-  try { const link = document.createElement("a"); let temporaryUrl: string | undefined; if (boardTemplateSourceMode) { temporaryUrl = URL.createObjectURL(await makeBoardTemplateBlob()); link.href = temporaryUrl; } else link.href = defaultBoardTemplateUrl; link.download = "cat-paw-board-template.png"; link.click(); if (temporaryUrl !== undefined) setTimeout(() => URL.revokeObjectURL(temporaryUrl!), 1_000); boardStatus("Board template downloaded · 1080 × 1920 PNG"); }
+  try { const link = document.createElement("a"); let temporaryUrl: string | undefined; if (boardTemplateSourceMode) { temporaryUrl = URL.createObjectURL(await makeBoardTemplateBlob()); link.href = temporaryUrl; } else link.href = defaultBoardTemplateUrl; link.download = "cat-paw-board-template.png"; link.click(); if (temporaryUrl !== undefined) setTimeout(() => URL.revokeObjectURL(temporaryUrl!), 1_000); boardStatus(`Board template downloaded · ${boardPixelLabel} PNG`); }
   catch (error) { boardStatus(error instanceof Error ? error.message : "Board template download failed"); }
 }
 async function acceptBoard(file: File): Promise<void> {
@@ -192,14 +194,15 @@ document.addEventListener("keydown", (event) => {
   event.preventDefault(); focusable[next]!.focus();
 });
 
-const removeDiagnostics = installDiagnostics({ getRuntime: () => runtime, input, getAudioStatus: () => audio.getStatus(), getOrientationGate: () => !orientationGate.hidden, getBoardDiagnostics: () => presenter.getBoardDiagnostics() });
+const removeDiagnostics = installDiagnostics({ getRuntime: () => runtime, input, getAudioStatus: () => audio.getStatus(), getOrientationGate: () => !orientationGate.hidden, getBoardDiagnostics: () => presenter.getBoardDiagnostics(), getGoalDiagnostics: () => presenter.getGoalDiagnostics() });
 async function boot(): Promise<void> {
   if (!supportsRequiredWebGl(document)) { capability.hidden = false; host.hidden = true; status.value = "WebGL unavailable"; return; }
   try {
+    await prepareCatHockeyPresentationAssets();
     runtime = await createSfhsPixiGameRuntime({ host, presentation, scene, actions: input, viewport: { mode: "fixed", logicalWidth: LOGICAL_WIDTH, logicalHeight: LOGICAL_HEIGHT, maximumDevicePixelRatio: 2, scalePolicy: "contain" }, simulationHz: SIMULATION_HZ, maximumFrameDeltaMilliseconds: MAXIMUM_FRAME_DELTA_MS });
     applyViewportGeometry(); input.setSurface(host, () => runtime?.getPrimarySurface()); scene.setReducedEffects(reducedEffects); presenter.setReducedEffects(reducedEffects); input.requestSettings(menuSettings); runtime.start(); status.value = "Ready — both players hold a paw"; applyOrientationGate(); updateControls();
     void loadTheme().then((file) => { if (file !== undefined) void acceptTheme(file); }).catch(() => themeStatus("Classic legacy theme (storage unavailable)"));
-    void loadBoard().then((file) => { if (file !== undefined) void acceptBoard(file); else syncBoardViews(); }).catch(() => boardStatus("Default Board · storage unavailable"));
+    void loadBoard().then((stored) => { legacyBoard = stored.legacy; if (stored.current !== undefined) void acceptBoard(stored.current); else syncBoardViews(); }).catch(() => boardStatus("Default Board · storage unavailable"));
   } catch (error) { capability.hidden = false; capability.querySelector("p")!.textContent = "The required PixiJS WebGL renderer could not initialize."; host.hidden = true; status.value = error instanceof Error ? error.message : "Renderer initialization failed"; }
 }
 document.addEventListener("visibilitychange", () => { if (runtime === undefined) return; if (document.hidden) { hiddenPaused = true; runtime.pause(); input.clear(); } else if (hiddenPaused) { hiddenPaused = false; if (!orientationPaused) runtime.resume(); void audio.unlock().then(updateControls); } });

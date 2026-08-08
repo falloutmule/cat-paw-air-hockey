@@ -7,7 +7,7 @@ pnpm install --frozen-lockfile
 pnpm test
 ```
 
-The suite covers 13 input lifecycle scenarios, 16 physics scenarios, 6 match-flow scenarios, 6 audio scenarios, orientation, settings migration/synchronization, return-speed behavior, and the exact shared-control contract. Packed Chromium additionally covers strict Board dimensions/decode, failed-replacement preservation, IndexedDB reload, reset, texture disposal, one persistent sprite, fullscreen, and goal-zone clearance.
+The suite covers 13 input lifecycle scenarios, 16 physics scenarios, 6 match-flow scenarios, 6 audio scenarios, orientation, settings migration/synchronization, return-speed behavior, the exact shared-control contract, and 22 focused tall-board checks. Packed Chromium additionally covers strict 1080×2400 Board dimensions/decode, safe R2 legacy retention, failed-replacement preservation, IndexedDB reload, reset, texture disposal, one persistent sprite, 75%/125% couch goals, fullscreen, and goal-zone clearance. The R3 semantic browser lane reaches a winner, saves the real canvas capture, and starts a rematch through normal UI and pointer actions.
 
 ## Canonical SFHS sequence
 
@@ -21,12 +21,12 @@ pnpm sfhs validate --project <materialized-project> --json
 pnpm sfhs check --project <materialized-project> --changed <path> --json
 pnpm sfhs pack --project <materialized-project> --json
 pnpm sfhs verify --project <materialized-project> --json
-pnpm test:browser
+pnpm test:r3-browser
 ```
 
 `pnpm run lint` and `pnpm run typecheck` are deliberately materialized-project commands: the source imports the pinned SFHS adapter/runtime packages and the graduation materializer provides the approved tool overlay without vendoring framework source into this repository. Direct-source regression tests remain project-owned.
 
-`SFHS_TEST_SELECTION_REVIEW_REQUIRED` can be a non-fatal warning for changed paths with broad runtime impact; it is recorded, never suppressed. A canonical result requires pack and exact verify of the same `dist/index.html` plus packed-artifact Chromium evidence. The browser evidence checks boot, one WebGL canvas, control layout, fullscreen, settings, capture, lifecycle/orientation, errors, and runtime requests. R2A additionally measures several portrait viewports, menu/document containment, independent half scrolling, Board pixel/logical independence, and post-fullscreen screen-to-logical mapping.
+`SFHS_TEST_SELECTION_REVIEW_REQUIRED` can be a non-fatal warning for changed paths with broad runtime impact; it is recorded, never suppressed. A canonical result requires pack and exact verify of the same `dist/index.html` plus packed-artifact Chromium evidence. The browser evidence checks boot, one WebGL canvas, control layout, fullscreen, settings, capture, lifecycle/orientation, errors, and runtime requests. R3 measures 412×915, 360×800, 390×844, and 360×640 portrait viewports, menu/document containment, independent half scrolling, Board pixel/logical independence, 20:9 input mapping, dynamic goal resizing, Board replacement invariance, and the normal-action match lifecycle.
 
 ## Pages release
 

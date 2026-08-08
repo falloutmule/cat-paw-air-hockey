@@ -1,4 +1,4 @@
-import { PUCK_RADIUS, PUCK_SPEED_CAP, RINK, STRIKER_IMPULSE_SPEED_CAP, STRIKER_MAX_SPEED, STRIKER_RADIUS } from "./constants.ts";
+import { LOGICAL_CENTER, PUCK_RADIUS, PUCK_SPEED_CAP, RINK, STRIKER_IMPULSE_SPEED_CAP, STRIKER_MAX_SPEED, STRIKER_RADIUS } from "./constants.ts";
 import type { PlayerId } from "./actions.ts";
 
 export interface MatchSettings {
@@ -64,7 +64,7 @@ export function strikerSpeedCap(settings: MatchSettings, player: PlayerId): numb
 export function strikerImpulseCap(settings: MatchSettings, player: PlayerId): number { return STRIKER_IMPULSE_SPEED_CAP * settingScale(settings.pawSpeed[player]); }
 export function goalBounds(settings: MatchSettings, defender: PlayerId): Readonly<{ left: number; right: number }> {
   const width = (RINK.goalRight - RINK.goalLeft) * settingScale(settings.goalSize[defender]);
-  return Object.freeze({ left: 270 - width / 2, right: 270 + width / 2 });
+  return Object.freeze({ left: LOGICAL_CENTER.x - width / 2, right: LOGICAL_CENTER.x + width / 2 });
 }
 
 export function isClassicSettings(settings: MatchSettings): boolean { return settingsEqual(settings, DEFAULT_MATCH_SETTINGS); }

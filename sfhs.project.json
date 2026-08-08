@@ -23,7 +23,7 @@
   "viewport": {
     "mode": "fixed-contain",
     "logicalWidth": 540,
-    "logicalHeight": 960,
+    "logicalHeight": 1200,
     "maxDevicePixelRatio": 2,
     "orientation": "adaptive"
   },

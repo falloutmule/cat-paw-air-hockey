@@ -16,7 +16,7 @@ const address = server.address();
 if (address === null || typeof address === "string") throw new Error("Unable to serve Board template source.");
 const browser = await chromium.launch({ headless: true });
 try {
-  const context = await browser.newContext({ viewport: { width: 540, height: 960 }, deviceScaleFactor: 2, acceptDownloads: true });
+  const context = await browser.newContext({ viewport: { width: 540, height: 1200 }, deviceScaleFactor: 2, acceptDownloads: true });
   const page = await context.newPage();
   await page.goto(`http://127.0.0.1:${address.port}/?board-template-source=1`, { waitUntil: "load" });
   await page.waitForFunction(() => (window.__CAT_AIR_HOCKEY__?.snapshot() as { state?: unknown } | undefined)?.state != null);
@@ -33,5 +33,5 @@ try {
 }
 const png = await readFile(outputPath);
 assert.equal(png.readUInt32BE(16), 1080);
-assert.equal(png.readUInt32BE(20), 1920);
-console.log(JSON.stringify({ schema: "cat-air-hockey.board-template@1", path: outputPath, width: 1080, height: 1920, bytes: png.byteLength, method: "packed-game Board template download" }, null, 2));
+assert.equal(png.readUInt32BE(20), 2400);
+console.log(JSON.stringify({ schema: "cat-air-hockey.board-template@1", path: outputPath, width: 1080, height: 2400, bytes: png.byteLength, method: "packed-game Board template download" }, null, 2));
