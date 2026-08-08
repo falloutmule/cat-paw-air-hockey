@@ -1,7 +1,7 @@
-# Cat Paw R2A physical layout gate
+# Cat Paw R3 physical gameplay gate
 
-Test only `dist/index.html`: 724,123 bytes; SHA-256 `acb55aec6d8d8d6bf1afa4634eefe5caeec51d77d95a743e4ddd29950e9c9c`; build `cat-paw-air-hockey-5735c4c572c2`.
+Test only `dist/index.html`: 732,858 bytes; SHA-256 `8bc85d72c1a3a39118fa36db4f9c4ba075ebeec9a8a6cd54b1259777d06afaeb`; build `cat-paw-air-hockey-4ed1cb3c5762`.
 
-Record Samsung model, Android version, numeric Chrome version, date, portrait viewport dimensions/DPR, screenshots, and **REPORTED PASS** or **REPORTED FAIL**. Confirm normal portrait and fullscreen each fit the visible screen; both mirrored Settings halves fit and scroll independently; the document itself does not pan; closing Settings restores the correct game size; and two simultaneous paw touches retain zero mapping offset.
+Record Samsung model, Android version, numeric Chrome version, date, portrait viewport dimensions/DPR, screenshots, and **REPORTED PASS** or **REPORTED FAIL**. Confirm the Board nearly fills a 20:9 phone without crop/stretch; side travel is edge-to-edge; both players defend deep at obvious couch goals; four center controls do not obstruct rallies; 75%/125% goals and GOAL labels remain readable; settings fit and name 1080 x 2400; touch mapping survives fullscreen; return speed changes the next safe rally; and first-to-five capture/rematch works.
 
-This is a layout-first gate only. Resume complete gameplay acceptance after it passes. Earlier physical reports remain historical and do not transfer.
+Earlier physical reports remain historical and do not transfer. No push or deployment is authorized by this seed.

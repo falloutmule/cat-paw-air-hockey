@@ -1,26 +1,23 @@
 {
   "artifact": {
-    "buildId": "cat-paw-air-hockey-5735c4c572c2",
-    "bytes": 724123,
+    "buildId": "cat-paw-air-hockey-4ed1cb3c5762",
+    "bytes": 732858,
     "path": "dist/index.html",
-    "sha256": "acb55aec6d8d8d6bf1afa4634eefe5caeec51d77d95a743e4ddd29950e9c9c",
+    "sha256": "8bc85d72c1a3a39118fa36db4f9c4ba075ebeec9a8a6cd54b1259777d06afaeb",
     "verifier": "sfhs verify"
   },
   "classification": "canonical",
   "required": [
-    "device model",
-    "Android version",
-    "numeric Chrome version",
-    "portrait and landscape viewport dimensions and DPR",
-    "screenshots",
-    "primary workflow",
-    "background/return",
-    "audio",
-    "performance and heat"
+    "device model, Android version, numeric Chrome version, viewport dimensions, and DPR",
+    "20:9 containment and edge-to-edge horizontal play",
+    "deep defense at both couch goals",
+    "100-percent and 75/125-percent goal readability",
+    "touch mapping before and after fullscreen",
+    "return-speed handicap rally",
+    "mirrored settings and 1080 x 2400 Board copy",
+    "first-to-five capture and rematch",
+    "screenshots and thermal/performance notes"
   ],
-  "resultVocabulary": [
-    "REPORTED PASS",
-    "REPORTED FAIL"
-  ],
+  "resultVocabulary": ["REPORTED PASS", "REPORTED FAIL"],
   "schema": "sfhs.graduation-physical-test-seed@1"
 }

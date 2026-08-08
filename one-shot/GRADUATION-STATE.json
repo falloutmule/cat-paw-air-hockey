@@ -1,14 +1,14 @@
 {
   "deferredWork": [],
   "evidenceStatus": "VERIFIED",
-  "nextAction": "Run the CATPAW-EXPANSION-001-R2A layout-first Samsung seed against the exact repaired artifact before resuming full gameplay acceptance.",
+  "nextAction": "Run the CATPAW-EXPANSION-001-R3 Samsung gameplay seed against the exact local canonical artifact.",
   "physicalStatus": "UNTESTED",
   "productStatus": "PRODUCT_COMPLETE",
   "projectRoot": ".",
   "records": {
     "physicalSeed": {
       "path": "one-shot/GRADUATION-PHYSICAL-TEST-SEED.json",
-      "sha256": "efb2384e3392883312a72eededeea7cbfaaefad3aabc02c1ec10a4f2b261fadc"
+      "sha256": "da44e330652ef23ba5f0f2e976132875ce8e9dedd1e4e229c1001b90e540f12c"
     },
     "plan": {
       "path": "one-shot/MIGRATION-PLAN.json",
@@ -16,7 +16,7 @@
     },
     "report": {
       "path": "one-shot/GRADUATION-REPORT.json",
-      "sha256": "643ded0af9940275b8c04ccc9e5a5c8a495736880c14c63e96339a1e52f86247"
+      "sha256": "80fd610f5e995a861fe01af0793fb228996205bfddaf8803e1fcd2f0daf1343b"
     },
     "source": {
       "path": "SOURCE-IDENTITY.json",

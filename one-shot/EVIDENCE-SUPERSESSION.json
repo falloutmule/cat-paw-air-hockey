@@ -1,6 +1,12 @@
 {
   "records": [
     {
+      "earlier": "cat-paw-air-hockey-5735c4c572c2 / acb55aec6d8d8d6bf1afa4634eefe5caeec51d77d95a743e4ddd29950e9c9c",
+      "status": "SUPERSEDED",
+      "treatment": "R2A remains the required viewport architecture but its 540 x 960 mechanics and 1080 x 1920 Board artifact are superseded by R3. The artifact and evidence remain historical; physical acceptance does not transfer.",
+      "currentArtifact": "cat-paw-air-hockey-4ed1cb3c5762 / 8bc85d72c1a3a39118fa36db4f9c4ba075ebeec9a8a6cd54b1259777d06afaeb"
+    },
+    {
       "earlier": "cat-paw-air-hockey-e15fc84c48fb / 2a45ce59d5a976a2196276de05d9672554f25467af6e44e3cbebda3f59d5d261",
       "status": "SUPERSEDED",
       "treatment": "The local post-touch fullscreen candidate is superseded by the mechanics-first viewport repair. The remotely verified 8115d17 artifact remains deployed, but its artifact-bound Samsung session reported the settings presentation physically wrong-sized and stopped testing. It is REPORTED FAIL / NEEDS REPAIR; physical acceptance did not occur and does not transfer.",

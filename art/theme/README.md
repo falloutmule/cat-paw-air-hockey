@@ -1,14 +1,14 @@
 # Board template provenance
 
-`cat-paw-board-template.png` is the exact editable Board bitmap template for Cat Paw Air Hockey R2.
+`cat-paw-board-template.png` is the exact editable Board bitmap template for Cat Paw Air Hockey R3.
 
-- Source implementation commit: `dfb8b330b0a64164bb280757d1bc82c8126d7b88`
-- Generation method: `pnpm run generate:board-template` against the exact SFHS-packed artifact; the packed game downloads the Board-only procedural paint recipe
-- Logical Board rectangle: x `0`, y `0`, width `540`, height `960`
+- Source implementation commit: `025849941bed487811fee553eb4152e9c9570264`
+- Generation method: `pnpm run generate:board-template` against an SFHS-packed artifact; the packed game downloads the Board-only presentation generated from `src/board-art.ts`
+- Logical Board rectangle: x `0`, y `0`, width `540`, height `1200`
 - Bitmap scale: `2`
-- Bitmap dimensions: `1080` x `1920`
-- Bytes: `100563`
-- SHA-256: `cd9fa2fcd5756c91b065199c8da863e45efad71a301426cca71f7455764a6630`
+- Bitmap dimensions: `1080` x `2400`
+- Bytes: `95863`
+- SHA-256: `705ee60f29283b345b399bcae5fee0e59d115744911949101303bf250c34bdf6`
 - Intended use: repaint this rectangle while preserving its exact pixel dimensions and overall geometry, then load it with **Replace Board PNG**
 
-The image contains only the static table presentation. Dynamic goals and posts, cats, paws, puck, scores, messages, controls, and VFX remain separate runtime layers.
+The image contains only the static Board presentation. Dynamic couch goals and posts, cats, paws, puck, scores, messages, controls, and VFX remain separate runtime layers.

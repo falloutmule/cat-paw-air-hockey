@@ -1,11 +1,11 @@
 ---
-{"schema":"sfhs.one-shot-decision-log@1","status":"VERIFIED","facts":{"decisions":["D-001 portrait-first shared-phone rink","D-002 zero finger offset","D-003 first-to-five ready/countdown/rematch flow","D-004 fixed-step bounded physics","D-005 optional reduced effects","D-006 procedural audio","D-007 readable committed source is authoritative","D-008 canonical output is packer-produced only"]}}
+{"schema":"sfhs.one-shot-decision-log@1","status":"VERIFIED","facts":{"decisions":["D-001 portrait-first 540x1200 shared-phone rink","D-002 zero finger offset","D-003 first-to-five ready/countdown/rematch flow","D-004 fixed-step bounded physics","D-005 optional reduced effects","D-006 procedural audio","D-007 readable committed source is authoritative","D-008 canonical output is packer-produced only","D-012 four shared center controls","D-013 independent 1080x2400 Board","D-014 dynamic NineSlice couch goals"]}}
 ---
 # Decisions
 
 | ID | Status | Decision | Reason / evidence | Supersedes |
 | --- | --- | --- | --- | --- |
-| D-001 | VERIFIED | Portrait-first 540×960 fixed-contain rink; landscape pauses behind a rotate guide. | Shared-phone opposite-end play and orientation coverage. | None |
+| D-001 | VERIFIED | Portrait-first 540×1200 fixed-contain rink; landscape pauses behind a rotate guide. | R3 tall-board contract and responsive packed-browser coverage. | Earlier 540×960 geometry |
 | D-002 | REPORTED | Zero logical-pixel finger offset. | Historical Samsung acceptance; maintain readable paw attachment. | None |
 | D-003 | VERIFIED | First to five, joint ready hold, countdown, goal reset, and joint rematch. | Match-flow simulation tests. | None |
 | D-004 | VERIFIED | 60 Hz fixed-step bounded physics with renderer-neutral state. | `src/physics.ts` and focused scenarios. | None |
@@ -17,4 +17,5 @@
 | D-010 | VERIFIED | The existing local expansion source is the current publication lineage; graduation does not alter its gameplay. | It descends from the settled source and has current local canonical verification. | Base-game-only publication framing |
 | D-011 | PROPOSED | GitHub Pages receives only the packed verified HTML from canonical `main`, then the deployed bytes are compared to the workflow's artifact hash. | Repository-graduation authorization and `pages.yml`. | No prior Pages configuration |
 | D-012 | VERIFIED | R2 uses exactly four shared center-edge controls; Capture temporarily replaces Pause only in the winner state. | Source contract, shared-control unit test, packed layout evidence. | Duplicated goal-side control sets |
-| D-013 | VERIFIED | The static Board is one 540×960 logical Pixi sprite slot with an exact 1080×1920 DPR-2 PNG template and procedural fallback; goals and actors remain separate. | Board generator, strict loader/persistence tests, one-sprite diagnostics. | Mandatory atlas and integrated control-apron concepts |
+| D-013 | VERIFIED | The static Board is one 540×1200 logical Pixi sprite slot with an exact 1080×2400 DPR-2 PNG template and procedural fallback; legacy 1080×1920 data is retained but incompatible; goals and actors remain separate. | Board generator, strict loader/migration/persistence tests, one-sprite diagnostics. | R2 Board format and mandatory atlas concepts |
+| D-014 | VERIFIED | Each goal uses a persistent nearest-neighbor Pixi NineSlice couch above a mechanics-derived dual-contrast mouth frame and outlined GOAL text. | 75%/100%/125% diagnostics and packed visual evidence. | Procedural cat-goal presentation |

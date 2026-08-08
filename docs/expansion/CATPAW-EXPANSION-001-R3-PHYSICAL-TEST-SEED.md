@@ -1,0 +1,18 @@
+# CATPAW-EXPANSION-001-R3 Samsung physical seed
+
+Status: **UNTESTED**. Test only the exact artifact named in `one-shot/VERIFICATION-REPORT.md`; earlier physical acceptance does not transfer.
+
+On Samsung Galaxy S21 Ultra in stable Android Chrome:
+
+1. Record device, Android version, numeric Chrome version, portrait viewport dimensions, DPR, date, and artifact identity.
+2. Confirm the 20:9 Board nearly fills portrait without crop, stretch, or chunky side rails.
+3. Confirm both paws use almost the full physical width and can defend deep beside their couch goal.
+4. Play ordinary rallies and confirm the four center-edge controls do not obstruct defense or finger mapping.
+5. Confirm couch goals, thick contrasting mouths, and both orientations of `GOAL` are readable at 100%, then at P1 75% / P2 125%.
+6. Set a return-speed handicap and confirm the next safe rally feels correctly changed.
+7. Open Settings, confirm both halves fit/scroll, and confirm the Board copy says 1080 x 2400.
+8. Enter and exit fullscreen, then continue play with exact touch mapping.
+9. Reach five, save the final PNG, and ready both paws for a rematch.
+10. Record screenshots and **REPORTED PASS** or **REPORTED FAIL**.
+
+A 360 x 640 packed-browser containment scenario has already passed. This seed is the remaining physical gate, not an authorization to deploy or publish.

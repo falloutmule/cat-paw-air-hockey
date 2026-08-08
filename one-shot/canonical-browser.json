@@ -3,27 +3,21 @@
   "valid": true,
   "artifact": {
     "path": "dist/index.html",
-    "bytes": 724123,
-    "sha256": "acb55aec6d8d8d8d6bf1afa4634eefe5caeec51d77d95a743e4ddd29950e9c9c",
-    "buildId": "cat-paw-air-hockey-5735c4c572c2"
+    "bytes": 732858,
+    "sha256": "8bc85d72c1a3a39118fa36db4f9c4ba075ebeec9a8a6cd54b1259777d06afaeb",
+    "buildId": "cat-paw-air-hockey-4ed1cb3c5762"
   },
   "browser": "Chromium 149.0.7827.55",
   "checks": [
-    "exact served bytes",
-    "Pixi WebGL renderer and one visible canvas",
-    "zero page/console errors and zero unexpected runtime requests",
-    "exactly four live shared center-edge controls with no duplicated end sets",
-    "both defensive goal zones clear of controls",
-    "strict 1080 x 1920 Board PNG acceptance and wrong-size/corrupt rejection",
-    "failed replacement preserves prior Board",
-    "custom Board persists across reload and Reset Board restores default",
-    "one persistent Board sprite and owned superseded texture disposal",
-    "Board replacement leaves simulation and stage object count unchanged",
-    "independent pointers, release, cancellation, and third-touch rejection",
-    "ready/countdown, pause/resume, touch-driven fullscreen entry/exit, landscape gate, and portrait return",
-    "settings and document containment at 412 x 915, 360 x 800, and 412 x 1000",
-    "independent scrolling in each bounded mirrored settings half",
-    "1080 x 1920 Board pixels remain independent from the 540 x 960 logical sprite",
-    "exact screen-to-logical pointer mapping after fullscreen viewport resize"
+    "exact served bytes, one Pixi WebGL canvas, zero page/console errors, and zero external runtime requests",
+    "540 x 1200 mechanics and 1080 x 2400 Board pixels remain independent",
+    "uniform contain at 412 x 915, 360 x 800, 390 x 844, and 360 x 640",
+    "exact center and 75-percent screen-to-logical mappings through resize/fullscreen/orientation return",
+    "exactly four shared center-edge controls with clear defensive goal zones",
+    "R2 Board Blob retained and reported incompatible without stretch or deletion",
+    "two valid R3 Board swaps leave physics, goals, viewport, controls, and stage object count unchanged",
+    "wrong-size and corrupt Board rejection preserves the working Board",
+    "persistent nearest-neighbor NineSlice couch goals at 100 percent and independent 75/125 percent",
+    "touch-driven ready, play, deep defense, deferred goal/return settings, fullscreen, first-to-five, capture, and rematch"
   ]
 }
