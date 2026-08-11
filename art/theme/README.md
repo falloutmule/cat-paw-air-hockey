@@ -1,14 +1,14 @@
-# Board template provenance
+# BOARD-ART-001 provenance
 
-`cat-paw-board-template.png` is the exact editable Board bitmap template for Cat Paw Air Hockey R3.
+`cat-paw-board-template.png` is the approved default Board bitmap for Cat Paw Air Hockey R3 and the exact editable replacement template downloaded by the game.
 
-- Source implementation commit: `025849941bed487811fee553eb4152e9c9570264`
-- Generation method: `pnpm run generate:board-template` against an SFHS-packed artifact; the packed game downloads the Board-only presentation generated from `src/board-art.ts`
+- Approved asset: `cat-paw-board-board-art-001.png`
+- Integration method: exact-byte copy; no regeneration, repainting, resizing, recompression, or other transformation
 - Logical Board rectangle: x `0`, y `0`, width `540`, height `1200`
 - Bitmap scale: `2`
 - Bitmap dimensions: `1080` x `2400`
-- Bytes: `95863`
-- SHA-256: `705ee60f29283b345b399bcae5fee0e59d115744911949101303bf250c34bdf6`
+- Bytes: `2562705`
+- SHA-256: `cfba2b87c4fec52fb0f9a491ac9fca8421fba015c86425eaa9abe9517c68bf2d`
 - Intended use: repaint this rectangle while preserving its exact pixel dimensions and overall geometry, then load it with **Replace Board PNG**
 
-The image contains only the static Board presentation. Dynamic couch goals and posts, cats, paws, puck, scores, messages, controls, and VFX remain separate runtime layers.
+The approved image contains only static Board presentation. Dynamic couch goals and posts, cats, paws, puck, scores, messages, controls, and VFX remain separate runtime layers. The geometry-guide PNG is inspection evidence only and is not a runtime asset.

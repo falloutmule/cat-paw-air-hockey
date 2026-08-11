@@ -1,4 +1,6 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
+import { readFileSync } from "node:fs";
 import { EMPTY_ACTION_SNAPSHOT, type HockeyActionSnapshot, type PlayerId } from "../src/actions.ts";
 import { BOARD, CENTER_EXCLUSION, FIXED_STEP_SECONDS, LOGICAL_CENTER, LOGICAL_HEIGHT, LOGICAL_WIDTH, PLAYER_HOME, PUCK_RADIUS, PUCK_SPEED_CAP, READY_TARGET, RINK, STRIKER_RADIUS } from "../src/constants.ts";
 import { stepGame } from "../src/physics.ts";
@@ -31,6 +33,11 @@ assert.deepEqual(PLAYER_HOME, { 1: { x: 270, y: 1014 }, 2: { x: 270, y: 186 } })
 assert.deepEqual(READY_TARGET, { 1: { x: 270, y: 1028 }, 2: { x: 270, y: 172 } });
 assert.deepEqual({ rinkWidthBefore: 456, rinkWidthAfter: RINK.right - RINK.left, pawCenterBefore: 366, pawCenterAfter: RINK.right - RINK.left - STRIKER_RADIUS * 2 }, { rinkWidthBefore: 456, rinkWidthAfter: 540, pawCenterBefore: 366, pawCenterAfter: 450 });
 assert.deepEqual({ halfBefore: 426, halfAfter: RINK.centerY - RINK.top, legalBefore: 325, legalAfter: RINK.centerY - RINK.top - STRIKER_RADIUS * 2 - CENTER_EXCLUSION }, { halfBefore: 426, halfAfter: 546, legalBefore: 325, legalAfter: 445 });
+
+const approvedBoard = readFileSync(new URL("../art/theme/cat-paw-board-template.png", import.meta.url));
+assert.equal(approvedBoard.byteLength, 2_562_705, "BOARD-ART-001 exact byte count is preserved");
+assert.equal(createHash("sha256").update(approvedBoard).digest("hex"), "cfba2b87c4fec52fb0f9a491ac9fca8421fba015c86425eaa9abe9517c68bf2d", "BOARD-ART-001 exact approved bytes are preserved");
+assert.deepEqual({ width: approvedBoard.readUInt32BE(16), height: approvedBoard.readUInt32BE(20) }, { width: BOARD.bitmapWidth, height: BOARD.bitmapHeight }, "approved Board pixels match the frozen R3 bitmap slot");
 
 let deep = playing();
 deep = step(deep, targetAction({ x: -10_000, y: 10_000 }, { x: 10_000, y: -10_000 }), 120);
@@ -71,4 +78,4 @@ for (const [y, direction] of [[RINK.top, -1], [RINK.bottom, 1]] as const) {
   assert.ok(postImpact.phase === "playing" || postImpact.phase === "goal");
 }
 
-console.log(JSON.stringify({ schema: "cat-air-hockey.tall-board@1", passed: true, checks: 22 }, null, 2));
+console.log(JSON.stringify({ schema: "cat-air-hockey.tall-board@1", passed: true, checks: 25 }, null, 2));
