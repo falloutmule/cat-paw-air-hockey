@@ -3,14 +3,15 @@
   "valid": true,
   "artifact": {
     "path": "dist/index.html",
-    "bytes": 733730,
-    "sha256": "47db45150895e881b94b370ff8b7e6a55b6f6d9d08891cbe420ddd76ed711416",
-    "buildId": "cat-paw-air-hockey-32b6e5f50e9d"
+    "bytes": 4022850,
+    "sha256": "1d6201909bec095f81a11bed9e31dd416fbfe25f0d6bb2409fb35cdcf6a16d8c",
+    "buildId": "cat-paw-air-hockey-512728228085"
   },
   "browser": "Chromium 149.0.7827.55",
   "checks": [
     "exact served bytes, one Pixi WebGL canvas, zero page/console errors, and zero external runtime requests",
     "540 x 1200 mechanics and 1080 x 2400 Board pixels remain independent",
+    "approved BOARD-ART-001 bytes are inlined as the default nearest-neighbor Board with no runtime asset request",
     "uniform contain at 412 x 915, 360 x 800, 390 x 844, and 360 x 640",
     "exact center and 75-percent screen-to-logical mappings through resize/fullscreen/orientation return",
     "exactly four shared center-edge controls with clear defensive goal zones",
@@ -18,6 +19,7 @@
     "two valid R3 Board swaps leave physics, goals, viewport, controls, and stage object count unchanged",
     "wrong-size and corrupt Board rejection preserves the working Board",
     "persistent nearest-neighbor NineSlice couch goals at 100 percent and independent 75/125 percent",
+    "approved couches, rug, paws, puck, GOAL frames, and four shared controls remain visually coherent in packed phone screenshots",
     "Goal Size and Paw Size are visible in the initial Samsung settings fold",
     "deferred 125-percent paw sizing is 90 units during the rally and 112.5 units at the next safe boundary",
     "touch-driven ready, play, deep defense, deferred goal/return settings, fullscreen, first-to-five, capture, and rematch"

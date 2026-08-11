@@ -41,3 +41,9 @@ R2A is preserved as required architecture: the SFHS runtime snapshot remains the
 R3 changes real mechanics to the locked 540×1200 Board, with center y=600 and rink bounds `(0,54)` through `(540,1146)`. The Board slot is exactly 1080×2400. R2 Board data is retained as incompatible and never stretched. Both goals are dynamic persistent NineSlice couches with mechanics-derived 75%–125% openings, posts, thick dual-contrast frames, and outlined GOAL text.
 
 **VERIFIED local R3 repair target:** `dist/index.html`, 733,730 bytes, SHA-256 `47db45150895e881b94b370ff8b7e6a55b6f6d9d08891cbe420ddd76ed711416`, build `cat-paw-air-hockey-32b6e5f50e9d`, source SHA-256 `32b6e5f50e9da5437f7e977ebf8d8d5ce99855faf7a0a9e860770e5aa5897ab5`. Goal Size/Paw Size now lead the menu, and deferred paw sizing has explicit UI plus rendered-diameter proof. The prior R3 artifact received **REPORTED FAIL / NEEDS REPAIR** for size-setting discoverability/feedback and is superseded. The repaired artifact's physical status is **UNTESTED**. No push, PR, release, or deployment was authorized.
+
+## BOARD-ART-001 approved default Board
+
+The exact approved 1080×2400 PNG is now the inlined default Board beneath the unchanged dynamic goals, actors, HUD, and controls. It was copied byte-for-byte without regeneration or transformation; source bytes are 2,562,705 with SHA-256 `cfba2b87c4fec52fb0f9a491ac9fca8421fba015c86425eaa9abe9517c68bf2d`. The geometry-guide PNG remains local inspection evidence only and is not packed.
+
+**VERIFIED local BOARD-ART-001 target:** `dist/index.html`, 4,022,850 bytes, SHA-256 `1d6201909bec095f81a11bed9e31dd416fbfe25f0d6bb2409fb35cdcf6a16d8c`, build `cat-paw-air-hockey-512728228085`, source SHA-256 `5127282280858c4d46340b3ce5e1761df5ffe1d4349e920b3816a6a57bac2254`. Physical status is **UNTESTED**. No push, PR, release, or deployment was authorized.
