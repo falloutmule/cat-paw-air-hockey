@@ -1,6 +1,6 @@
 # Repository Graduation Plan — CATPAW-RAPIER-001 verified-main-publish
 
-Status: **PROPOSED until the publication gates complete**. The plan is additive and idempotent: a repeat run updates the same source, evidence, manifests, workflows, and Pages path without creating a competing structure.
+Status: **VERIFIED**. The plan is additive and idempotent: a repeat run updates the same source, evidence, manifests, workflows, and Pages path without creating a competing structure.
 
 ## Authority and output
 
@@ -11,7 +11,7 @@ Status: **PROPOSED until the publication gates complete**. The plan is additive 
 | Canonical branch | `main` | VERIFIED |
 | Toolchain | SFHS commit `fce070a0a08a9b4e0fbebda75440eaee80bb95a9`, contained by SFHS `main` merge `391ed3afe75fa47794e7e1e9f3477e3ec53ecb12` | VERIFIED locally and remotely |
 | Canonical output | Packer-created `dist/index.html`; never committed or hand-edited | VERIFIED locally |
-| Publication | GitHub Actions Pages deployment from verified `main` only | PROPOSED |
+| Publication | GitHub Actions Pages deployment from verified `main` only | VERIFIED; run `31632172076` |
 
 ## Migration and cleanup actions
 

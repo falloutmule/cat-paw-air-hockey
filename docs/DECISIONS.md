@@ -9,7 +9,7 @@
 | D-005 | VERIFIED | Only the pinned SFHS packer may create `dist/index.html`; generated output is ignored. |
 | D-006 | VERIFIED | Return-speed settings are per hitter, apply once to a discrete paw hit, and activate at safe serve boundaries. |
 | D-007 | SUPERSEDED | Goal-side controls remain split around the goal; the goal itself says `GOAL`, not a player label. |
-| D-008 | PROPOSED | GitHub Pages deploys only verified `main` output and must prove local/deployed byte parity. |
+| D-008 | VERIFIED | GitHub Pages deploys only verified `main` output and proves local/deployed byte parity. |
 | D-009 | VERIFIED | Exactly four shared controls occupy the center side edges: Mute upper-left, Pause/Capture lower-left, Menu upper-right, and Fullscreen lower-right. Defensive goal zones remain UI-free. |
 | D-010 | VERIFIED | Reskinning uses one rectangular 1080×2400 Board bitmap derived from the 540×1200 presentation at the DPR-2 ceiling; adjustable goals and all actors/HUD remain separate above it. |
 | D-011 | VERIFIED | The mandatory 2048×2048 atlas, generated theme guide authority, integrated control aprons, duplicated end controls, goal-side clusters, and artwork-baked controls/goals are rejected. Procedural/vector art remains fallback while later independent actor replacements are deferred. |

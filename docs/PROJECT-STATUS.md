@@ -13,7 +13,7 @@
 | Shared center controls and independent Board PNG | VERIFIED IMPLEMENTED | Four live controls; strict 1080×2400 Board migration/replacement/invariance proof |
 | Dynamic couch goals | VERIFIED IMPLEMENTED | Persistent Pixi NineSliceSprite goals; independent 75%–125% mechanics/presentation; thick dual-contrast frame and outlined GOAL text |
 | One Pixi WebGL canvas / no runtime external requests | VERIFIED IMPLEMENTED | SFHS manifest and packed Chromium proof |
-| GitHub Pages | VERIFIED WORKFLOW / SUPERSEDED ARTIFACT | [Live site](https://falloutmule.github.io/cat-paw-air-hockey/) remains historical; verified-main publication is authorized and pending exact deployed-byte parity |
+| GitHub Pages | VERIFIED | [Live site](https://falloutmule.github.io/cat-paw-air-hockey/) serves the exact CATPAW-RAPIER-001 bytes; workflow run `31632172076` and an independent download both matched SHA-256 |
 | Size-setting discoverability and deferred paw application | VERIFIED REPAIRED | Goal Size/Paw Size lead the menu; packed proof checks 90 -> 112.5 paw diameter at the safe boundary |
 | Approved BOARD-ART-001 default | VERIFIED INTEGRATED | Exact approved 1080×2400 PNG; nearest-neighbor Board sprite; packed composed visual proof |
 | Accepted custom-solver Samsung baseline | REPORTED PASS | Exact build `cat-paw-air-hockey-06998a9ce8bc`; preserved artifact-bound report from 2026-08-12 |
@@ -31,4 +31,4 @@ The locally verified CATPAW-RAPIER-001 target is build `cat-paw-air-hockey-b83bd
 - Formal device model, Android/Chrome versions, viewport/DPR, screenshots/video, and instrumented frame-pacing/thermal measurements were not supplied with the PASS.
 - The handoff-supplied baseline commit label `d034d165` is not a repository object. Repository commit `d034d16fb62c4d8c74a882f00f9ef042679398d2` records the exact matching baseline artifact report, but no equivalence between those commit labels is claimed; baseline acceptance remains bound to the full artifact identity.
 
-Release terminology remains deliberately limited: CATPAW-RAPIER-001 automated gates pass and artifact-bound physical-device acceptance is REPORTED PASS. No push, PR, release, or deployment has occurred.
+Release terminology remains deliberately limited: CATPAW-RAPIER-001 automated gates pass, artifact-bound physical-device acceptance is REPORTED PASS, PR #6 is merged, and exact GitHub Pages parity is VERIFIED. Formal device/browser/thermal instrumentation remains unavailable.

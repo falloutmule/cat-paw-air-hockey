@@ -7,6 +7,8 @@ CATPAW-RAPIER-001 replaces the production collision and motion layer with Rapier
 
 Source tests, 23 focused Rapier scenarios, broader product tests, a classic-solver A/B envelope, fresh pinned materialized lint/typecheck, SFHS pack/exact verify, HTTP browser evidence, and exact-file offline boot pass. The packed artifact makes no external runtime request and reports a 13-body `rapier2d` world.
 
+PR #6 merged normally to `main` at `efdcabd2901a4ca2b595a3e4e219d836f860760c`. GitHub Pages workflow run `31632172076` rebuilt and exactly verified the artifact, deployed only `index.html` plus `.nojekyll`, and passed served-byte parity. A separate download returned 5,857,863 bytes with the same SHA-256, and the live page booted, opened/closed settings, exposed one canvas, and reported no browser console errors.
+
 On 2026-08-12 the user reported that the exact Rapier artifact seemed “snapper and more responsive,” then confirmed the full required session “Showed no regressions passed.” This is recorded as **REPORTED PASS** in `one-shot/PHYSICAL-REPORT-CATPAW-RAPIER-001.json`; unavailable formal device and instrumentation metadata is not inferred.
 
 The accepted custom-solver build `cat-paw-air-hockey-06998a9ce8bc` and its 2026-08-12 reported Samsung PASS remain preserved in `one-shot/PHYSICAL-REPORT-PUCK-PAW-GODOT-001.json`. That result is historical baseline evidence and is not transferred to this candidate.

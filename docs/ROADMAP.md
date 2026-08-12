@@ -4,7 +4,7 @@
 
 | Item | Status | Intent and acceptance |
 | --- | --- | --- |
-| Verified-main GitHub Pages publication | APPROVED | Publish only an SFHS-packed and exactly verified artifact; deployed bytes must match local canonical bytes. Status remains PROPOSED until parity passes. |
+| Verified-main GitHub Pages publication | VERIFIED | SFHS-packed artifact is deployed from `main`; workflow and independent download both match the canonical SHA-256. |
 | CATPAW-RAPIER-001 Samsung gate | REPORTED PASS | Exact Rapier artifact was reported snappier and more responsive with no regressions after the required session. |
 
 ## Next

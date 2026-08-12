@@ -6,7 +6,7 @@
 
 ## Status
 
-The readable source, tests, and SFHS project are authoritative. CATPAW-RAPIER-001 is locally verified by the real pinned SFHS packer and exact verifier, including offline one-file boot. It is not deployed or pushed. On 2026-08-12 the user reported **Samsung PASS**, describing it as snappier and more responsive with no regressions against the accepted custom-solver baseline.
+The readable source, tests, and SFHS project are authoritative. CATPAW-RAPIER-001 is verified by the real pinned SFHS packer and exact verifier, including offline one-file boot, and the exact bytes are deployed from `main`. On 2026-08-12 the user reported **Samsung PASS**, describing it as snappier and more responsive with no regressions against the accepted custom-solver baseline.
 
 | Current canonical artifact | Value |
 | --- | --- |
@@ -18,7 +18,7 @@ The readable source, tests, and SFHS project are authoritative. CATPAW-RAPIER-00
 | Verification date | 2026-08-12 |
 | Verification | SFHS inspect, validate, check, pack, exact verify, packed Chromium, and exact-file offline boot |
 | Samsung | REPORTED PASS; snappier and more responsive with no regressions versus `cat-paw-air-hockey-06998a9ce8bc` |
-| Pages | [Currently deployed earlier build](https://falloutmule.github.io/cat-paw-air-hockey/); CATPAW-RAPIER-001 was not deployed |
+| Pages | [Exact verified CATPAW-RAPIER-001 artifact](https://falloutmule.github.io/cat-paw-air-hockey/); deployed SHA-256 matches local canonical bytes |
 
 ## Play
 
