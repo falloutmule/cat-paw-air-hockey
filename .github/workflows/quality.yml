@@ -44,18 +44,12 @@ jobs:
         run: pnpm --dir "$RUNNER_TEMP/sfhs/packages/browser-runner" exec playwright install --with-deps chromium
       - name: Canonical SFHS gates
         run: |
-          base="${{ github.event.pull_request.base.sha || github.event.before }}"
-          test -n "$base"
-          git cat-file -e "$base^{commit}"
-          changed=$(git diff --name-only "$base" "$GITHUB_SHA" --)
-          args=()
-          while IFS= read -r path; do [ -z "$path" ] || args+=(--changed "$path"); done <<< "$changed"
           pnpm --dir "$CAT_PAW_SFHS_PROJECT" test
           pushd "$RUNNER_TEMP/sfhs"
           node packages/cli/src/main.ts one-shot graduate audit --project "$CAT_PAW_SFHS_PROJECT" --json
           node packages/cli/src/main.ts inspect --json --project "$CAT_PAW_SFHS_PROJECT"
           node packages/cli/src/main.ts validate --json --project "$CAT_PAW_SFHS_PROJECT"
-          SFHS_PLAYWRIGHT_RESOLVER="$RUNNER_TEMP/sfhs/packages/browser-runner/package.json" node packages/cli/src/main.ts check --json --project "$CAT_PAW_SFHS_PROJECT" "${args[@]}"
+          SFHS_PLAYWRIGHT_RESOLVER="$RUNNER_TEMP/sfhs/packages/browser-runner/package.json" node packages/cli/src/main.ts check --json --project "$CAT_PAW_SFHS_PROJECT"
           node packages/cli/src/main.ts pack --json --project "$CAT_PAW_SFHS_PROJECT"
           node packages/cli/src/main.ts verify --json --project "$CAT_PAW_SFHS_PROJECT"
           first_sha=$(sha256sum "$CAT_PAW_SFHS_PROJECT/dist/index.html" | awk '{print $1}')
