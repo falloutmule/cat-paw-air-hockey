@@ -196,7 +196,7 @@ document.addEventListener("keydown", (event) => {
   event.preventDefault(); focusable[next]!.focus();
 });
 
-const removeDiagnostics = installDiagnostics({ getRuntime: () => runtime, input, getAudioStatus: () => audio.getStatus(), getOrientationGate: () => !orientationGate.hidden, getBoardDiagnostics: () => presenter.getBoardDiagnostics(), getGoalDiagnostics: () => presenter.getGoalDiagnostics(), getPawDiagnostics: () => presenter.getPawDiagnostics() });
+const removeDiagnostics = installDiagnostics({ getRuntime: () => runtime, input, getAudioStatus: () => audio.getStatus(), getOrientationGate: () => !orientationGate.hidden, getBoardDiagnostics: () => presenter.getBoardDiagnostics(), getGoalDiagnostics: () => presenter.getGoalDiagnostics(), getPawDiagnostics: () => presenter.getPawDiagnostics(), getScoreCatDiagnostics: () => presenter.getScoreCatDiagnostics() });
 async function boot(): Promise<void> {
   if (!supportsRequiredWebGl(document)) { capability.hidden = false; host.hidden = true; status.value = "WebGL unavailable"; return; }
   try {

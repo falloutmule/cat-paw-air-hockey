@@ -1,0 +1,42 @@
+{
+  "anchor": {
+    "x": 40,
+    "y": 72
+  },
+  "descriptor": {
+    "path": "tools/godot-score-cats/manifests/score-cat-export.json",
+    "sha256": "18e03a9f8ada7f3c578c30960a421e5bfef66fd33daa24f50ab09cba7bc47732"
+  },
+  "frameCount": 16,
+  "godot": {
+    "executionMode": "hidden-window-cli",
+    "officialWindowsArchiveSha256": "c7a289051eaefb460b0106b60e9cd5bee0ef55fd102dcb2bed1eb356cf3d90a1",
+    "renderingMethod": "gl_compatibility",
+    "supportedVersion": "4.7.1 stable only",
+    "version": "4.7.1.stable.official.a13da4feb"
+  },
+  "outputs": [
+    {
+      "bytes": 15155,
+      "path": "art/score-cats/cat-paw-score-cat-p1.png",
+      "sha256": "2ce9621a713749a2f4a4fb7487aa9c6736385bbf9e51437c00b697fc5095e4b7",
+      "variant": "player1"
+    },
+    {
+      "bytes": 15364,
+      "path": "art/score-cats/cat-paw-score-cat-p2.png",
+      "sha256": "b915f6f245fdf69658cb7d7736fb2eea2bc455e383cb1f3e889392b70313f9ec",
+      "variant": "player2"
+    }
+  ],
+  "scale": 2,
+  "schema": "cat-paw.score-cat-export-metadata@1",
+  "sheet": {
+    "columns": 4,
+    "rows": 4
+  },
+  "workingFrame": {
+    "height": 80,
+    "width": 80
+  }
+}

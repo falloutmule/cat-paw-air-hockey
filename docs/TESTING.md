@@ -7,6 +7,14 @@ pnpm install --frozen-lockfile
 pnpm test
 ```
 
+The score-cat producer is pinned to the verified official Godot 4.7.1 stable Windows archive:
+
+```powershell
+pnpm score-cats:build -- --godot-executable <path-to-Godot_v4.7.1-stable_win64_console.exe>
+```
+
+Run it twice and compare the two sheet hashes before canonical materialization. Windows uses a hidden OpenGL compatibility window because Godot's literal `--headless` mode selects the non-rendering Dummy driver.
+
 The suite covers 13 input lifecycle scenarios, 16 physics scenarios, 6 match-flow scenarios, 6 audio scenarios, orientation, settings migration/synchronization, return-speed behavior, the exact shared-control contract, and 22 focused tall-board checks. Packed Chromium additionally covers strict 1080×2400 Board dimensions/decode, safe R2 legacy retention, failed-replacement preservation, IndexedDB reload, reset, texture disposal, one persistent sprite, 75%/125% couch goals, fullscreen, and goal-zone clearance. The R3 semantic browser lane reaches a winner, saves the real canvas capture, and starts a rematch through normal UI and pointer actions.
 
 ## Canonical SFHS sequence

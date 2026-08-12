@@ -6,16 +6,16 @@
 
 ## Status
 
-The readable source, tests, and SFHS project are authoritative. The current R2A artifact is locally verified by the real SFHS packer and exact verifier. It is not deployed under this local-only repair boundary, and its Samsung Galaxy S21 Ultra session is **UNTESTED**. The currently deployed earlier artifact has a `REPORTED FAIL / NEEDS REPAIR` physical layout result.
+The readable source, tests, and SFHS project are authoritative. SCORE-CAT-GODOT-001 is locally verified by the real pinned SFHS packer and exact verifier. It is not deployed or pushed under this local-only boundary, and its Samsung Galaxy S21 Ultra session is **UNTESTED**.
 
 | Current canonical artifact | Value |
 | --- | --- |
-| Build ID | `cat-paw-air-hockey-5735c4c572c2` |
-| Source SHA-256 | `5735c4c572c28fedac73ab0eb2308ca2b983c66170c525dc40f2a714df50c5dd` |
-| Artifact SHA-256 | `acb55aec6d8d8d8d6bf1afa4634eefe5caeec51d77d95a743e4ddd29950e9c9c` |
-| Bytes | 724,123 |
+| Build ID | `cat-paw-air-hockey-1e9558fbf0aa` |
+| Source SHA-256 | `1e9558fbf0aa97967ed024211b5b95c1da5c2609b26aad6e3c55f76a9a2400be` |
+| Artifact SHA-256 | `c2fdf6b121ce015dcab6e7fe1be86f8f815ea20ffb1181f7dd407a2484413e94` |
+| Bytes | 4,065,857 |
 | Verification | SFHS inspect, validate, check, pack, exact verify, and multi-viewport packed Chromium smoke |
-| Pages | [Currently deployed earlier build](https://falloutmule.github.io/cat-paw-air-hockey/); R2A was not deployed |
+| Pages | [Currently deployed earlier build](https://falloutmule.github.io/cat-paw-air-hockey/); SCORE-CAT-GODOT-001 was not deployed |
 
 ## Play
 
@@ -31,6 +31,7 @@ The four shared controls straddle the center edges: Mute upper-left, Pause lower
 - Shared mirrored settings: puck speed/size, individual paw speed/size, goal opening, and return-speed handicaps (70–130%).
 - Optional local PNG theme, fullscreen controls, and final-score PNG capture.
 - One required Pixi v8 WebGL canvas, no runtime external requests, and a portrait-first adaptive viewport.
+- Godot 4.7.1-authored animated score cats with fixed nearest-neighbor sprites, palette-only P1/P2 sheets, reduced-motion poses, and no runtime skeletal animation.
 
 ## Limits
 

@@ -4,8 +4,11 @@ import { BOARD, LOGICAL_CENTER, LOGICAL_HEIGHT, LOGICAL_WIDTH, PUCK_RADIUS, READ
 import { goalBounds, puckRadius, strikerRadius } from "./settings.ts";
 import type { ThemeSlot, ValidBoard, ValidTheme } from "./theme.ts";
 import type { HockeyGameState, PresentationEvent } from "./state.ts";
+import { resolveScoreCatFrames, type ScoreCatFrames, type ScoreCatReaction } from "./score-cat-animation.ts";
 import defaultBoardTemplateUrl from "../art/theme/cat-paw-board-template.png";
 import defaultCouchGoalUrl from "../art/goals/cat-paw-couch-goal.png";
+import scoreCatPlayer1Url from "../art/score-cats/cat-paw-score-cat-p1.png";
+import scoreCatPlayer2Url from "../art/score-cats/cat-paw-score-cat-p2.png";
 
 interface ActiveImpact {
   readonly event: PresentationEvent;
@@ -24,16 +27,20 @@ export interface CatHockeyPresenter extends SfhsPixiPresenter<HockeyGameState> {
   getBoardDiagnostics(): Readonly<{ mode: "default" | "custom"; spriteCount: 1; replacementCount: number; disposedOwnedTextureCount: number }>;
   getGoalDiagnostics(): Readonly<{ architecture: "pixi-nine-slice"; textureSampling: "nearest"; top: GoalDiagnostic; bottom: GoalDiagnostic }>;
   getPawDiagnostics(): Readonly<{ top: PawDiagnostic; bottom: PawDiagnostic }>;
+  getScoreCatDiagnostics(): Readonly<{ top: ScoreCatDiagnostic; bottom: ScoreCatDiagnostic }>;
 }
 
 export interface GoalDiagnostic { readonly openingWidth: number; readonly visualWidth: number; readonly labelScale: number; readonly rotation: number; }
 export interface PawDiagnostic { readonly nominalDiameter: number; readonly renderedScaleX: number; readonly renderedScaleY: number; readonly presentation: "procedural" | "theme"; }
+export interface ScoreCatDiagnostic { readonly frame: number; readonly reaction: ScoreCatReaction; readonly sheet: string; readonly sha256: string; readonly scale: Readonly<{ x: number; y: number }>; readonly anchor: Readonly<{ x: number; y: number }>; readonly rotation: number; }
 
 const COUCH_GOAL = Object.freeze({ capWidth: 24, borderHeight: 8, height: 54, visualPadding: 48, outerStroke: 10, innerStroke: 4 });
 
 interface PreparedPresentationImages {
   readonly board: HTMLImageElement;
   readonly couch: HTMLImageElement;
+  readonly scoreCatPlayer1: HTMLImageElement;
+  readonly scoreCatPlayer2: HTMLImageElement;
 }
 
 let preparedPresentationImages: PreparedPresentationImages | undefined;
@@ -52,12 +59,22 @@ async function loadPresentationImage(source: string, label: string): Promise<HTM
 
 export async function prepareCatHockeyPresentationAssets(): Promise<void> {
   if (preparedPresentationImages !== undefined) return;
-  const [board, couch] = await Promise.all([
+  const [board, couch, scoreCatPlayer1, scoreCatPlayer2] = await Promise.all([
     loadPresentationImage(defaultBoardTemplateUrl, "the default Board image"),
-    loadPresentationImage(defaultCouchGoalUrl, "the couch goal image")
+    loadPresentationImage(defaultCouchGoalUrl, "the couch goal image"),
+    loadPresentationImage(scoreCatPlayer1Url, "the Player 1 score-cat sheet"),
+    loadPresentationImage(scoreCatPlayer2Url, "the Player 2 score-cat sheet")
   ]);
-  preparedPresentationImages = Object.freeze({ board, couch });
+  preparedPresentationImages = Object.freeze({ board, couch, scoreCatPlayer1, scoreCatPlayer2 });
 }
+
+const SCORE_CAT_CELL = 160;
+const SCORE_CAT_DISPLAY_SCALE = 0.5;
+const SCORE_CAT_ANCHOR = Object.freeze({ x: 0.5, y: 0.9 });
+const SCORE_CAT_SHEETS = Object.freeze({
+  1: Object.freeze({ identity: "cat-paw-score-cat-p1.png", sha256: "2ce9621a713749a2f4a4fb7487aa9c6736385bbf9e51437c00b697fc5095e4b7" }),
+  2: Object.freeze({ identity: "cat-paw-score-cat-p2.png", sha256: "b915f6f245fdf69658cb7d7736fb2eea2bc455e383cb1f3e889392b70313f9ec" })
+});
 
 const COLORS = Object.freeze({
   table: 0x172331,
@@ -179,8 +196,12 @@ export function createCatHockeyPresenter(options: {
   let readyLabel2: Text;
   let instruction1: Text;
   let instruction2: Text;
-  let topCat: Graphics;
-  let bottomCat: Graphics;
+  let topCat: Sprite;
+  let bottomCat: Sprite;
+  let scoreCatSheet1: Texture;
+  let scoreCatSheet2: Texture;
+  let scoreCatFrames1: Texture[] = [];
+  let scoreCatFrames2: Texture[] = [];
   let couchTop: NineSliceSprite;
   let couchBottom: NineSliceSprite;
   let goalTop: Graphics;
@@ -207,6 +228,7 @@ export function createCatHockeyPresenter(options: {
   let shakeEvent: PresentationEvent | undefined;
   let celebrationEvent: PresentationEvent | undefined;
   let lastPresentedState: Readonly<HockeyGameState> | undefined;
+  let lastScoreCatFrames: ScoreCatFrames = Object.freeze({ 1: Object.freeze({ frame: 0, reaction: "idle" }), 2: Object.freeze({ frame: 0, reaction: "idle" }) });
 
   function initialize(layers: SfhsPixiStageLayers): void {
     if (initialized) return;
@@ -282,18 +304,24 @@ export function createCatHockeyPresenter(options: {
     proceduralBoardRoot.addChild(backdrop, paletteOverlay, markings, railDetails);
     foregroundRoot.addChild(couchTop, couchBottom, goalTop, goalBottom, posts, goalLabelTop, goalLabelBottom);
 
-    bottomCat = new Graphics();
-    topCat = new Graphics();
-    const drawFace = (graphic: Graphics, color: number, dark: number): void => {
-      graphic.clear().circle(0, 0, 38).fill({ color })
-        .moveTo(-32, -22).lineTo(-45, -53).lineTo(-12, -35).fill({ color })
-        .moveTo(32, -22).lineTo(45, -53).lineTo(12, -35).fill({ color })
-        .circle(-14, -3, 5).fill({ color: dark }).circle(14, -3, 5).fill({ color: dark })
-        .moveTo(-5, 11).lineTo(0, 16).lineTo(5, 11).fill({ color: 0xf4a6a6 })
-        .moveTo(-8, 20).quadraticCurveTo(0, 27, 8, 20).stroke({ color: dark, width: 3 });
-    };
-    drawFace(bottomCat, COLORS.player1, COLORS.player1Dark);
-    drawFace(topCat, COLORS.player2, COLORS.player2Dark);
+    scoreCatSheet1 = Texture.from(preparedPresentationImages.scoreCatPlayer1);
+    scoreCatSheet2 = Texture.from(preparedPresentationImages.scoreCatPlayer2);
+    scoreCatSheet1.source.style.scaleMode = "nearest";
+    scoreCatSheet2.source.style.scaleMode = "nearest";
+    scoreCatFrames1 = Array.from({ length: 16 }, (_, index) => new Texture({ source: scoreCatSheet1.source, frame: new Rectangle(index % 4 * SCORE_CAT_CELL, Math.floor(index / 4) * SCORE_CAT_CELL, SCORE_CAT_CELL, SCORE_CAT_CELL) }));
+    scoreCatFrames2 = Array.from({ length: 16 }, (_, index) => new Texture({ source: scoreCatSheet2.source, frame: new Rectangle(index % 4 * SCORE_CAT_CELL, Math.floor(index / 4) * SCORE_CAT_CELL, SCORE_CAT_CELL, SCORE_CAT_CELL) }));
+    bottomCat = new Sprite(scoreCatFrames1[0]);
+    topCat = new Sprite(scoreCatFrames2[0]);
+    bottomCat.label = "player-1-score-cat";
+    topCat.label = "player-2-score-cat";
+    bottomCat.anchor.set(SCORE_CAT_ANCHOR.x, SCORE_CAT_ANCHOR.y);
+    topCat.anchor.set(SCORE_CAT_ANCHOR.x, SCORE_CAT_ANCHOR.y);
+    bottomCat.scale.set(SCORE_CAT_DISPLAY_SCALE);
+    topCat.scale.set(SCORE_CAT_DISPLAY_SCALE);
+    bottomCat.roundPixels = true;
+    topCat.roundPixels = true;
+    bottomCat.eventMode = "none";
+    topCat.eventMode = "none";
     bottomCat.position.set(68, RINK.bottom - 34);
     topCat.position.set(LOGICAL_WIDTH - 68, RINK.top + 34);
     topCat.rotation = Math.PI;
@@ -558,7 +586,7 @@ export function createCatHockeyPresenter(options: {
     updateThemePalette();
     if (theme === undefined) return;
     themeTexture = Texture.from(theme.url);
-    const cells: Readonly<Record<string, number>> = Object.freeze({ paw1: 0, paw2: 1, puck: 2, emblem: 3, mascot1: 4, mascot2: 5, impact: 8, confetti: 9, winner: 10, corner: 11 });
+    const cells: Readonly<Record<string, number>> = Object.freeze({ paw1: 0, paw2: 1, puck: 2, emblem: 3, impact: 8, confetti: 9, winner: 10, corner: 11 });
     for (const [name, cell] of Object.entries(cells)) {
       if (!theme.slots[name as ThemeSlot]) continue;
       const sprite = new Sprite(new Texture({ source: themeTexture.source, frame: new Rectangle(cell % 4 * 256, Math.floor(cell / 4) * 256, 256, 256) }));
@@ -624,32 +652,19 @@ export function createCatHockeyPresenter(options: {
       if (themedPaw1 !== undefined) { themedPaw1.position.copyFrom(paw1.position); themedPaw1.width = strikerRadius(state.activeMatchSettings, 1) * 2; themedPaw1.height = strikerRadius(state.activeMatchSettings, 1) * 2; paw1Graphic.visible = false; } else paw1Graphic.visible = true;
       if (themedPaw2 !== undefined) { themedPaw2.position.copyFrom(paw2.position); themedPaw2.width = strikerRadius(state.activeMatchSettings, 2) * 2; themedPaw2.height = strikerRadius(state.activeMatchSettings, 2) * 2; themedPaw2.rotation = Math.PI; paw2Graphic.visible = false; } else paw2Graphic.visible = true;
       if (themedPuck !== undefined) { themedPuck.position.copyFrom(puck.position); themedPuck.width = puckRadius(state.activeMatchSettings) * 2; themedPuck.height = puckRadius(state.activeMatchSettings) * 2; puckGraphic.visible = false; puckHighlight.visible = false; } else { puckGraphic.visible = true; puckHighlight.visible = true; }
-      const themedMascot1 = setThemeSprite("mascot1", 68, RINK.bottom - 34, 82, 82);
-      const themedMascot2 = setThemeSprite("mascot2", LOGICAL_WIDTH - 68, RINK.top + 34, 82, 82);
-      bottomCat.visible = themedMascot1 === undefined;
-      topCat.visible = themedMascot2 === undefined;
+      lastScoreCatFrames = resolveScoreCatFrames(state);
+      bottomCat.texture = scoreCatFrames1[lastScoreCatFrames[1].frame]!;
+      topCat.texture = scoreCatFrames2[lastScoreCatFrames[2].frame]!;
       setThemeSprite("emblem", LOGICAL_CENTER.x, RINK.centerY, 132, 132, state.phase !== "playing");
       setThemeSprite("corner", RINK.left + 30, RINK.centerY, 52, 52);
       setThemeSprite("winner", LOGICAL_CENTER.x, RINK.centerY, 210, 210, state.phase === "won");
       setThemeSprite("impact", state.puck.position.x, state.puck.position.y, 96, 96, activeImpacts.length > 0 && !reducedEffects);
       setThemeSprite("confetti", LOGICAL_CENTER.x, state.winner === 1 ? RINK.top + 126 : RINK.bottom - 126, 190, 190, celebrationEvent !== undefined && !reducedEffects);
       updateHud(state);
-      bottomCat.scale.set(1);
-      topCat.scale.set(1);
+      bottomCat.scale.set(SCORE_CAT_DISPLAY_SCALE);
+      topCat.scale.set(SCORE_CAT_DISPLAY_SCALE);
       bottomCat.rotation = 0;
       topCat.rotation = Math.PI;
-      if (state.phase === "won" && state.winner !== undefined) {
-        const winnerCat = state.winner === 1 ? bottomCat : topCat;
-        const loserCat = state.winner === 1 ? topCat : bottomCat;
-        const winnerBaseRotation = state.winner === 1 ? 0 : Math.PI;
-        const loserBaseRotation = state.winner === 1 ? Math.PI : 0;
-        const bounce = reducedEffects ? 0.04 : 0.11;
-        const pulse = 1 + Math.sin(state.tick * 0.18) * bounce;
-        winnerCat.scale.set(pulse, 1 + Math.cos(state.tick * 0.18) * bounce * 0.55);
-        winnerCat.rotation = winnerBaseRotation + Math.sin(state.tick * 0.12) * (reducedEffects ? 0.025 : 0.075);
-        loserCat.scale.set(0.94, 0.9);
-        loserCat.rotation = loserBaseRotation + Math.sin(state.tick * 0.08) * 0.035;
-      }
       layers.worldRoot.position.set(0, 0);
       if (!reducedEffects && shakeEvent !== undefined) {
         const age = (state.tick - shakeEvent.tick) / 60;
@@ -683,6 +698,10 @@ export function createCatHockeyPresenter(options: {
         bottom: Object.freeze({ nominalDiameter: STRIKER_RADIUS * 2 * bottomScale, renderedScaleX: initialized ? paw1.scale.x : bottomScale, renderedScaleY: initialized ? paw1.scale.y : bottomScale, presentation: themeSprites.paw1 === undefined ? "procedural" as const : "theme" as const })
       });
     },
+    getScoreCatDiagnostics: () => Object.freeze({
+      top: Object.freeze({ frame: lastScoreCatFrames[2].frame, reaction: lastScoreCatFrames[2].reaction, sheet: SCORE_CAT_SHEETS[2].identity, sha256: SCORE_CAT_SHEETS[2].sha256, scale: Object.freeze({ x: initialized ? topCat.scale.x : SCORE_CAT_DISPLAY_SCALE, y: initialized ? topCat.scale.y : SCORE_CAT_DISPLAY_SCALE }), anchor: SCORE_CAT_ANCHOR, rotation: initialized ? topCat.rotation : Math.PI }),
+      bottom: Object.freeze({ frame: lastScoreCatFrames[1].frame, reaction: lastScoreCatFrames[1].reaction, sheet: SCORE_CAT_SHEETS[1].identity, sha256: SCORE_CAT_SHEETS[1].sha256, scale: Object.freeze({ x: initialized ? bottomCat.scale.x : SCORE_CAT_DISPLAY_SCALE, y: initialized ? bottomCat.scale.y : SCORE_CAT_DISPLAY_SCALE }), anchor: SCORE_CAT_ANCHOR, rotation: initialized ? bottomCat.rotation : 0 })
+    }),
     destroy(): void {
       if (destroyed) return;
       destroyed = true;
@@ -698,6 +717,10 @@ export function createCatHockeyPresenter(options: {
       boardTexture?.destroy(true);
       defaultBoardTexture?.destroy(true);
       couchTexture?.destroy(true);
+      scoreCatFrames1.forEach((texture) => texture.destroy(false));
+      scoreCatFrames2.forEach((texture) => texture.destroy(false));
+      scoreCatSheet1?.destroy(true);
+      scoreCatSheet2?.destroy(true);
     }
   };
 }

@@ -3,9 +3,9 @@
   "valid": true,
   "artifact": {
     "path": "dist/index.html",
-    "bytes": 4022850,
-    "sha256": "1d6201909bec095f81a11bed9e31dd416fbfe25f0d6bb2409fb35cdcf6a16d8c",
-    "buildId": "cat-paw-air-hockey-512728228085"
+    "bytes": 4065857,
+    "sha256": "c2fdf6b121ce015dcab6e7fe1be86f8f815ea20ffb1181f7dd407a2484413e94",
+    "buildId": "cat-paw-air-hockey-1e9558fbf0aa"
   },
   "browser": "Chromium 149.0.7827.55",
   "checks": [
@@ -22,6 +22,8 @@
     "approved couches, rug, paws, puck, GOAL frames, and four shared controls remain visually coherent in packed phone screenshots",
     "Goal Size and Paw Size are visible in the initial Samsung settings fold",
     "deferred 125-percent paw sizing is 90 units during the rally and 112.5 units at the next safe boundary",
-    "touch-driven ready, play, deep defense, deferred goal/return settings, fullscreen, first-to-five, capture, and rematch"
+    "touch-driven ready, play, deep defense, deferred goal/return settings, fullscreen, first-to-five, capture, and rematch",
+    "both Godot score-cat sheets are embedded in the sole Pixi canvas with nearest sampling and no legacy mascot duplicates",
+    "score-cat diagnostics report frame 0 idle, 0.5 scale, anchor 0.5/0.9, exact sheet hashes, and top rotation pi"
   ]
 }
