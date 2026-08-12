@@ -1,0 +1,32 @@
+{
+  "schema": "cat-paw.rapier-physical-test-seed@1",
+  "candidate": {
+    "buildId": "cat-paw-air-hockey-b83bd150d75e",
+    "bytes": 5857863,
+    "path": "dist/index.html",
+    "sha256": "827d1b6d1e3aa8877b206d2be5c89baaea89b5cd04e8643196b394b3f7789b1a",
+    "sourceSha256": "b83bd150d75e68db243ed39b8d18aee32e6df349e634dc3f672fbd29d757fa1d"
+  },
+  "baseline": {
+    "buildId": "cat-paw-air-hockey-06998a9ce8bc",
+    "sha256": "51b92216c60556d2df9885ba5155bc427da6904b0fc3fc6a89c864e30215f42a",
+    "physicalResult": "REPORTED PASS",
+    "evidence": "one-shot/PHYSICAL-REPORT-PUCK-PAW-GODOT-001.json"
+  },
+  "required": [
+    "normal shots",
+    "hard shots",
+    "glancing shots",
+    "bank shots",
+    "post shots",
+    "rapid paw movement and direction reversal",
+    "defensive blocks",
+    "simultaneous two-player interaction",
+    "repeated goals",
+    "several minutes of uninterrupted play",
+    "frame pacing, pointer responsiveness, heat, and startup observations",
+    "explicit better, equal, or worse physical-feel comparison against the baseline"
+  ],
+  "resultVocabulary": ["REPORTED PASS", "REPORTED FAIL"],
+  "status": "UNTESTED"
+}

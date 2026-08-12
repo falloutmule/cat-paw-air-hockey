@@ -1,9 +1,11 @@
 import assert from "node:assert/strict";
 import { EMPTY_ACTION_SNAPSHOT } from "../src/actions.ts";
 import { PUCK_RADIUS, PUCK_SPEED_CAP, RINK, STRIKER_IMPULSE_SPEED_CAP, STRIKER_MAX_SPEED, STRIKER_RADIUS } from "../src/constants.ts";
-import { stepGame } from "../src/physics.ts";
 import { DEFAULT_MATCH_SETTINGS, goalBounds, incompatibleGoalPlayers, minimumPlayableGoalSize, normalizeMatchSettings, puckRadius, puckSpeedCap, returnSpeedCap, settingsSummary, strikerImpulseCap, strikerRadius, strikerSpeedCap } from "../src/settings.ts";
 import { createInitialGameState, type HockeyGameState } from "../src/state.ts";
+import { createRapierTestSimulation } from "./rapier-harness.ts";
+
+const simulation = await createRapierTestSimulation();
 
 const requested = (settings = DEFAULT_MATCH_SETTINGS) => Object.freeze({ ...EMPTY_ACTION_SNAPSHOT, settingsRequested: settings });
 const changed = normalizeMatchSettings({ puckSpeed: 130, puckSize: 125, pawSpeed: { 1: 70, 2: 130 }, pawSize: { 1: 75, 2: 125 }, goalSize: { 1: 75, 2: 125 } });
@@ -36,15 +38,16 @@ const incompatible = normalizeMatchSettings({ puckSize: 200, goalSize: { 1: 25, 
 assert.deepEqual(incompatibleGoalPlayers(incompatible), [1]);
 assert.deepEqual(incompatibleGoalPlayers(DEFAULT_MATCH_SETTINGS), []);
 
-let ready = stepGame(createInitialGameState(), requested(changed), 1 / 60);
+let ready = simulation.stepGame(createInitialGameState(), requested(changed), 1 / 60);
 assert.deepEqual(ready.activeMatchSettings, changed);
 assert.deepEqual(ready.pendingMatchSettings, changed);
 let playing = { ...ready, phase: "playing" as const } as HockeyGameState;
-playing = stepGame(playing, requested(DEFAULT_MATCH_SETTINGS), 1 / 60);
+playing = simulation.stepGame(playing, requested(DEFAULT_MATCH_SETTINGS), 1 / 60);
 assert.deepEqual(playing.activeMatchSettings, changed);
 assert.deepEqual(playing.pendingMatchSettings, DEFAULT_MATCH_SETTINGS);
 const goal = { ...playing, phase: "goal" as const, phaseTimer: 0 } as HockeyGameState;
-const afterGoal = stepGame(goal, EMPTY_ACTION_SNAPSHOT, 1 / 60);
+const afterGoal = simulation.stepGame(goal, EMPTY_ACTION_SNAPSHOT, 1 / 60);
 assert.deepEqual(afterGoal.activeMatchSettings, DEFAULT_MATCH_SETTINGS);
 assert.equal(afterGoal.phase, "countdown");
 console.log(JSON.stringify({ schema: "cat-air-hockey.settings@1", passed: true, checks: 30 }, null, 2));
+simulation.destroy();

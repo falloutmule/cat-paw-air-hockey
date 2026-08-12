@@ -5,6 +5,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { createServer } from "node:http";
 import { createRequire } from "node:module";
 import { dirname, resolve } from "node:path";
+import { pathToFileURL } from "node:url";
 
 const playwrightResolver = process.env.SFHS_PLAYWRIGHT_RESOLVER
   ?? resolve(process.cwd(), "node_modules", "@sfhs", "browser-runner", "package.json");
@@ -55,6 +56,8 @@ try {
 
   const initial = await page.evaluate(() => window.__CAT_AIR_HOCKEY__!.snapshot() as any);
   assert.equal(initial.renderer.renderer, "PIXI");
+  assert.equal(initial.physics.backend, "rapier2d");
+  assert.ok(Number.isFinite(initial.physics.initializationMilliseconds));
   assert.equal(initial.state.phase, "ready");
   assert.equal(initial.board.mode, "default");
   assert.equal(initial.board.spriteCount, 1);
@@ -340,19 +343,42 @@ try {
   snapshot = await page.evaluate(() => window.__CAT_AIR_HOCKEY__!.snapshot() as any);
   assert.equal(snapshot.renderer.paused, false);
   assert.equal(snapshot.renderer.viewport.orientation, "portrait");
+  assert.equal(snapshot.physics.backend, "rapier2d");
+  assert.equal(snapshot.physics.bodyCount, 13);
+  assert.ok(snapshot.physics.steps > 0);
+  assert.ok(snapshot.physics.timingMilliseconds.p95 < 4, `Rapier p95 ${snapshot.physics.timingMilliseconds.p95} ms`);
+  assert.ok(snapshot.physics.timingMilliseconds.worst < 16.67, `Rapier worst ${snapshot.physics.timingMilliseconds.worst} ms`);
 
   assert.deepEqual(pageErrors, []);
   assert.deepEqual(consoleErrors, []);
   assert.equal(requests.length, 3);
   assert.ok(requests.every((request) => request === "/"));
-  const report = { schema: "cat-air-hockey.canonical-browser@1", valid: true, artifact: { path: "dist/index.html", bytes: bytes.byteLength, sha256 }, browser: await browser.version(), canvasCount: 1, requests, pageErrors, consoleErrors, snapshot };
+  await context.close();
+  const offlineRequests: string[] = [];
+  const offlineErrors: string[] = [];
+  const offlineContext = await browser.newContext({ viewport: { width: 412, height: 915 }, hasTouch: true, isMobile: true, deviceScaleFactor: 2, serviceWorkers: "block" });
+  const offlinePage = await offlineContext.newPage();
+  offlinePage.on("request", (request) => offlineRequests.push(request.url()));
+  offlinePage.on("pageerror", (error) => offlineErrors.push(error.message));
+  offlinePage.on("console", (message) => { if (message.type() === "error") offlineErrors.push(message.text()); });
+  await offlinePage.goto(pathToFileURL(artifactPath).href, { waitUntil: "load" });
+  await offlinePage.waitForFunction(() => (window.__CAT_AIR_HOCKEY__?.snapshot() as any)?.physics?.backend === "rapier2d");
+  await offlinePage.waitForFunction(() => ((window.__CAT_AIR_HOCKEY__?.snapshot() as any)?.state?.tick ?? 0) > 0);
+  const offlineSnapshot = await offlinePage.evaluate(() => window.__CAT_AIR_HOCKEY__!.snapshot() as any);
+  assert.equal(offlineSnapshot.physics.backend, "rapier2d");
+  assert.equal(offlineSnapshot.renderer.renderer, "PIXI");
+  assert.deepEqual(offlineErrors, []);
+  assert.equal(offlineRequests.length, 1);
+  assert.ok(offlineRequests[0]?.startsWith("file:"));
+  await offlineContext.close();
+  const offline = { valid: true, requests: offlineRequests, errors: offlineErrors, backend: offlineSnapshot.physics.backend };
+  const report = { schema: "cat-air-hockey.canonical-browser@1", valid: true, artifact: { path: "dist/index.html", bytes: bytes.byteLength, sha256 }, browser: await browser.version(), canvasCount: 1, requests, pageErrors, consoleErrors, offline, snapshot };
   if (process.env.SFHS_BROWSER_REPORT !== undefined) {
     const reportPath = resolve(process.env.SFHS_BROWSER_REPORT);
     await mkdir(dirname(reportPath), { recursive: true });
     await writeFile(reportPath, `${JSON.stringify(report, null, 2)}\n`, "utf8");
   }
   console.log(JSON.stringify(report, null, 2));
-  await context.close();
 } finally {
   await browser.close();
   await new Promise<void>((resolvePromise, reject) => server.close((error) => error === undefined ? resolvePromise() : reject(error)));

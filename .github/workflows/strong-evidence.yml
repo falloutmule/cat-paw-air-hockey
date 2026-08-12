@@ -20,7 +20,7 @@ jobs:
           node-version: 24
           cache: pnpm
           cache-dependency-path: pnpm-lock.yaml
-      - run: pnpm install --frozen-lockfile && pnpm test
+      - run: pnpm install --frozen-lockfile && pnpm test:source
       - name: Rebuild, verify, and retain packed browser evidence
         run: |
           pin=$(node -p "require('./one-shot/SFHS-PIN.json').sfhsCommit")

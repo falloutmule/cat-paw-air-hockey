@@ -3,9 +3,11 @@ import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { EMPTY_ACTION_SNAPSHOT, type HockeyActionSnapshot, type PlayerId } from "../src/actions.ts";
 import { BOARD, CENTER_EXCLUSION, FIXED_STEP_SECONDS, LOGICAL_CENTER, LOGICAL_HEIGHT, LOGICAL_WIDTH, PLAYER_HOME, PUCK_RADIUS, PUCK_SPEED_CAP, READY_TARGET, RINK, STRIKER_RADIUS } from "../src/constants.ts";
-import { stepGame } from "../src/physics.ts";
 import { goalBounds, normalizeMatchSettings, puckRadius, strikerRadius, type MatchSettings } from "../src/settings.ts";
 import { createInitialGameState, type HockeyGameState } from "../src/state.ts";
+import { createRapierTestSimulation } from "./rapier-harness.ts";
+
+const simulation = await createRapierTestSimulation();
 
 function playing(settings: MatchSettings = normalizeMatchSettings(undefined)): HockeyGameState {
   return { ...createInitialGameState(), phase: "playing", activeMatchSettings: settings, pendingMatchSettings: settings } as HockeyGameState;
@@ -22,7 +24,7 @@ function withPuck(state: HockeyGameState, x: number, y: number, vx: number, vy: 
 
 function step(state: HockeyGameState, action: HockeyActionSnapshot = EMPTY_ACTION_SNAPSHOT, count = 1): HockeyGameState {
   let next = state;
-  for (let index = 0; index < count; index += 1) next = stepGame(next, action, FIXED_STEP_SECONDS);
+  for (let index = 0; index < count; index += 1) next = simulation.stepGame(next, action, FIXED_STEP_SECONDS);
   return next;
 }
 
@@ -88,3 +90,4 @@ for (const size of [25, 200] as const) {
 }
 
 console.log(JSON.stringify({ schema: "cat-air-hockey.tall-board@1", passed: true, checks: 29 }, null, 2));
+simulation.destroy();

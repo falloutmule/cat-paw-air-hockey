@@ -1,5 +1,6 @@
 import { createSfhsPixiV8Presentation, supportsRequiredWebGl } from "@sfhs/adapter-pixi-v8";
 import { createSfhsPixiGameRuntime, type SfhsPixiGameRuntime } from "@sfhs/pixi-runtime";
+import { createPhysics2DWorld } from "@sfhs/physics-2d";
 import { createHockeyAudioController } from "./audio.ts";
 import { makeBoardTemplateBlob } from "./board-art.ts";
 import { BOARD, LOGICAL_HEIGHT, LOGICAL_WIDTH, MAXIMUM_FRAME_DELTA_MS, SIMULATION_HZ } from "./constants.ts";
@@ -8,7 +9,7 @@ import { fullscreenAvailable, fullscreenElement, toggleElementFullscreen } from 
 import { installDiagnostics } from "./diagnostics.ts";
 import { createHockeyInput } from "./input.ts";
 import { createCatHockeyPresenter, prepareCatHockeyPresentationAssets } from "./presentation.ts";
-import { createCatHockeyScene } from "./scene.ts";
+import { createCatHockeyScene, type CatHockeyScene } from "./scene.ts";
 import { DEFAULT_MATCH_SETTINGS, SIZE_SETTING_MAXIMUM, SIZE_SETTING_MINIMUM, SPEED_SETTING_MAXIMUM, SPEED_SETTING_MINIMUM, incompatibleGoalPlayers, minimumPlayableGoalSize, normalizeMatchSettings, settingsEqual, type MatchSettings } from "./settings.ts";
 import { clearBoard, clearTheme, loadBoard, loadTheme, saveBoard, saveTheme, validateBoard, validateTheme, type LegacyBoardRecord, type ValidBoard, type ValidTheme } from "./theme.ts";
 import type { HockeyGameState } from "./state.ts";
@@ -82,7 +83,7 @@ let menuSettings = loadSettings();
 try { const stored = localStorage.getItem("cat-paw-air-hockey.reduced-motion.v1"); if (stored !== null) reducedEffects = stored === "true"; } catch { /* session fallback */ }
 
 const audio = createHockeyAudioController();
-const scene = createCatHockeyScene();
+let scene: CatHockeyScene | undefined;
 const presenter = createCatHockeyPresenter({ onEvents: (events) => { audio.consume(events); if (events.length > 0) updateControls(); }, boardTemplateMode });
 const presentation = createSfhsPixiV8Presentation<HockeyGameState>({ backgroundColor: 0x172331, presenter });
 const input = createHockeyInput({ initialSurface: host, getCanvas: () => runtime?.getPrimarySurface(), onIntentionalGesture: () => { void audio.unlock().then(updateControls); } });
@@ -212,7 +213,7 @@ for (const button of fullscreenButtons) {
 }
 for (const button of captureButtons) button.addEventListener("click", () => { void captureScore(); });
 for (const view of menuViews) {
-  view.addEventListener("input", (event) => { const target = event.target as HTMLInputElement; if (target.dataset.setting !== undefined) updateSetting(target.dataset.setting, Number(target.value)); if (target.dataset.menuAction === "reduced") { reducedEffects = target.checked; scene.setReducedEffects(reducedEffects); presenter.setReducedEffects(reducedEffects); persistPreferences(); updateControls(); } });
+  view.addEventListener("input", (event) => { const target = event.target as HTMLInputElement; if (target.dataset.setting !== undefined) updateSetting(target.dataset.setting, Number(target.value)); if (target.dataset.menuAction === "reduced") { reducedEffects = target.checked; scene?.setReducedEffects(reducedEffects); presenter.setReducedEffects(reducedEffects); persistPreferences(); updateControls(); } });
   view.addEventListener("click", (event) => { const action = (event.target as HTMLElement).closest<HTMLElement>("[data-menu-action]")?.dataset.menuAction; if (action === "close") setMenuOpen(false); if (action === "reset") { menuSettings = DEFAULT_MATCH_SETTINGS; input.requestSettings(menuSettings); persistPreferences(); updateControls(); } if (action === "board-template") void downloadBoardTemplate(); if (action === "load-board") boardFile.click(); if (action === "reset-board") void resetBoard(); if (action === "load-theme") themeFile.click(); if (action === "reset-theme") { presenter.setTheme(undefined); currentTheme = undefined; void clearTheme().catch(() => undefined); themeStatus("Classic legacy theme restored"); } });
 }
 themeFile.addEventListener("change", () => { const file = themeFile.files?.[0]; if (file !== undefined) void acceptTheme(file); themeFile.value = ""; });
@@ -226,11 +227,12 @@ document.addEventListener("keydown", (event) => {
   event.preventDefault(); focusable[next]!.focus();
 });
 
-const removeDiagnostics = installDiagnostics({ getRuntime: () => runtime, input, getAudioStatus: () => audio.getStatus(), getOrientationGate: () => !orientationGate.hidden, getBoardDiagnostics: () => presenter.getBoardDiagnostics(), getGoalDiagnostics: () => presenter.getGoalDiagnostics(), getPawDiagnostics: () => presenter.getPawDiagnostics(), getPuckDiagnostics: () => presenter.getPuckDiagnostics(), getScoreCatDiagnostics: () => presenter.getScoreCatDiagnostics() });
+const removeDiagnostics = installDiagnostics({ getRuntime: () => runtime, input, getAudioStatus: () => audio.getStatus(), getOrientationGate: () => !orientationGate.hidden, getPhysicsDiagnostics: () => scene?.getPhysicsDiagnostics(), getBoardDiagnostics: () => presenter.getBoardDiagnostics(), getGoalDiagnostics: () => presenter.getGoalDiagnostics(), getPawDiagnostics: () => presenter.getPawDiagnostics(), getPuckDiagnostics: () => presenter.getPuckDiagnostics(), getScoreCatDiagnostics: () => presenter.getScoreCatDiagnostics() });
 async function boot(): Promise<void> {
   if (!supportsRequiredWebGl(document)) { capability.hidden = false; host.hidden = true; status.value = "WebGL unavailable"; return; }
   try {
     await prepareCatHockeyPresentationAssets();
+    scene = await createCatHockeyScene(createPhysics2DWorld);
     runtime = await createSfhsPixiGameRuntime({ host, presentation, scene, actions: input, viewport: { mode: "fixed", logicalWidth: LOGICAL_WIDTH, logicalHeight: LOGICAL_HEIGHT, maximumDevicePixelRatio: 2, scalePolicy: "contain" }, simulationHz: SIMULATION_HZ, maximumFrameDeltaMilliseconds: MAXIMUM_FRAME_DELTA_MS });
     applyViewportGeometry(); input.setSurface(host, () => runtime?.getPrimarySurface()); scene.setReducedEffects(reducedEffects); presenter.setReducedEffects(reducedEffects); input.requestSettings(menuSettings); runtime.start(); status.value = "Ready — both players hold a paw"; applyOrientationGate(); updateControls();
     void loadTheme().then((file) => { if (file !== undefined) void acceptTheme(file); }).catch(() => themeStatus("Classic legacy theme (storage unavailable)"));
@@ -245,5 +247,5 @@ document.addEventListener("webkitfullscreenchange", onFullscreenChange);
 document.addEventListener("fullscreenerror", onFullscreenError);
 document.addEventListener("webkitfullscreenerror", onFullscreenError);
 window.addEventListener("resize", scheduleViewport); window.addEventListener("orientationchange", scheduleViewport); window.visualViewport?.addEventListener("resize", scheduleViewport);
-window.addEventListener("pagehide", () => { removeDiagnostics(); runtime?.destroy(); input.destroy(); if (currentBoard !== undefined) URL.revokeObjectURL(currentBoard.url); void audio.dispose(); }, { once: true });
+window.addEventListener("pagehide", () => { removeDiagnostics(); runtime?.destroy(); if (runtime === undefined) scene?.destroy(); input.destroy(); if (currentBoard !== undefined) URL.revokeObjectURL(currentBoard.url); void audio.dispose(); }, { once: true });
 syncBoardViews(); updateControls(); void boot();

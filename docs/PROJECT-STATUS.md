@@ -4,7 +4,7 @@
 
 | Area | Status | Evidence / note |
 | --- | --- | --- |
-| Shared-phone local two-player air hockey | VERIFIED IMPLEMENTED | Input, physics, match-flow, and packed semantic browser suites |
+| Shared-phone local two-player air hockey | VERIFIED IMPLEMENTED / PHYSICAL PENDING | Input, Rapier physics, match-flow, and packed semantic browser suites |
 | 540×1200 edge-to-edge mechanics | VERIFIED IMPLEMENTED | Walls at x=0/540; 25 focused tall-board/art checks; deep-defense screenshots |
 | First-to-five, ready/countdown, goal reset, winner/capture/rematch | VERIFIED IMPLEMENTED | Match-flow and normal-action packed-browser proof |
 | Pointer lifecycle, legal halves, third-touch rejection | VERIFIED IMPLEMENTED | 13 input scenarios and packed browser proof |
@@ -16,17 +16,18 @@
 | GitHub Pages | VERIFIED IMPLEMENTED / SUPERSEDED ARTIFACT | [Live site](https://falloutmule.github.io/cat-paw-air-hockey/) remains historical; R3 is local only and no remote action was authorized |
 | Size-setting discoverability and deferred paw application | VERIFIED REPAIRED | Goal Size/Paw Size lead the menu; packed proof checks 90 -> 112.5 paw diameter at the safe boundary |
 | Approved BOARD-ART-001 default | VERIFIED INTEGRATED | Exact approved 1080×2400 PNG; nearest-neighbor Board sprite; packed composed visual proof |
-| Current-artifact Samsung acceptance | REPORTED PASS | User reported “Pass everything appears to work” for the exact PUCK-PAW-GODOT-001 preview and packed artifact on 2026-08-12 |
+| Accepted custom-solver Samsung baseline | REPORTED PASS | Exact build `cat-paw-air-hockey-06998a9ce8bc`; preserved artifact-bound report from 2026-08-12 |
+| CATPAW-RAPIER-001 Samsung acceptance | UNTESTED | Automated candidate passes; exact Samsung A/B verdict is still required |
 | Settings defaults and phone controls | VERIFIED REPAIRED | Sizes default to 200% over 25–200%; speeds default to 100% over 70–130%; mirrored sticky Close and one thin native scrollbar per half pass packed multi-viewport Chromium |
 | Godot puck-and-paw contact animation | VERIFIED IMPLEMENTED | Five deterministic sheets, last-hitter palette, seven synchronized frames, collision-normal recoil, static-theme fallback, reduced-motion rest frames, focused resolver/export tests, and normal-pointer semantic browser proof |
 
 ## Canonical identity
 
-The locally verified PUCK-PAW-GODOT-001 target is build `cat-paw-air-hockey-06998a9ce8bc`, 4,117,623 bytes, SHA-256 `51b92216c60556d2df9885ba5155bc427da6904b0fc3fc6a89c864e30215f42a`, source SHA-256 `06998a9ce8bc8b8cd578018e42b716c3c4b5b017c13626d306aa609eddc5055b`. The five gameplay-actor sheets were exported twice with Godot `4.7.1.stable.official.a13da4feb` and merged SFHS commit `37aa056b6bd0948d73fcd99c1aba558861f0037e`. It retains the real 540×1200 edge-wall mechanics, R2A's single viewport authority, and the accepted double-size score-cat sheets.
+The locally verified CATPAW-RAPIER-001 target is build `cat-paw-air-hockey-b83bd150d75e`, 5,857,863 bytes, SHA-256 `827d1b6d1e3aa8877b206d2be5c89baaea89b5cd04e8643196b394b3f7789b1a`, source SHA-256 `b83bd150d75e68db243ed39b8d18aee32e6df349e634dc3f672fbd29d757fa1d`. It uses SFHS commit `fce070a0a08a9b4e0fbebda75440eaee80bb95a9` and reports a 13-body Rapier 2D world. The prior accepted custom-solver identity remains unchanged as the physical baseline.
 
 ## Known limitations and blockers
 
 - WebGL is mandatory.
-- Formal device model, Android/Chrome versions, viewport/DPR, screenshots/video, custom-theme observation, and thermal measurements were not supplied with the PASS.
+- CATPAW-RAPIER-001 still requires the artifact-bound Samsung comparison, including physical feel, two-finger input, startup, pacing, heat, and several-minute stability.
 
-Release terminology remains deliberately limited: automated gates pass and artifact-bound physical-device acceptance is REPORTED PASS. No PUCK-PAW-GODOT-001 push, PR, release, or deployment has occurred.
+Release terminology remains deliberately limited: CATPAW-RAPIER-001 automated gates pass, but physical-device acceptance is UNTESTED. No push, PR, release, or deployment has occurred.

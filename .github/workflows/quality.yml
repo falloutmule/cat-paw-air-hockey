@@ -25,7 +25,7 @@ jobs:
           cache: pnpm
           cache-dependency-path: pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
-      - run: pnpm test
+      - run: pnpm test:source
       - name: Materialize exact SFHS workspace
         run: |
           pin=$(node -p "require('./one-shot/SFHS-PIN.json').sfhsCommit")

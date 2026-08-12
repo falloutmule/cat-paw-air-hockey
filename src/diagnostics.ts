@@ -16,6 +16,7 @@ export function installDiagnostics(options: {
   readonly input: HockeyInput;
   readonly getAudioStatus: () => string;
   readonly getOrientationGate: () => boolean;
+  readonly getPhysicsDiagnostics?: () => unknown;
   readonly getBoardDiagnostics?: () => unknown;
   readonly getGoalDiagnostics?: () => unknown;
   readonly getPawDiagnostics?: () => unknown;
@@ -28,12 +29,13 @@ export function installDiagnostics(options: {
       const runtime = options.getRuntime();
       const state = runtime?.getState();
       return Object.freeze({
-        schema: "cat-air-hockey.runtime-snapshot@2",
+        schema: "cat-air-hockey.runtime-snapshot@3",
         renderer: runtime?.getDiagnostics() ?? null,
         viewport: runtime?.getViewport() ?? null,
         input: options.input.getDiagnostics(),
         audio: options.getAudioStatus(),
         orientationGateActive: options.getOrientationGate(),
+        physics: options.getPhysicsDiagnostics?.() ?? null,
         board: options.getBoardDiagnostics?.() ?? null,
         goals: options.getGoalDiagnostics?.() ?? null,
         paws: options.getPawDiagnostics?.() ?? null,

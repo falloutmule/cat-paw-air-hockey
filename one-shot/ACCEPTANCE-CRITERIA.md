@@ -1,5 +1,5 @@
 ---
-{"schema":"sfhs.one-shot-acceptance@1","status":"VERIFIED","facts":{"physicalDevice":"REPORTED PASS"}}
+{"schema":"sfhs.one-shot-acceptance@1","status":"VERIFIED","facts":{"physicalDevice":"UNTESTED"}}
 ---
 # Acceptance Criteria
 
@@ -10,6 +10,10 @@
 - Semantic scenario: ready hold, countdown, goal reset, first-to-five winner, and two-player rematch.
 - Required visual evidence: packed-artifact boot/play/landscape gate, one WebGL canvas, zero unexpected runtime requests.
 - Required-before-completion tests: input, physics, match flow, audio, orientation, lifecycle/browser smoke, pack and exact verify.
+- Rapier acceptance: dynamic CCD puck, position-based kinematic paws, visible fixed rails/posts, exact-once goals, finite stable state, and retained player constraints/settings.
+- Physical gate: compare normal, hard, glancing, bank, and post shots plus rapid and simultaneous two-player control against accepted build `cat-paw-air-hockey-06998a9ce8bc` for several uninterrupted minutes.
+
+All automated requirements are verified for CATPAW-RAPIER-001. Physical Samsung acceptance remains untested and is required before completion.
 - Physical result: the user reported PASS for the exact PUCK-PAW-GODOT-001 preview and packed artifact; missing formal device/browser/thermal metadata remains explicit rather than inferred.
 - Publication condition: a normal canonical-branch change runs the durable quality and Pages workflows; Pages serves only verified packed HTML whose downloaded SHA-256 matches the recorded canonical artifact.
 - Physical-device condition: Samsung acceptance remains separate and artifact-bound; it is not implied by publication.

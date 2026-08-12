@@ -3,12 +3,13 @@
   "node": ">=24",
   "pnpm": "11.9.0",
   "schema": "sfhs.graduation-sfhs-pin@1",
-  "sfhsCommit": "37aa056b6bd0948d73fcd99c1aba558861f0037e",
+  "sfhsCommit": "fce070a0a08a9b4e0fbebda75440eaee80bb95a9",
   "sfhsRepository": "falloutmule/single-file-html-software",
   "sourceProductIdentity": "cf42d1907066450c5661d57c2d9017f1311a372f386aa52d20fee888c62d66f5",
   "workspacePackages": [
     "@sfhs/adapter-pixi-v8",
     "@sfhs/browser-runner",
+    "@sfhs/physics-2d",
     "@sfhs/pixi-runtime"
   ]
 }

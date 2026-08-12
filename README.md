@@ -6,16 +6,17 @@
 
 ## Status
 
-The readable source, tests, and SFHS project are authoritative. PUCK-PAW-GODOT-001 is locally verified by the real pinned SFHS packer and exact verifier. It is not deployed or pushed under this local-only boundary, and the user reported **Samsung PASS** for its exact preview and packed artifact on 2026-08-12.
+The readable source, tests, and SFHS project are authoritative. CATPAW-RAPIER-001 is locally verified by the real pinned SFHS packer and exact verifier, including offline one-file boot. It is not deployed or pushed. Its Samsung comparison is still **UNTESTED**; the accepted custom-solver artifact and its 2026-08-12 reported PASS remain the physical baseline.
 
 | Current canonical artifact | Value |
 | --- | --- |
-| Build ID | `cat-paw-air-hockey-06998a9ce8bc` |
-| Source SHA-256 | `06998a9ce8bc8b8cd578018e42b716c3c4b5b017c13626d306aa609eddc5055b` |
-| Artifact SHA-256 | `51b92216c60556d2df9885ba5155bc427da6904b0fc3fc6a89c864e30215f42a` |
-| Bytes | 4,117,623 |
-| Verification | SFHS inspect, validate, check, pack, exact verify, and multi-viewport packed Chromium smoke |
-| Pages | [Currently deployed earlier build](https://falloutmule.github.io/cat-paw-air-hockey/); PUCK-PAW-GODOT-001 was not deployed |
+| Build ID | `cat-paw-air-hockey-b83bd150d75e` |
+| Source SHA-256 | `b83bd150d75e68db243ed39b8d18aee32e6df349e634dc3f672fbd29d757fa1d` |
+| Artifact SHA-256 | `827d1b6d1e3aa8877b206d2be5c89baaea89b5cd04e8643196b394b3f7789b1a` |
+| Bytes | 5,857,863 |
+| Verification | SFHS inspect, validate, check, pack, exact verify, packed Chromium, and exact-file offline boot |
+| Samsung | UNTESTED candidate; accepted baseline remains `cat-paw-air-hockey-06998a9ce8bc` |
+| Pages | [Currently deployed earlier build](https://falloutmule.github.io/cat-paw-air-hockey/); CATPAW-RAPIER-001 was not deployed |
 
 ## Play
 
@@ -26,7 +27,7 @@ The four shared controls straddle the center edges: Mute upper-left, Pause lower
 ## Implemented
 
 - Simultaneous independent two-player touch ownership, cancellation cleanup, and third-touch rejection.
-- Fixed-step renderer-neutral air-hockey simulation with cat-paw strikers, yarn puck, posts, goals, winner, and rematch flow.
+- Fixed-step renderer-neutral game state backed by Rapier 2D: dynamic CCD puck, position-based kinematic paws, fixed visible rails/posts, product-owned goals, winner, and rematch flow.
 - Pause, mute, user-gesture audio unlock, background recovery, reduced effects, and accessible instructions.
 - Shared mirrored settings with 100% normal speeds, 200% normal sizes, 70–130% speed ranges, and 25–200% size ranges. Each half has a sticky Close button and one thin native scrollbar; incompatible puck/goal sizes warn without locking the players out.
 - Optional local PNG theme, fullscreen controls, and final-score PNG capture.
@@ -36,11 +37,11 @@ The four shared controls straddle the center edges: Mute upper-left, Pause lower
 
 ## Limits
 
-The primary device target is Samsung Galaxy S21 Ultra in stable Android Chrome. Automated Chromium evidence does not replace an artifact-bound physical session. The current puck-and-paw artifact has no reported Samsung result; the previous settings artifact's PASS does not transfer. WebGL is required; there is deliberately no hidden Canvas fallback.
+The primary device target is Samsung Galaxy S21 Ultra in stable Android Chrome. Automated Chromium evidence does not replace an artifact-bound physical session. CATPAW-RAPIER-001 has no reported Samsung result; the accepted custom-solver PASS does not transfer. WebGL is required; there is deliberately no hidden Canvas fallback.
 
 ## Architecture and verification
 
-Editable product source is `src/`, with `tests/`, `public/`, `sfhs.project.json`, and `one-shot/` as authoritative product records. The canonical `dist/index.html` is generated only by the SFHS packer and is ignored by Git. The project uses the fixed SFHS revision in [one-shot/SFHS-PIN.json](one-shot/SFHS-PIN.json), Pixi v8, a 60 Hz fixed-step simulation, and a single WebGL presentation surface.
+Editable product source is `src/`, with `tests/`, `public/`, `sfhs.project.json`, and `one-shot/` as authoritative product records. The canonical `dist/index.html` is generated only by the SFHS packer and is ignored by Git. The project uses the fixed SFHS revision in [one-shot/SFHS-PIN.json](one-shot/SFHS-PIN.json), Pixi v8, Rapier 2D at a 60 Hz fixed step, and a single WebGL presentation surface.
 
 ```powershell
 pnpm install --frozen-lockfile

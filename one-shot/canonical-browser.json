@@ -3,8 +3,8 @@
   "valid": true,
   "artifact": {
     "path": "dist/index.html",
-    "bytes": 4117623,
-    "sha256": "51b92216c60556d2df9885ba5155bc427da6904b0fc3fc6a89c864e30215f42a"
+    "bytes": 5857863,
+    "sha256": "827d1b6d1e3aa8877b206d2be5c89baaea89b5cd04e8643196b394b3f7789b1a"
   },
   "browser": "149.0.7827.55",
   "canvasCount": 1,
@@ -15,8 +15,16 @@
   ],
   "pageErrors": [],
   "consoleErrors": [],
+  "offline": {
+    "valid": true,
+    "requests": [
+      "file:///C:/Users/fallo/Documents/Single-File-Html/.worktrees/sfhs-rapier-kinematic-001/examples/.sfhs-grad-cat-paw-rapier-001-66ade8a90f60/dist/index.html"
+    ],
+    "errors": [],
+    "backend": "rapier2d"
+  },
   "snapshot": {
-    "schema": "cat-air-hockey.runtime-snapshot@2",
+    "schema": "cat-air-hockey.runtime-snapshot@3",
     "renderer": {
       "renderer": "PIXI",
       "paused": false,
@@ -88,6 +96,17 @@
     },
     "audio": "ready",
     "orientationGateActive": false,
+    "physics": {
+      "backend": "rapier2d",
+      "bodyCount": 13,
+      "initializationMilliseconds": 0.09999999776482582,
+      "steps": 236,
+      "timingMilliseconds": {
+        "mean": 0.08050847449734555,
+        "p95": 0.19999999925494194,
+        "worst": 5.300000000745058
+      }
+    },
     "board": {
       "mode": "default",
       "spriteCount": 1,
@@ -179,7 +198,7 @@
       },
       "renderedScaleX": 1,
       "renderedScaleY": 1,
-      "rotation": 0.12982120568306152,
+      "rotation": 0.1544111007058828,
       "contactPlayer": null,
       "contactEventId": null,
       "contactAgeSeconds": null,
@@ -224,7 +243,7 @@
     },
     "state": {
       "phase": "playing",
-      "tick": 962,
+      "tick": 940,
       "scores": {
         "1": 0,
         "2": 0
@@ -272,53 +291,53 @@
       },
       "puck": {
         "position": {
-          "x": 196.22291045345852,
-          "y": 376.9143536728336
+          "x": 197.82772064208984,
+          "y": 393.3084487915039
         },
         "previousPosition": {
-          "x": 196.30238623399117,
-          "y": 377.4535668952652
+          "x": 197.92561531066895,
+          "y": 393.9645767211914
         },
         "velocity": {
-          "x": -4.722687246664776,
-          "y": -32.04165334072995
+          "x": -5.816484242677689,
+          "y": -38.99267911911011
         },
         "trail": [
           {
-            "x": 196.22291045345852,
-            "y": 376.9143536728336
+            "x": 197.82772064208984,
+            "y": 393.3084487915039
           },
           {
-            "x": 196.30238623399117,
-            "y": 377.4535668952652
+            "x": 197.92561531066895,
+            "y": 393.9645767211914
           },
           {
-            "x": 196.38263376292588,
-            "y": 377.9980161397906
+            "x": 198.02441596984863,
+            "y": 394.6270942687988
           },
           {
-            "x": 196.46366053431422,
-            "y": 378.54775225072547
+            "x": 198.12421798706055,
+            "y": 395.2960014343262
           },
           {
-            "x": 196.5454741149786,
-            "y": 379.1028265661087
+            "x": 198.22497367858887,
+            "y": 395.9713935852051
           },
           {
-            "x": 196.62808214521894,
-            "y": 379.66329092249634
+            "x": 198.3266830444336,
+            "y": 396.65327072143555
           },
           {
-            "x": 196.71149233952625,
-            "y": 380.2291976598026
+            "x": 198.42939376831055,
+            "y": 397.3417282104492
           },
           {
-            "x": 196.79571248730292,
-            "y": 380.80059962618753
+            "x": 198.53310585021973,
+            "y": 398.03686141967773
           },
           {
-            "x": 196.88075045359025,
-            "y": 381.37755018299265
+            "x": 198.63781929016113,
+            "y": 398.7386703491211
           }
         ],
         "lastHitter": 1
@@ -360,7 +379,7 @@
       "recentEvents": [
         {
           "id": 10,
-          "tick": 894,
+          "tick": 857,
           "kind": "pause",
           "x": 270,
           "y": 600,
@@ -368,7 +387,7 @@
         },
         {
           "id": 11,
-          "tick": 938,
+          "tick": 911,
           "kind": "resume",
           "x": 270,
           "y": 600,
