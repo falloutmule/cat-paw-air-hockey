@@ -9,7 +9,7 @@ import { installDiagnostics } from "./diagnostics.ts";
 import { createHockeyInput } from "./input.ts";
 import { createCatHockeyPresenter, prepareCatHockeyPresentationAssets } from "./presentation.ts";
 import { createCatHockeyScene } from "./scene.ts";
-import { DEFAULT_MATCH_SETTINGS, normalizeMatchSettings, settingsEqual, type MatchSettings } from "./settings.ts";
+import { DEFAULT_MATCH_SETTINGS, SIZE_SETTING_MAXIMUM, SIZE_SETTING_MINIMUM, SPEED_SETTING_MAXIMUM, SPEED_SETTING_MINIMUM, incompatibleGoalPlayers, minimumPlayableGoalSize, normalizeMatchSettings, settingsEqual, type MatchSettings } from "./settings.ts";
 import { clearBoard, clearTheme, loadBoard, loadTheme, saveBoard, saveTheme, validateBoard, validateTheme, type LegacyBoardRecord, type ValidBoard, type ValidTheme } from "./theme.ts";
 import type { HockeyGameState } from "./state.ts";
 import defaultBoardTemplateUrl from "../art/theme/cat-paw-board-template.png";
@@ -39,6 +39,7 @@ const fullscreenButtons = [...document.querySelectorAll<HTMLButtonElement>("[dat
 const captureButtons = [...document.querySelectorAll<HTMLButtonElement>("[data-action='capture']")];
 const controlFeedback = required<HTMLOutputElement>("#control-feedback");
 const menuViews = [...document.querySelectorAll<HTMLElement>("[data-menu-view]")];
+const settingsScrollControls = [...document.querySelectorAll<HTMLInputElement>("input[data-settings-scroll]")];
 
 let runtime: SfhsPixiGameRuntime<HockeyGameState> | undefined;
 let hiddenPaused = false;
@@ -52,8 +53,30 @@ let currentTheme: ValidTheme | undefined;
 let currentBoard: ValidBoard | undefined;
 let legacyBoard: LegacyBoardRecord | undefined;
 const boardPixelLabel = `${BOARD.bitmapWidth} × ${BOARD.bitmapHeight}`;
-const settingsStorageKey = "cat-paw-air-hockey.settings.v1";
-function loadSettings(): MatchSettings { try { return normalizeMatchSettings(JSON.parse(localStorage.getItem(settingsStorageKey) ?? "null")); } catch { return DEFAULT_MATCH_SETTINGS; } }
+const settingsStorageKey = "cat-paw-air-hockey.settings.v2";
+const legacySettingsStorageKey = "cat-paw-air-hockey.settings.v1";
+const migrateLegacyValue = (value: unknown, nextDefault: number): unknown => value === 100 ? nextDefault : value;
+function migrateLegacySettings(value: Partial<MatchSettings> | undefined): MatchSettings {
+  return normalizeMatchSettings({
+    puckSpeed: migrateLegacyValue(value?.puckSpeed, DEFAULT_MATCH_SETTINGS.puckSpeed) as number,
+    pawSpeed: { 1: migrateLegacyValue(value?.pawSpeed?.[1], DEFAULT_MATCH_SETTINGS.pawSpeed[1]) as number, 2: migrateLegacyValue(value?.pawSpeed?.[2], DEFAULT_MATCH_SETTINGS.pawSpeed[2]) as number },
+    returnSpeed: { 1: migrateLegacyValue(value?.returnSpeed?.[1], DEFAULT_MATCH_SETTINGS.returnSpeed[1]) as number, 2: migrateLegacyValue(value?.returnSpeed?.[2], DEFAULT_MATCH_SETTINGS.returnSpeed[2]) as number },
+    puckSize: migrateLegacyValue(value?.puckSize, DEFAULT_MATCH_SETTINGS.puckSize) as number,
+    pawSize: { 1: migrateLegacyValue(value?.pawSize?.[1], DEFAULT_MATCH_SETTINGS.pawSize[1]) as number, 2: migrateLegacyValue(value?.pawSize?.[2], DEFAULT_MATCH_SETTINGS.pawSize[2]) as number },
+    goalSize: { 1: migrateLegacyValue(value?.goalSize?.[1], DEFAULT_MATCH_SETTINGS.goalSize[1]) as number, 2: migrateLegacyValue(value?.goalSize?.[2], DEFAULT_MATCH_SETTINGS.goalSize[2]) as number }
+  });
+}
+function loadSettings(): MatchSettings {
+  try {
+    const current = localStorage.getItem(settingsStorageKey);
+    if (current !== null) return normalizeMatchSettings(JSON.parse(current));
+    const legacy = localStorage.getItem(legacySettingsStorageKey);
+    if (legacy === null) return DEFAULT_MATCH_SETTINGS;
+    const migrated = migrateLegacySettings(JSON.parse(legacy));
+    localStorage.setItem(settingsStorageKey, JSON.stringify(migrated));
+    return migrated;
+  } catch { return DEFAULT_MATCH_SETTINGS; }
+}
 let menuSettings = loadSettings();
 try { const stored = localStorage.getItem("cat-paw-air-hockey.reduced-motion.v1"); if (stored !== null) reducedEffects = stored === "true"; } catch { /* session fallback */ }
 
@@ -64,26 +87,56 @@ const presentation = createSfhsPixiV8Presentation<HockeyGameState>({ backgroundC
 const input = createHockeyInput({ initialSurface: host, getCanvas: () => runtime?.getPrimarySurface(), onIntentionalGesture: () => { void audio.unlock().then(updateControls); } });
 
 const settingControls = (settings: readonly (readonly [string, string, number, number])[]): string => settings.map(([key, label, min, max]) => `<label>${label}<output data-value="${key}"></output><input data-setting="${key}" aria-label="${label}" type="range" min="${min}" max="${max}" step="5"></label>`).join("");
-const menuMarkup = `<h2>Cat Paw settings</h2><p class="settings-summary" data-summary></p>
-  <fieldset data-settings-group="sizes"><legend>Sizes</legend>${settingControls([["goalSize1", "Player 1 goal size", 75, 125], ["goalSize2", "Player 2 goal size", 75, 125], ["pawSize1", "Player 1 paw size", 75, 125], ["pawSize2", "Player 2 paw size", 75, 125], ["puckSize", "Puck size", 75, 125]])}</fieldset>
-  <fieldset data-settings-group="speeds"><legend>Speeds</legend>${settingControls([["puckSpeed", "Puck speed", 70, 130], ["pawSpeed1", "Player 1 paw speed", 70, 130], ["pawSpeed2", "Player 2 paw speed", 70, 130], ["returnSpeed1", "Player 1 return speed", 70, 130], ["returnSpeed2", "Player 2 return speed", 70, 130]])}<button type="button" data-menu-action="reset">Reset Gameplay Defaults</button></fieldset>
-  <fieldset><legend>Display</legend><label>Reduced motion <input data-menu-action="reduced" type="checkbox"></label><p data-fullscreen-status></p></fieldset><fieldset><legend>Theme</legend><div class="board-preview"><img data-board-preview alt="Current Board preview"><p data-board-status>Default Board</p></div><button type="button" data-menu-action="board-template">Download Board Template</button><button type="button" data-menu-action="load-board">Replace Board PNG</button><button type="button" data-menu-action="reset-board">Reset Board</button><details class="legacy-theme"><summary>Legacy composite theme</summary><button type="button" data-menu-action="load-theme">Load Legacy Theme PNG</button><button type="button" data-menu-action="reset-theme">Reset Legacy Theme</button><p data-theme-status>Classic legacy theme</p></details></fieldset><fieldset><legend>About / Reset</legend><p>Live-match size and speed changes apply after the next goal, before the next serve.</p><button type="button" data-menu-action="close">Close settings</button></fieldset>`;
+const menuMarkup = `<div class="settings-toolbar"><button class="settings-close" type="button" data-menu-action="close">Close settings</button><p class="settings-summary" data-summary></p></div><h2>Cat Paw settings</h2>
+  <fieldset data-settings-group="sizes"><legend>Sizes · normal 125%</legend>${settingControls([["goalSize1", "Player 1 goal size", SIZE_SETTING_MINIMUM, SIZE_SETTING_MAXIMUM], ["goalSize2", "Player 2 goal size", SIZE_SETTING_MINIMUM, SIZE_SETTING_MAXIMUM], ["pawSize1", "Player 1 paw size", SIZE_SETTING_MINIMUM, SIZE_SETTING_MAXIMUM], ["pawSize2", "Player 2 paw size", SIZE_SETTING_MINIMUM, SIZE_SETTING_MAXIMUM], ["puckSize", "Puck size", SIZE_SETTING_MINIMUM, SIZE_SETTING_MAXIMUM]])}</fieldset>
+  <fieldset data-settings-group="speeds"><legend>Speeds · normal 75%</legend>${settingControls([["puckSpeed", "Puck speed", SPEED_SETTING_MINIMUM, SPEED_SETTING_MAXIMUM], ["pawSpeed1", "Player 1 paw speed", SPEED_SETTING_MINIMUM, SPEED_SETTING_MAXIMUM], ["pawSpeed2", "Player 2 paw speed", SPEED_SETTING_MINIMUM, SPEED_SETTING_MAXIMUM], ["returnSpeed1", "Player 1 return speed", SPEED_SETTING_MINIMUM, SPEED_SETTING_MAXIMUM], ["returnSpeed2", "Player 2 return speed", SPEED_SETTING_MINIMUM, SPEED_SETTING_MAXIMUM]])}<button type="button" data-menu-action="reset">Reset to Normal · Sizes 125% · Speeds 75%</button></fieldset>
+  <fieldset><legend>Display</legend><label>Reduced motion <input data-menu-action="reduced" type="checkbox"></label><p data-fullscreen-status></p></fieldset><fieldset><legend>Theme</legend><div class="board-preview"><img data-board-preview alt="Current Board preview"><p data-board-status>Default Board</p></div><button type="button" data-menu-action="board-template">Download Board Template</button><button type="button" data-menu-action="load-board">Replace Board PNG</button><button type="button" data-menu-action="reset-board">Reset Board</button><details class="legacy-theme"><summary>Legacy composite theme</summary><button type="button" data-menu-action="load-theme">Load Legacy Theme PNG</button><button type="button" data-menu-action="reset-theme">Reset Legacy Theme</button><p data-theme-status>Classic legacy theme</p></details></fieldset><fieldset><legend>About</legend><p>Live-match size and speed changes apply after the next goal, before the next serve. Extreme puck and goal combinations may be intentionally unplayable; the warning above will remain visible.</p></fieldset>`;
 for (const view of menuViews) view.innerHTML = menuMarkup;
 
+function settingDefaultValue(key: string): number {
+  const values: Record<string, number> = { puckSpeed: DEFAULT_MATCH_SETTINGS.puckSpeed, pawSpeed1: DEFAULT_MATCH_SETTINGS.pawSpeed[1], pawSpeed2: DEFAULT_MATCH_SETTINGS.pawSpeed[2], returnSpeed1: DEFAULT_MATCH_SETTINGS.returnSpeed[1], returnSpeed2: DEFAULT_MATCH_SETTINGS.returnSpeed[2], puckSize: DEFAULT_MATCH_SETTINGS.puckSize, pawSize1: DEFAULT_MATCH_SETTINGS.pawSize[1], pawSize2: DEFAULT_MATCH_SETTINGS.pawSize[2], goalSize1: DEFAULT_MATCH_SETTINGS.goalSize[1], goalSize2: DEFAULT_MATCH_SETTINGS.goalSize[2] };
+  return values[key] ?? DEFAULT_MATCH_SETTINGS.puckSpeed;
+}
 function settingValue(key: string): number {
   const values: Record<string, number> = { puckSpeed: menuSettings.puckSpeed, pawSpeed1: menuSettings.pawSpeed[1], pawSpeed2: menuSettings.pawSpeed[2], returnSpeed1: menuSettings.returnSpeed[1], returnSpeed2: menuSettings.returnSpeed[2], puckSize: menuSettings.puckSize, pawSize1: menuSettings.pawSize[1], pawSize2: menuSettings.pawSize[2], goalSize1: menuSettings.goalSize[1], goalSize2: menuSettings.goalSize[2] };
-  return values[key] ?? 100;
+  return values[key] ?? settingDefaultValue(key);
 }
 function syncMenuViews(): void {
   const state = runtime?.getState();
+  const incompatible = incompatibleGoalPlayers(menuSettings);
+  const minimumGoal = minimumPlayableGoalSize(menuSettings.puckSize);
   for (const view of menuViews) {
-    for (const range of view.querySelectorAll<HTMLInputElement>("input[data-setting]")) { range.value = String(settingValue(range.dataset.setting ?? "")); range.setAttribute("aria-valuetext", `${range.value}%`); range.dataset.default = String(range.value === "100"); }
+    for (const range of view.querySelectorAll<HTMLInputElement>("input[data-setting]")) { const key = range.dataset.setting ?? ""; range.value = String(settingValue(key)); range.setAttribute("aria-valuetext", `${range.value}%`); range.dataset.default = String(Number(range.value) === settingDefaultValue(key)); const goalPlayer = key === "goalSize1" ? 1 : key === "goalSize2" ? 2 : undefined; if (goalPlayer === undefined) range.removeAttribute("aria-invalid"); else range.setAttribute("aria-invalid", String(incompatible.includes(goalPlayer))); }
     for (const output of view.querySelectorAll<HTMLOutputElement>("output[data-value]")) output.value = `${settingValue(output.dataset.value ?? "")}%`;
     const checkbox = view.querySelector<HTMLInputElement>("input[data-menu-action='reduced']"); if (checkbox !== null) checkbox.checked = reducedEffects;
-    const summary = view.querySelector<HTMLElement>("[data-summary]"); if (summary !== null) { const pending = !settingsEqual(state?.activeMatchSettings ?? menuSettings, menuSettings); summary.dataset.pending = String(pending); summary.textContent = pending ? "Pending changes — visible after the next goal, before the next serve." : "All shown settings are active."; }
+    const summary = view.querySelector<HTMLElement>("[data-summary]"); if (summary !== null) { const pending = !settingsEqual(state?.activeMatchSettings ?? menuSettings, menuSettings); summary.dataset.pending = String(pending && incompatible.length === 0); summary.dataset.warning = String(incompatible.length > 0); summary.textContent = incompatible.length > 0 ? `Warning · ${incompatible.map((player) => `P${player} goal`).join(" and ")} cannot fit the ${menuSettings.puckSize}% puck · use at least ${minimumGoal}% goal size. Closing is still allowed.` : pending ? "Pending changes · visible after the next goal, before the next serve." : "All shown settings are active."; }
     const fullscreenStatus = view.querySelector<HTMLElement>("[data-fullscreen-status]"); if (fullscreenStatus !== null) fullscreenStatus.textContent = fullscreenAvailable(document.documentElement) ? (fullscreenElement() === null ? "Fullscreen available" : "Fullscreen active") : "Fullscreen unavailable in this browser view";
   }
 }
+let settingsScrollFrame = 0;
+function syncSettingsScrollControls(): void {
+  settingsScrollFrame = 0;
+  for (const control of settingsScrollControls) {
+    const view = menuViews.find((candidate) => candidate.dataset.menuView === control.dataset.settingsScroll);
+    if (view === undefined) continue;
+    const maximum = Math.max(0, view.scrollHeight - view.clientHeight);
+    const percent = maximum === 0 ? 0 : Math.round(view.scrollTop / maximum * 100);
+    control.value = String(percent);
+    control.disabled = maximum === 0;
+    control.setAttribute("aria-valuetext", maximum === 0 ? "All settings visible" : `${percent}% through settings`);
+  }
+}
+function scheduleSettingsScrollSync(): void { if (settingsScrollFrame === 0) settingsScrollFrame = requestAnimationFrame(syncSettingsScrollControls); }
+for (const view of menuViews) view.addEventListener("scroll", scheduleSettingsScrollSync, { passive: true });
+for (const control of settingsScrollControls) control.addEventListener("input", () => {
+  const view = menuViews.find((candidate) => candidate.dataset.menuView === control.dataset.settingsScroll);
+  if (view === undefined) return;
+  const maximum = Math.max(0, view.scrollHeight - view.clientHeight);
+  view.scrollTop = maximum * Number(control.value) / 100;
+  control.setAttribute("aria-valuetext", `${control.value}% through settings`);
+});
+const settingsResizeObserver = typeof ResizeObserver === "undefined" ? undefined : new ResizeObserver(scheduleSettingsScrollSync);
+for (const view of menuViews) settingsResizeObserver?.observe(view);
 function persistPreferences(): void { try { localStorage.setItem(settingsStorageKey, JSON.stringify(menuSettings)); localStorage.setItem("cat-paw-air-hockey.reduced-motion.v1", String(reducedEffects)); } catch { /* session fallback */ } }
 function updateSetting(key: string, value: number): void {
   const next = { puckSpeed: menuSettings.puckSpeed, puckSize: menuSettings.puckSize, pawSpeed: { ...menuSettings.pawSpeed }, returnSpeed: { ...menuSettings.returnSpeed }, pawSize: { ...menuSettings.pawSize }, goalSize: { ...menuSettings.goalSize } };
@@ -92,7 +145,7 @@ function updateSetting(key: string, value: number): void {
   else if (key === "returnSpeed1") next.returnSpeed[1] = value; else if (key === "returnSpeed2") next.returnSpeed[2] = value;
   else if (key === "pawSize1") next.pawSize[1] = value; else if (key === "pawSize2") next.pawSize[2] = value;
   else if (key === "goalSize1") next.goalSize[1] = value; else if (key === "goalSize2") next.goalSize[2] = value;
-  menuSettings = normalizeMatchSettings(next); input.requestSettings(menuSettings); persistPreferences(); syncMenuViews(); setTimeout(syncMenuViews, 60);
+  menuSettings = normalizeMatchSettings(next); input.requestSettings(menuSettings); persistPreferences(); syncMenuViews(); scheduleSettingsScrollSync(); const incompatible = incompatibleGoalPlayers(menuSettings); if (incompatible.length > 0) settingsLive.value = `Warning: ${incompatible.map((player) => `Player ${player} goal`).join(" and ")} cannot fit the current puck. Closing settings is still allowed.`; setTimeout(syncMenuViews, 60);
 }
 
 function applyViewportGeometry(): void {
@@ -117,9 +170,9 @@ function applyOrientationGate(): void {
   if (landscape && !orientationPaused) { orientationPaused = true; runtime.pause(); input.clear(); }
   else if (!landscape && orientationPaused) { orientationPaused = false; if (!document.hidden) runtime.resume(); }
 }
-function scheduleViewport(): void { if (viewportFrame !== 0) return; viewportFrame = requestAnimationFrame(() => { viewportFrame = 0; applyViewportGeometry(); applyOrientationGate(); updateControls(); }); }
+function scheduleViewport(): void { if (viewportFrame !== 0) return; viewportFrame = requestAnimationFrame(() => { viewportFrame = 0; applyViewportGeometry(); applyOrientationGate(); updateControls(); scheduleSettingsScrollSync(); }); }
 function setMenuOpen(open: boolean): void {
-  if (open) { input.clear(); if (runtime?.getState().phase !== "paused") input.requestPause(); menuOpen = true; settingsOverlay.hidden = false; settingsLive.value = "Settings open. Match paused."; }
+  if (open) { input.clear(); if (runtime?.getState().phase !== "paused") input.requestPause(); menuOpen = true; settingsOverlay.hidden = false; settingsLive.value = "Settings open. Match paused."; scheduleSettingsScrollSync(); }
   else { input.clear(); menuOpen = false; settingsOverlay.hidden = true; const pending = runtime !== undefined && !settingsEqual(runtime.getState().activeMatchSettings, menuSettings); settingsLive.value = pending ? "Settings saved. Changes apply after the next goal, before the next serve." : "Settings closed. Press Resume to continue."; if (pending) showControlFeedback("Settings saved · size changes appear after the next goal"); }
   updateControls();
 }
@@ -196,7 +249,7 @@ document.addEventListener("keydown", (event) => {
   event.preventDefault(); focusable[next]!.focus();
 });
 
-const removeDiagnostics = installDiagnostics({ getRuntime: () => runtime, input, getAudioStatus: () => audio.getStatus(), getOrientationGate: () => !orientationGate.hidden, getBoardDiagnostics: () => presenter.getBoardDiagnostics(), getGoalDiagnostics: () => presenter.getGoalDiagnostics(), getPawDiagnostics: () => presenter.getPawDiagnostics(), getScoreCatDiagnostics: () => presenter.getScoreCatDiagnostics() });
+const removeDiagnostics = installDiagnostics({ getRuntime: () => runtime, input, getAudioStatus: () => audio.getStatus(), getOrientationGate: () => !orientationGate.hidden, getBoardDiagnostics: () => presenter.getBoardDiagnostics(), getGoalDiagnostics: () => presenter.getGoalDiagnostics(), getPawDiagnostics: () => presenter.getPawDiagnostics(), getPuckDiagnostics: () => presenter.getPuckDiagnostics(), getScoreCatDiagnostics: () => presenter.getScoreCatDiagnostics() });
 async function boot(): Promise<void> {
   if (!supportsRequiredWebGl(document)) { capability.hidden = false; host.hidden = true; status.value = "WebGL unavailable"; return; }
   try {
@@ -215,5 +268,5 @@ document.addEventListener("webkitfullscreenchange", onFullscreenChange);
 document.addEventListener("fullscreenerror", onFullscreenError);
 document.addEventListener("webkitfullscreenerror", onFullscreenError);
 window.addEventListener("resize", scheduleViewport); window.addEventListener("orientationchange", scheduleViewport); window.visualViewport?.addEventListener("resize", scheduleViewport);
-window.addEventListener("pagehide", () => { removeDiagnostics(); runtime?.destroy(); input.destroy(); if (currentBoard !== undefined) URL.revokeObjectURL(currentBoard.url); void audio.dispose(); }, { once: true });
-syncBoardViews(); updateControls(); void boot();
+window.addEventListener("pagehide", () => { removeDiagnostics(); settingsResizeObserver?.disconnect(); if (settingsScrollFrame !== 0) cancelAnimationFrame(settingsScrollFrame); runtime?.destroy(); input.destroy(); if (currentBoard !== undefined) URL.revokeObjectURL(currentBoard.url); void audio.dispose(); }, { once: true });
+syncBoardViews(); updateControls(); scheduleSettingsScrollSync(); void boot();

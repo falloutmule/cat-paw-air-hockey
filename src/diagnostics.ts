@@ -19,6 +19,7 @@ export function installDiagnostics(options: {
   readonly getBoardDiagnostics?: () => unknown;
   readonly getGoalDiagnostics?: () => unknown;
   readonly getPawDiagnostics?: () => unknown;
+  readonly getPuckDiagnostics?: () => unknown;
   readonly getScoreCatDiagnostics?: () => unknown;
 }): () => void {
   const diagnostics: CatHockeyDiagnostics = Object.freeze({
@@ -36,6 +37,7 @@ export function installDiagnostics(options: {
         board: options.getBoardDiagnostics?.() ?? null,
         goals: options.getGoalDiagnostics?.() ?? null,
         paws: options.getPawDiagnostics?.() ?? null,
+        puckPresentation: options.getPuckDiagnostics?.() ?? null,
         scoreCats: options.getScoreCatDiagnostics?.() ?? null,
         state: state === undefined ? null : {
           phase: state.phase,

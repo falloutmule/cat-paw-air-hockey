@@ -4,22 +4,21 @@ Status: **UNTESTED — PRODUCT GATE**. Test only these exact local files on the 
 
 | File | Bytes | SHA-256 |
 | --- | ---: | --- |
-| `test-results/SCORE-CAT-GODOT-001/phone/score-cat-preview.html` | 46,886 | `da4665735e98edae6f77fbb66c16c6e07ad28d4be5f16adc47fbb466a81f61b2` |
-| `dist/index.html` | 4,067,812 | `7a12db4fec3c6f38cd0c9e4ed5d197b36be27c9fa3a23e97728dc2469587dad2` |
+| `test-results/CATPAW-SETTINGS-CONTACT-001/phone/score-cat-preview.html` | 46,886 | `da4665735e98edae6f77fbb66c16c6e07ad28d4be5f16adc47fbb466a81f61b2` |
+| `test-results/CATPAW-SETTINGS-CONTACT-001/phone/index.html` | 4,075,821 | `34a3bbd431243f27797a5801095e7c5f210dca0effc4a114a19bd1efabf6dbd8` |
 
-Packed build: `cat-paw-air-hockey-ffaa71fb1d0d`; source SHA-256 `ffaa71fb1d0de2144997316b423628e84c0c43f928b195ad9041e42b47de8adf`. The sheets were produced with Godot `4.7.1.stable.official.a13da4feb` from official Windows archive SHA-256 `c7a289051eaefb460b0106b60e9cd5bee0ef55fd102dcb2bed1eb356cf3d90a1`.
+Packed build: `cat-paw-air-hockey-d9c204866261`; source SHA-256 `d9c2048662618f62b1bdd2abe746fc4ecf93468e38850268e9fdce87acab4c7a`. The score-cat sheets were produced with Godot `4.7.1.stable.official.a13da4feb` from official Windows archive SHA-256 `c7a289051eaefb460b0106b60e9cd5bee0ef55fd102dcb2bed1eb356cf3d90a1` and are unchanged in this repair.
 
-The prior exact build `cat-paw-air-hockey-1e9558fbf0aa` received a Samsung **FAIL**: the cats were too small, the reactions were too fast/subtle, and the neutral paws obscured the eyes. That verdict is retained under ignored `test-results/SCORE-CAT-GODOT-001-R1/physical-fail/`; it does not transfer to this repaired artifact.
-
-Build `cat-paw-air-hockey-235ab3123bc4` is also superseded: it enlarged the cats only to 120 x 120 (1.5x), not the requested exact double size. The current build corrects both the packed board and preview to 160 x 160 (2x the original 80 x 80).
+The prior exact-double artifact `cat-paw-air-hockey-ffaa71fb1d0d` is superseded by the requested settings and contact-puck work. Earlier score-cat FAIL results remain bound to their exact files and do not transfer.
 
 ## Phone checks
 
-1. Open the preview and inspect both actual 160 x 160 runtime-size cats against the board colors. Tap Idle, Goal, Conceded, Win, Defeated, Player 1, Player 2, and Reduced motion. Confirm clearly visible idle eyes, lowered neutral paws, sharp pixels, readable expressions, no clipping, stable feet on settled poses, correct opposite palette, and no visual jump at the anchor.
-2. Open the packed game in portrait. Confirm exactly one score cat per end, unchanged large numeric scores, full P2 rotation, no overlap with goals/controls, and no blurred scaling.
-3. Score once in each direction. Confirm the scorer cheers while the opponent reacts, then both settle. Pause during a goal reaction and confirm the pose holds; resume and confirm it continues.
-4. Enable Reduced motion. Confirm goal reactions jump to settled frames and winner/loser jump to their final poses.
-5. Reach the final goal through ordinary play. Confirm the winner sequence, defeated hold, final-score capture containing both cats, and two-player rematch returning both cats to idle frame 0.
-6. Recheck independent simultaneous touch, third-touch rejection, settings, fullscreen, portrait containment, and landscape gate.
+1. Open the packed game in portrait. Confirm all puck, paw, and goal size controls initially read 125%, while puck speed, both paw speeds, and both return speeds initially read 75%.
+2. Confirm every size slider reaches 25% and 200%. Confirm each speed slider remains 70–130%.
+3. In both mirrored settings halves, drag the dedicated vertical scroll slider from top to bottom. Confirm only that player's panel scrolls and Close settings remains visible at both ends.
+4. Set the puck to 200% and one goal to 25%. Confirm the goal control and summary show a strong warning, then confirm Close settings still works and play is not blocked.
+5. Reset to Normal. During ordinary play, strike the puck with each paw. Confirm the puck adopts the last hitter's cream/teal or lavender/coral cat palette, visibly squash/pops, and the contacting paw recoils.
+6. Enable Reduced motion. Confirm the hitter palette still changes but the puck and paw do not squash, stretch, or recoil.
+7. Recheck simultaneous two-player touch, third-touch rejection, both scoring directions, fullscreen, pause/resume, final-score capture, rematch, portrait containment, landscape gate, performance, and heat.
 
 Report `PASS` or `FAIL`, the two tested SHA-256 values, device model, Android version, Chrome version, and any screenshot/video. A FAIL remains a Cat Paw repair with a new artifact identity. A PASS authorizes only the already-planned local PASS commit and subsequent isolated SFHS extraction; it does not authorize a Cat Paw push or deployment.

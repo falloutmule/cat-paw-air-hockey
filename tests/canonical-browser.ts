@@ -61,9 +61,10 @@ try {
   assert.deepEqual(initial.board.logicalBounds, { x: 0, y: 0, width: 540, height: 1200 });
   assert.deepEqual(initial.board.spriteLogicalSize, { width: 540, height: 1200 });
   assert.deepEqual(initial.board.bitmapPixels, { width: 1080, height: 2400 });
-  assert.deepEqual(initial.goals, { architecture: "pixi-nine-slice", textureSampling: "nearest", top: { openingWidth: 184, visualWidth: 232, labelScale: 1, rotation: Math.PI }, bottom: { openingWidth: 184, visualWidth: 232, labelScale: 1, rotation: 0 } });
-  assert.equal(initial.paws.top.nominalDiameter, 90);
-  assert.equal(initial.paws.bottom.nominalDiameter, 90);
+  assert.deepEqual(initial.goals, { architecture: "pixi-nine-slice", textureSampling: "nearest", top: { openingWidth: 230, visualWidth: 278, labelScale: 1.1, rotation: Math.PI }, bottom: { openingWidth: 230, visualWidth: 278, labelScale: 1.1, rotation: 0 } });
+  assert.equal(initial.paws.top.nominalDiameter, 112.5);
+  assert.equal(initial.paws.bottom.nominalDiameter, 112.5);
+  assert.deepEqual({ nominalDiameter: initial.puckPresentation.nominalDiameter, owner: initial.puckPresentation.owner, palette: initial.puckPresentation.palette, renderedScaleX: initial.puckPresentation.renderedScaleX, renderedScaleY: initial.puckPresentation.renderedScaleY, contactPlayer: initial.puckPresentation.contactPlayer, presentation: initial.puckPresentation.presentation }, { nominalDiameter: 57.5, owner: null, palette: "neutral", renderedScaleX: 1.25, renderedScaleY: 1.25, contactPlayer: null, presentation: "procedural" });
   assert.deepEqual(initial.scoreCats.top.scale, { x: 1, y: 1 });
   assert.deepEqual(initial.scoreCats.bottom.scale, { x: 1, y: 1 });
   assert.deepEqual(initial.scoreCats.top.anchor, { x: 0.5, y: 0.9 });
@@ -77,12 +78,14 @@ try {
   assert.equal(await page.locator("#pixi-host canvas").count(), 1);
   assert.equal(await page.locator("canvas").count(), 1);
   await page.screenshot({ path: resolve(screenshotDirectory, "01-ready-412x915.png") });
-  await page.screenshot({ path: resolve(screenshotDirectory, "05-goals-100-percent.png") });
+  await page.screenshot({ path: resolve(screenshotDirectory, "05-goals-125-default.png") });
   const initialCanvas = await page.locator("#pixi-host canvas").boundingBox();
   assert.ok(initialCanvas);
   await page.screenshot({ path: resolve(screenshotDirectory, "07-couch-goal-detail.png"), clip: { x: initialCanvas.x, y: initialCanvas.y, width: initialCanvas.width, height: Math.max(1, initialCanvas.height * 0.14) } });
 
   await page.evaluate(async () => {
+    localStorage.removeItem("cat-paw-air-hockey.settings.v2");
+    localStorage.setItem("cat-paw-air-hockey.settings.v1", JSON.stringify({ puckSpeed: 100, pawSpeed: { 1: 100, 2: 100 }, returnSpeed: { 1: 100, 2: 100 }, puckSize: 100, pawSize: { 1: 100, 2: 100 }, goalSize: { 1: 100, 2: 100 } }));
     const db = await new Promise<IDBDatabase>((resolvePromise, reject) => { const request = indexedDB.open("cat-paw-air-hockey-theme-v1", 1); request.onupgradeneeded = () => { if (!request.result.objectStoreNames.contains("themes")) request.result.createObjectStore("themes"); }; request.onsuccess = () => resolvePromise(request.result); request.onerror = () => reject(request.error); });
     await new Promise<void>((resolvePromise, reject) => { const request = db.transaction("themes", "readwrite").objectStore("themes").put({ filename: "legacy-r2-board.png", blob: new Blob(["legacy-r2"], { type: "image/png" }) }, "board-r2"); request.onsuccess = () => resolvePromise(); request.onerror = () => reject(request.error); });
     db.close();
@@ -91,6 +94,10 @@ try {
   await page.waitForFunction(() => (window.__CAT_AIR_HOCKEY__?.snapshot() as any)?.state != null);
   await page.waitForFunction(() => ((window.__CAT_AIR_HOCKEY__?.snapshot() as any)?.state?.tick ?? 0) > 0);
   await page.waitForFunction(() => document.querySelector("#game-shell")?.getAttribute("data-legacy-board") === "true");
+  const migratedSettings = await page.evaluate(() => ({ active: (window.__CAT_AIR_HOCKEY__!.snapshot() as any).state.activeMatchSettings, stored: JSON.parse(localStorage.getItem("cat-paw-air-hockey.settings.v2") ?? "null") }));
+  const expectedDefaults = { puckSpeed: 75, pawSpeed: { 1: 75, 2: 75 }, returnSpeed: { 1: 75, 2: 75 }, puckSize: 125, pawSize: { 1: 125, 2: 125 }, goalSize: { 1: 125, 2: 125 } };
+  assert.deepEqual(migratedSettings.active, expectedDefaults, "legacy 100% normal values migrate to the new category defaults");
+  assert.deepEqual(migratedSettings.stored, expectedDefaults, "migration is persisted under the v2 settings key");
   assert.equal(await page.locator("#game-shell").getAttribute("data-board"), "default");
   assert.match((await page.locator(".settings-view--bottom [data-board-status]").textContent()) ?? "", /legacy-r2-board\.png.*incompatible.*1080 × 2400/u);
 
@@ -119,7 +126,9 @@ try {
         document: { width: document.documentElement.scrollWidth, height: document.documentElement.scrollHeight, clientWidth: document.documentElement.clientWidth, clientHeight: document.documentElement.clientHeight },
         shell: rect("#game-shell"), canvas: rect("#pixi-host canvas"), settings: rect("#settings-overlay"), top: rect(".settings-half--top"), bottom: rect(".settings-half--bottom"),
         controls: ["mute", "pause", "menu", "fullscreen"].map((action) => rect(`[data-action='${action}']`)),
-        topScroll: { clientHeight: top.clientHeight, scrollHeight: top.scrollHeight }, bottomScroll: { clientHeight: bottom.clientHeight, scrollHeight: bottom.scrollHeight }
+        topScroll: { clientHeight: top.clientHeight, scrollHeight: top.scrollHeight }, bottomScroll: { clientHeight: bottom.clientHeight, scrollHeight: bottom.scrollHeight },
+        topClose: rect(".settings-view--top .settings-close"), bottomClose: rect(".settings-view--bottom .settings-close"),
+        topRail: rect("input[data-settings-scroll='2']"), bottomRail: rect("input[data-settings-scroll='1']")
       };
     });
     const epsilon = 1;
@@ -133,6 +142,7 @@ try {
     assert.equal(geometry.document.height, geometry.document.clientHeight, "settings own vertical scrolling without growing the document");
     for (const half of [geometry.top, geometry.bottom]) { assert.ok(half.x >= -epsilon && half.y >= -epsilon && half.right <= geometry.visual.width + epsilon && half.bottom <= geometry.visual.height + epsilon); }
     assert.ok(geometry.topScroll.scrollHeight > geometry.topScroll.clientHeight && geometry.bottomScroll.scrollHeight > geometry.bottomScroll.clientHeight, "both settings halves own internal scrolling");
+    for (const item of [geometry.topClose, geometry.bottomClose, geometry.topRail, geometry.bottomRail]) assert.ok(item.x >= -epsilon && item.y >= -epsilon && item.right <= geometry.visual.width + epsilon && item.bottom <= geometry.visual.height + epsilon, "sticky close controls and dedicated scroll sliders remain visible");
     assert.ok(geometry.canvas.x >= -epsilon && geometry.canvas.y >= -epsilon && geometry.canvas.right <= geometry.visual.width + epsilon && geometry.canvas.bottom <= geometry.visual.height + epsilon);
     for (const control of geometry.controls) assert.ok(control.x >= -epsilon && control.y >= -epsilon && control.right <= geometry.visual.width + epsilon && control.bottom <= geometry.visual.height + epsilon, "shared controls remain inside the current safe screen bounds");
     const bottomScrollBeforeTop = await page.locator(".settings-view--bottom").evaluate((element) => element.scrollTop);
@@ -143,6 +153,10 @@ try {
     await page.locator(".settings-view--bottom").evaluate((element) => { element.scrollTop = 140; });
     assert.equal(await page.locator(".settings-view--top").evaluate((element) => element.scrollTop), topScroll);
     assert.ok(await page.locator(".settings-view--bottom").evaluate((element) => element.scrollTop) > 0);
+    await page.locator("input[data-settings-scroll='1']").evaluate((input) => { (input as HTMLInputElement).value = "100"; input.dispatchEvent(new Event("input", { bubbles: true })); });
+    await page.waitForFunction(() => { const view = document.querySelector<HTMLElement>(".settings-view--bottom")!; return view.scrollTop >= view.scrollHeight - view.clientHeight - 2; });
+    assert.equal(await page.locator(".settings-view--top").evaluate((element) => element.scrollTop), topScroll, "Player 1 dedicated slider does not move Player 2 settings");
+    assert.equal(await page.locator(".settings-view--bottom .settings-close").isVisible(), true, "Close remains visible at the end of the settings list");
     if (width === 412 && height === 915) await page.screenshot({ path: resolve(screenshotDirectory, "08-settings-1080x2400.png") });
     await page.locator(".settings-view--bottom [data-menu-action='close']").click();
     await page.waitForFunction(() => (document.querySelector("#settings-overlay") as HTMLElement).hidden);
@@ -169,6 +183,22 @@ try {
   await page.locator("[data-action='menu']").last().click();
   await page.waitForFunction(() => !(document.querySelector("#settings-overlay") as HTMLElement).hidden);
   await page.waitForFunction(() => (window.__CAT_AIR_HOCKEY__!.snapshot() as any).state.phase === "paused");
+  const sizeRanges = await page.locator(".settings-view--bottom input[data-setting]").evaluateAll((inputs) => Object.fromEntries(inputs.map((input) => [(input as HTMLInputElement).dataset.setting, { min: (input as HTMLInputElement).min, max: (input as HTMLInputElement).max, value: (input as HTMLInputElement).value }])));
+  assert.deepEqual(sizeRanges.puckSize, { min: "25", max: "200", value: "125" });
+  assert.deepEqual(sizeRanges.goalSize1, { min: "25", max: "200", value: "125" });
+  assert.deepEqual(sizeRanges.puckSpeed, { min: "70", max: "130", value: "75" });
+  const warningPuck = page.locator(".settings-view--bottom input[data-setting='puckSize']");
+  const warningGoal = page.locator(".settings-view--bottom input[data-setting='goalSize1']");
+  await warningPuck.evaluate((input) => { (input as HTMLInputElement).value = "200"; input.dispatchEvent(new Event("input", { bubbles: true })); });
+  await warningGoal.evaluate((input) => { (input as HTMLInputElement).value = "25"; input.dispatchEvent(new Event("input", { bubbles: true })); });
+  await page.waitForFunction(() => document.querySelector(".settings-view--bottom [data-summary]")?.getAttribute("data-warning") === "true");
+  assert.equal(await warningGoal.getAttribute("aria-invalid"), "true");
+  assert.match((await page.locator(".settings-view--bottom [data-summary]").textContent()) ?? "", /cannot fit.*Closing is still allowed/u);
+  await page.locator(".settings-view--bottom .settings-close").click();
+  await page.waitForFunction(() => (document.querySelector("#settings-overlay") as HTMLElement).hidden);
+  await page.locator("[data-action='menu']").click();
+  await page.locator(".settings-view--bottom [data-menu-action='reset']").click();
+  await page.waitForFunction(() => (document.querySelector(".settings-view--bottom input[data-setting='puckSize']") as HTMLInputElement).value === "125");
   const puckSpeed = page.locator(".settings-view--bottom input[data-setting='puckSpeed']");
   await puckSpeed.evaluate((input) => { (input as HTMLInputElement).value = "130"; input.dispatchEvent(new Event("input", { bubbles: true })); });
   await page.waitForFunction(() => (document.querySelector(".settings-view--top input[data-setting='puckSpeed']") as HTMLInputElement).value === "130");

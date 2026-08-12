@@ -4,7 +4,7 @@ import { readFileSync } from "node:fs";
 import { EMPTY_ACTION_SNAPSHOT, type HockeyActionSnapshot, type PlayerId } from "../src/actions.ts";
 import { BOARD, CENTER_EXCLUSION, FIXED_STEP_SECONDS, LOGICAL_CENTER, LOGICAL_HEIGHT, LOGICAL_WIDTH, PLAYER_HOME, PUCK_RADIUS, PUCK_SPEED_CAP, READY_TARGET, RINK, STRIKER_RADIUS } from "../src/constants.ts";
 import { stepGame } from "../src/physics.ts";
-import { goalBounds, normalizeMatchSettings, type MatchSettings } from "../src/settings.ts";
+import { goalBounds, normalizeMatchSettings, puckRadius, strikerRadius, type MatchSettings } from "../src/settings.ts";
 import { createInitialGameState, type HockeyGameState } from "../src/state.ts";
 
 function playing(settings: MatchSettings = normalizeMatchSettings(undefined)): HockeyGameState {
@@ -41,20 +41,22 @@ assert.deepEqual({ width: approvedBoard.readUInt32BE(16), height: approvedBoard.
 
 let deep = playing();
 deep = step(deep, targetAction({ x: -10_000, y: 10_000 }, { x: 10_000, y: -10_000 }), 120);
-assert.ok(Math.abs(deep.players[1].position.x - STRIKER_RADIUS) < 0.01);
-assert.ok(Math.abs(deep.players[1].position.y - (RINK.bottom - STRIKER_RADIUS)) < 0.01);
-assert.ok(Math.abs(deep.players[2].position.x - (RINK.right - STRIKER_RADIUS)) < 0.01);
-assert.ok(Math.abs(deep.players[2].position.y - (RINK.top + STRIKER_RADIUS)) < 0.01);
+const defaultStrikerRadius = strikerRadius(deep.activeMatchSettings, 1);
+assert.ok(Math.abs(deep.players[1].position.x - defaultStrikerRadius) < 0.01);
+assert.ok(Math.abs(deep.players[1].position.y - (RINK.bottom - defaultStrikerRadius)) < 0.01);
+assert.ok(Math.abs(deep.players[2].position.x - (RINK.right - defaultStrikerRadius)) < 0.01);
+assert.ok(Math.abs(deep.players[2].position.y - (RINK.top + defaultStrikerRadius)) < 0.01);
 
 let centerClamp = playing();
 centerClamp = step(centerClamp, targetAction({ x: LOGICAL_CENTER.x, y: 0 }, { x: LOGICAL_CENTER.x, y: LOGICAL_HEIGHT }), 120);
-assert.ok(centerClamp.players[1].position.y >= RINK.centerY + CENTER_EXCLUSION + STRIKER_RADIUS);
-assert.ok(centerClamp.players[2].position.y <= RINK.centerY - CENTER_EXCLUSION - STRIKER_RADIUS);
+assert.ok(centerClamp.players[1].position.y >= RINK.centerY + CENTER_EXCLUSION + defaultStrikerRadius);
+assert.ok(centerClamp.players[2].position.y <= RINK.centerY - CENTER_EXCLUSION - defaultStrikerRadius);
 
-let wall = withPuck(playing(), RINK.left + PUCK_RADIUS + 1, LOGICAL_CENTER.y, -PUCK_SPEED_CAP, 420);
+const defaultPuckRadius = puckRadius(playing().activeMatchSettings);
+let wall = withPuck(playing(), RINK.left + defaultPuckRadius + 1, LOGICAL_CENTER.y, -PUCK_SPEED_CAP, 420);
 wall = step(wall, EMPTY_ACTION_SNAPSHOT, 40);
 assert.ok(Number.isFinite(wall.puck.position.x) && Number.isFinite(wall.puck.velocity.y));
-assert.ok(wall.puck.position.x >= RINK.left + PUCK_RADIUS - 0.1 && wall.puck.position.x <= RINK.right - PUCK_RADIUS + 0.1);
+assert.ok(wall.puck.position.x >= RINK.left + defaultPuckRadius - 0.1 && wall.puck.position.x <= RINK.right - defaultPuckRadius + 0.1);
 
 const asymmetric = normalizeMatchSettings({ goalSize: { 1: 75, 2: 125 } });
 assert.deepEqual(goalBounds(asymmetric, 1), { left: 201, right: 339 });
@@ -78,4 +80,11 @@ for (const [y, direction] of [[RINK.top, -1], [RINK.bottom, 1]] as const) {
   assert.ok(postImpact.phase === "playing" || postImpact.phase === "goal");
 }
 
-console.log(JSON.stringify({ schema: "cat-air-hockey.tall-board@1", passed: true, checks: 25 }, null, 2));
+for (const size of [25, 200] as const) {
+  const extreme = normalizeMatchSettings({ puckSize: size, pawSize: { 1: size, 2: size }, goalSize: { 1: size, 2: size } });
+  const state = step(withPuck(playing(extreme), LOGICAL_CENTER.x, LOGICAL_CENTER.y, PUCK_SPEED_CAP, -PUCK_SPEED_CAP), EMPTY_ACTION_SNAPSHOT, 120);
+  assert.ok(Number.isFinite(state.puck.position.x) && Number.isFinite(state.puck.position.y));
+  assert.ok(Number.isFinite(state.players[1].position.x) && Number.isFinite(state.players[2].position.y));
+}
+
+console.log(JSON.stringify({ schema: "cat-air-hockey.tall-board@1", passed: true, checks: 29 }, null, 2));

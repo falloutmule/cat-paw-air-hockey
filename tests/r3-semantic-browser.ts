@@ -83,12 +83,15 @@ try {
   await touch("pointerdown", 2, 270, 172);
   await page.waitForFunction(() => (window.__CAT_AIR_HOCKEY__!.snapshot() as any).state.phase === "countdown", undefined, { timeout: 3_000 });
   await touch("pointermove", 1, 270, 800);
-  await touch("pointermove", 2, 60, 100);
+  await touch("pointermove", 2, 100, 100);
   await page.waitForFunction(() => (window.__CAT_AIR_HOCKEY__!.snapshot() as any).state.phase === "playing", undefined, { timeout: 5_000 });
   await touch("pointermove", 1, 270, 1100);
-  await touch("pointermove", 2, 60, 100);
-  await page.waitForFunction(() => { const state = (window.__CAT_AIR_HOCKEY__!.snapshot() as any).state; return state.players[1].position.y > 1_070 && state.players[2].position.x < 90 && state.players[2].position.y < 125; });
+  await touch("pointermove", 2, 100, 100);
+  await page.waitForFunction(() => { const state = (window.__CAT_AIR_HOCKEY__!.snapshot() as any).state; return state.players[1].position.y > 1_070 && state.players[2].position.x < 110 && state.players[2].position.y < 125; });
 
+  let observedContact = false;
+  let observedContactPalette: string | undefined;
+  let observedContactDeformation = false;
   const scoreForPlayerOne = async (targetScore: number): Promise<void> => {
     const deadline = Date.now() + 90_000;
     let sweptThisDescent = false;
@@ -96,10 +99,16 @@ try {
     let serveSweepPending = true;
     while (Date.now() < deadline) {
       const current = await snapshot();
+      if (current.puckPresentation?.contactPlayer != null) {
+        observedContact = true;
+        observedContactDeformation ||= Math.abs(current.puckPresentation.renderedScaleX - current.puckPresentation.renderedScaleY) > 0.01;
+      }
+      if (current.state.puck.lastHitter === 1 && current.puckPresentation?.palette === "player1") observedContactPalette = "player1";
+      if (current.state.puck.lastHitter === 2 && current.puckPresentation?.palette === "player2") observedContactPalette = "player2";
       if (current.state.scores[1] >= targetScore) return;
       if (current.state.phase === "countdown") {
         await touch("pointermove", 1, 270, 800);
-        await touch("pointermove", 2, 60, 100);
+        await touch("pointermove", 2, 100, 100);
         serveSweepPending = true;
         await page.waitForTimeout(45);
         continue;
@@ -113,7 +122,7 @@ try {
         }
         const puck = current.state.puck.position as { x: number; y: number };
         const velocity = current.state.puck.velocity as { x: number; y: number };
-        const x = Math.max(46, Math.min(494, puck.x));
+        const x = Math.max(57, Math.min(483, puck.x));
         if (puck.y > 650 && Math.hypot(velocity.x, velocity.y) < 24) {
           await touch("pointermove", 1, x, Math.min(1_100, puck.y + 105));
           await page.waitForTimeout(220);
@@ -123,9 +132,11 @@ try {
           continue;
         }
         if (puck.y >= 500 && puck.y <= 650 && Math.hypot(velocity.x, velocity.y) < 24) {
-          await touch("pointermove", 2, x, 544);
+          const sweepX = x < 270 ? Math.min(483, x + 120) : Math.max(57, x - 120);
+          await touch("pointermove", 1, sweepX, 700);
+          await page.waitForTimeout(120);
           await touch("pointermove", 1, x, 660);
-          await page.waitForTimeout(280);
+          await page.waitForTimeout(220);
           continue;
         }
         if (puck.y > 620) topSweepComplete = false;
@@ -170,6 +181,9 @@ try {
 
   await scoreForPlayerOne(1);
   assert.equal((await snapshot()).state.scores[1], 1);
+  assert.equal(observedContact, true, "normal pointer play reaches the contact presentation lane");
+  assert.ok(observedContactPalette === "player1" || observedContactPalette === "player2", "contact gives the puck the last hitter's cat palette");
+  assert.equal(observedContactDeformation, true, "normal motion visibly deforms the puck during contact");
 
   await page.locator("[data-action='menu']").click();
   await page.waitForFunction(() => (window.__CAT_AIR_HOCKEY__!.snapshot() as any).state.phase === "paused");
@@ -178,9 +192,9 @@ try {
   await setRange("returnSpeed1", 70);
   await page.waitForFunction(() => { const state = (window.__CAT_AIR_HOCKEY__!.snapshot() as any).state; return state.pendingMatchSettings.goalSize[1] === 75 && state.pendingMatchSettings.pawSize[1] === 125 && state.pendingMatchSettings.returnSpeed[1] === 70; });
   let paused = await snapshot();
-  assert.equal(paused.state.activeMatchSettings.goalSize[1], 100, "mid-match goal resize waits for the next safe boundary");
-  assert.equal(paused.state.activeMatchSettings.pawSize[1], 100, "mid-match paw resize waits for the next safe boundary");
-  assert.equal(paused.paws.bottom.nominalDiameter, 90, "rendered paw remains at the active size during the paused rally");
+  assert.equal(paused.state.activeMatchSettings.goalSize[1], 125, "mid-match goal resize waits for the next safe boundary");
+  assert.equal(paused.state.activeMatchSettings.pawSize[1], 125, "mid-match paw resize waits for the next safe boundary");
+  assert.equal(paused.paws.bottom.nominalDiameter, 112.5, "rendered paw remains at the active size during the paused rally");
   assert.equal(paused.state.activeMatchSettings.returnSpeed[1], 125, "mid-match return handicap waits for the next safe boundary");
 
   const boardPng = await page.evaluate(async () => {
@@ -203,7 +217,7 @@ try {
   await page.waitForFunction(() => document.fullscreenElement === null);
 
   await touch("pointerdown", 1, 270, 1_050);
-  await touch("pointerdown", 2, 60, 100);
+  await touch("pointerdown", 2, 100, 100);
   await page.locator("[data-action='pause']").click();
   await scoreForPlayerOne(2);
   await page.waitForFunction(() => { const snapshot = window.__CAT_AIR_HOCKEY__!.snapshot() as any; const state = snapshot.state; return state.phase === "countdown" && state.activeMatchSettings.goalSize[1] === 75 && state.activeMatchSettings.pawSize[1] === 125 && state.activeMatchSettings.returnSpeed[1] === 70 && snapshot.paws.bottom.nominalDiameter === 112.5; }, undefined, { timeout: 3_000 });
@@ -247,7 +261,8 @@ try {
     artifact: { bytes: artifact.byteLength, sha256: artifactSha256 },
     browser: await browser.version(), scoresBeforeRematch: won.state.scores,
     rematch: { phase: rematch.state.phase, scores: rematch.state.scores },
-    actions: ["boot", "ready", "play", "deep defense", "score", "defer goal resize", "defer return handicap", "load Board", "fullscreen enter/exit", "continue", "first to five", "capture", "rematch"],
+    contactPresentation: { observedContact, observedContactPalette, observedContactDeformation },
+    actions: ["boot", "ready", "play", "paw and puck contact animation", "deep defense", "score", "defer goal resize", "defer return handicap", "load Board", "fullscreen enter/exit", "continue", "first to five", "capture", "rematch"],
     requests, pageErrors, consoleErrors
   }, null, 2));
   await context.close();

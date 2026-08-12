@@ -18,11 +18,11 @@ function step(state: HockeyGameState, count = 1): HockeyGameState { let next = s
 const speed = (state: HockeyGameState): number => Math.hypot(state.puck.velocity.x, state.puck.velocity.y);
 
 const oldExpansion = normalizeMatchSettings({ puckSpeed: 125, pawSpeed: { 1: 70, 2: 130 }, puckSize: 110, pawSize: { 1: 75, 2: 125 }, goalSize: { 1: 125, 2: 75 } });
-assert.deepEqual(oldExpansion.returnSpeed, { 1: 100, 2: 100 });
+assert.deepEqual(oldExpansion.returnSpeed, { 1: 75, 2: 75 });
 const independent = normalizeMatchSettings({ ...oldExpansion, returnSpeed: { 1: 70, 2: 130 } });
 assert.equal(independent.returnSpeed[1], 70);
 assert.equal(independent.returnSpeed[2], 130);
-assert.equal(normalizeMatchSettings({ returnSpeed: { 1: Number.NaN, 2: 999 } }).returnSpeed[1], 100);
+assert.equal(normalizeMatchSettings({ returnSpeed: { 1: Number.NaN, 2: 999 } }).returnSpeed[1], 75);
 assert.equal(normalizeMatchSettings({ returnSpeed: { 1: Number.NaN, 2: 999 } }).returnSpeed[2], 130);
 
 function hitByPlayer1(returnSpeed: number): HockeyGameState {

@@ -3,27 +3,22 @@
   "valid": true,
   "artifact": {
     "path": "dist/index.html",
-    "bytes": 4067812,
-    "sha256": "7a12db4fec3c6f38cd0c9e4ed5d197b36be27c9fa3a23e97728dc2469587dad2",
-    "buildId": "cat-paw-air-hockey-ffaa71fb1d0d"
+    "bytes": 4075821,
+    "sha256": "34a3bbd431243f27797a5801095e7c5f210dca0effc4a114a19bd1efabf6dbd8",
+    "buildId": "cat-paw-air-hockey-d9c204866261"
   },
   "browser": "Chromium 149.0.7827.55",
   "checks": [
     "exact served bytes, one Pixi WebGL canvas, zero page/console errors, and zero external runtime requests",
     "540 x 1200 mechanics and 1080 x 2400 Board pixels remain independent",
-    "approved BOARD-ART-001 bytes are inlined as the default nearest-neighbor Board with no runtime asset request",
     "uniform contain at 412 x 915, 360 x 800, 390 x 844, and 360 x 640",
-    "exact center and 75-percent screen-to-logical mappings through resize/fullscreen/orientation return",
-    "exactly four shared center-edge controls with clear defensive goal zones",
-    "R2 Board Blob retained and reported incompatible without stretch or deletion",
-    "two valid R3 Board swaps leave physics, goals, viewport, controls, and stage object count unchanged",
-    "wrong-size and corrupt Board rejection preserves the working Board",
-    "persistent nearest-neighbor NineSlice couch goals at 100 percent and independent 75/125 percent",
-    "approved couches, rug, paws, puck, GOAL frames, and four shared controls remain visually coherent in packed phone screenshots",
-    "Goal Size and Paw Size are visible in the initial Samsung settings fold",
-    "deferred 125-percent paw sizing is 90 units during the rally and 112.5 units at the next safe boundary",
-    "touch-driven ready, play, deep defense, deferred goal/return settings, fullscreen, first-to-five, capture, and rematch",
-    "both Godot score-cat sheets are embedded in the sole Pixi canvas with nearest sampling and no legacy mascot duplicates",
-    "score-cat diagnostics report frame 0 idle, 1.0 scale (exact double-size 160 x 160 logical size), anchor 0.5/0.9, exact repaired sheet hashes, and top rotation pi"
+    "legacy v1 100-percent normal settings migrate once to v2 75-percent speeds and 125-percent sizes",
+    "all five size controls expose 25 to 200 percent and all five speed controls expose 70 to 130 percent",
+    "both mirrored settings halves retain sticky Close controls and independent dedicated vertical scroll sliders",
+    "a 200-percent puck with a 25-percent goal warns visibly and remains closable",
+    "default goals render at 125 percent and default puck/paw diagnostics report 57.5/112.5 logical diameters",
+    "normal touch play observes authoritative contact, last-hitter score-cat palette, visible puck deformation, first-to-five, capture, and rematch",
+    "focused reduced-motion tests retain palette ownership and suppress puck/paw transforms",
+    "both Godot score-cat sheets remain embedded in the sole Pixi canvas at exact double-size 160 x 160 display"
   ]
 }

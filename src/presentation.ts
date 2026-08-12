@@ -1,10 +1,11 @@
 import { Container, Graphics, NineSliceSprite, Rectangle, Sprite, Text, TextStyle, Texture } from "pixi.js";
 import type { SfhsPixiPresenter, SfhsPixiStageLayers } from "@sfhs/adapter-pixi-v8";
 import { BOARD, LOGICAL_CENTER, LOGICAL_HEIGHT, LOGICAL_WIDTH, PUCK_RADIUS, READY_TARGET, RINK, STRIKER_RADIUS } from "./constants.ts";
-import { goalBounds, puckRadius, strikerRadius } from "./settings.ts";
+import { DEFAULT_MATCH_SETTINGS, goalBounds, puckRadius, strikerRadius } from "./settings.ts";
 import type { ThemeSlot, ValidBoard, ValidTheme } from "./theme.ts";
 import type { HockeyGameState, PresentationEvent } from "./state.ts";
 import { resolveScoreCatFrames, type ScoreCatFrames, type ScoreCatReaction } from "./score-cat-animation.ts";
+import { resolveContactPresentation, type ContactPresentation } from "./contact-presentation.ts";
 import defaultBoardTemplateUrl from "../art/theme/cat-paw-board-template.png";
 import defaultCouchGoalUrl from "../art/goals/cat-paw-couch-goal.png";
 import scoreCatPlayer1Url from "../art/score-cats/cat-paw-score-cat-p1.png";
@@ -27,11 +28,13 @@ export interface CatHockeyPresenter extends SfhsPixiPresenter<HockeyGameState> {
   getBoardDiagnostics(): Readonly<{ mode: "default" | "custom"; spriteCount: 1; replacementCount: number; disposedOwnedTextureCount: number }>;
   getGoalDiagnostics(): Readonly<{ architecture: "pixi-nine-slice"; textureSampling: "nearest"; top: GoalDiagnostic; bottom: GoalDiagnostic }>;
   getPawDiagnostics(): Readonly<{ top: PawDiagnostic; bottom: PawDiagnostic }>;
+  getPuckDiagnostics(): PuckDiagnostic;
   getScoreCatDiagnostics(): Readonly<{ top: ScoreCatDiagnostic; bottom: ScoreCatDiagnostic }>;
 }
 
 export interface GoalDiagnostic { readonly openingWidth: number; readonly visualWidth: number; readonly labelScale: number; readonly rotation: number; }
 export interface PawDiagnostic { readonly nominalDiameter: number; readonly renderedScaleX: number; readonly renderedScaleY: number; readonly presentation: "procedural" | "theme"; }
+export interface PuckDiagnostic { readonly nominalDiameter: number; readonly owner: 1 | 2 | null; readonly palette: "neutral" | "player1" | "player2" | "theme"; readonly renderedScaleX: number; readonly renderedScaleY: number; readonly rotation: number; readonly contactPlayer: 1 | 2 | null; readonly contactAgeSeconds: number | null; readonly presentation: "procedural" | "theme"; }
 export interface ScoreCatDiagnostic { readonly frame: number; readonly reaction: ScoreCatReaction; readonly sheet: string; readonly sha256: string; readonly scale: Readonly<{ x: number; y: number }>; readonly anchor: Readonly<{ x: number; y: number }>; readonly rotation: number; }
 
 const COUCH_GOAL = Object.freeze({ capWidth: 24, borderHeight: 8, height: 54, visualPadding: 48, outerStroke: 10, innerStroke: 4 });
@@ -94,6 +97,13 @@ const COLORS = Object.freeze({
   shadow: 0x071018
 });
 
+const PUCK_PALETTES = Object.freeze({
+  neutral: Object.freeze({ fill: COLORS.yarn, strand: COLORS.yarnDark, accent: COLORS.cream, highlight: COLORS.white }),
+  player1: Object.freeze({ fill: 0xf4d6ae, strand: 0xefad8f, accent: 0x39b9b0, highlight: 0xfff0dc }),
+  player2: Object.freeze({ fill: 0xbba6df, strand: 0xd8c8ef, accent: 0xee746d, highlight: 0xf3eaff })
+});
+type PuckPalette = keyof typeof PUCK_PALETTES;
+
 function makeText(text: string, size: number, fill: number = COLORS.cream, weight: "normal" | "bold" = "bold"): Text {
   const label = new Text({
     text,
@@ -145,13 +155,15 @@ function drawPaw(graphic: Graphics, color: number, dark: number): void {
     .circle(28, -13, 6).fill({ color: COLORS.cream, alpha: 0.55 });
 }
 
-function drawYarn(graphic: Graphics): void {
+function drawYarn(graphic: Graphics, paletteId: PuckPalette): void {
+  const palette = PUCK_PALETTES[paletteId];
   graphic.clear()
     .circle(0, 0, PUCK_RADIUS + 4).fill({ color: COLORS.shadow, alpha: 0.44 })
-    .circle(0, 0, PUCK_RADIUS).fill({ color: COLORS.yarn })
-    .arc(0, 0, 15, -2.5, 0.7).stroke({ color: COLORS.yarnDark, width: 4, alpha: 0.9 })
-    .arc(0, 0, 11, -0.2, 2.8).stroke({ color: COLORS.yarnDark, width: 3, alpha: 0.82 })
-    .moveTo(-18, -4).bezierCurveTo(-5, -17, 7, 16, 18, 4).stroke({ color: COLORS.cream, width: 2, alpha: 0.8 });
+    .circle(0, 0, PUCK_RADIUS).fill({ color: palette.fill })
+    .arc(0, 0, 15, -2.5, 0.7).stroke({ color: palette.strand, width: 4, alpha: 0.9 })
+    .arc(0, 0, 11, -0.2, 2.8).stroke({ color: palette.strand, width: 3, alpha: 0.82 })
+    .moveTo(-18, -4).bezierCurveTo(-5, -17, 7, 16, 18, 4).stroke({ color: palette.accent, width: 3, alpha: 0.88 })
+    .circle(-8, -10, 3).fill({ color: palette.highlight, alpha: 0.72 });
 }
 
 function asPixiColor(value: string): number {
@@ -229,6 +241,8 @@ export function createCatHockeyPresenter(options: {
   let celebrationEvent: PresentationEvent | undefined;
   let lastPresentedState: Readonly<HockeyGameState> | undefined;
   let lastScoreCatFrames: ScoreCatFrames = Object.freeze({ 1: Object.freeze({ frame: 0, reaction: "idle" }), 2: Object.freeze({ frame: 0, reaction: "idle" }) });
+  let lastPuckPalette: PuckPalette = "neutral";
+  let lastContactPresentation: ContactPresentation | undefined;
 
   function initialize(layers: SfhsPixiStageLayers): void {
     if (initialized) return;
@@ -341,7 +355,7 @@ export function createCatHockeyPresenter(options: {
     puck = new Container({ label: "yarn-puck" });
     puckGraphic = new Graphics();
     puckHighlight = new Graphics().circle(-7, -8, 5).fill({ color: COLORS.white, alpha: 0.7 });
-    drawYarn(puckGraphic);
+    drawYarn(puckGraphic, "neutral");
     puck.addChild(puckGraphic, puckHighlight);
     actorRoot.addChild(puck);
 
@@ -631,11 +645,19 @@ export function createCatHockeyPresenter(options: {
       const speed2 = Math.hypot(state.players[2].velocity.x, state.players[2].velocity.y);
       const scale1 = strikerRadius(state.activeMatchSettings, 1) / STRIKER_RADIUS;
       const scale2 = strikerRadius(state.activeMatchSettings, 2) / STRIKER_RADIUS;
-      paw1.scale.set(scale1 * (1 + Math.min(0.08, speed1 / 24_000)), scale1 * (1 - Math.min(0.06, speed1 / 28_000)));
-      paw2.scale.set(scale2 * (1 + Math.min(0.08, speed2 / 24_000)), scale2 * (1 - Math.min(0.06, speed2 / 28_000)));
+      const contact = resolveContactPresentation(state);
+      lastContactPresentation = contact;
+      paw1.scale.set(scale1 * (1 + Math.min(0.08, speed1 / 24_000)) * contact.paws[1].scaleX, scale1 * (1 - Math.min(0.06, speed1 / 28_000)) * contact.paws[1].scaleY);
+      paw2.scale.set(scale2 * (1 + Math.min(0.08, speed2 / 24_000)) * contact.paws[2].scaleX, scale2 * (1 - Math.min(0.06, speed2 / 28_000)) * contact.paws[2].scaleY);
+      paw1.rotation = contact.paws[1].rotation;
+      paw2.rotation = contact.paws[2].rotation;
       puck.position.set(state.puck.position.x, state.puck.position.y);
-      puck.scale.set(puckRadius(state.activeMatchSettings) / PUCK_RADIUS);
-      puck.rotation = state.tick * Math.hypot(state.puck.velocity.x, state.puck.velocity.y) / 240_000;
+      const puckScale = puckRadius(state.activeMatchSettings) / PUCK_RADIUS;
+      puck.scale.set(puckScale * contact.puck.scaleX, puckScale * contact.puck.scaleY);
+      puck.rotation = state.tick * Math.hypot(state.puck.velocity.x, state.puck.velocity.y) / 240_000 + contact.puck.rotation;
+      const puckPalette: PuckPalette = contact.owner === 1 ? "player1" : contact.owner === 2 ? "player2" : "neutral";
+      if (puckPalette !== lastPuckPalette) { lastPuckPalette = puckPalette; drawYarn(puckGraphic, puckPalette); }
+      puckHighlight.tint = PUCK_PALETTES[puckPalette].highlight;
       for (let index = 0; index < trail.length; index += 1) {
         const point = state.puck.trail[index];
         const dot = trail[index];
@@ -643,15 +665,16 @@ export function createCatHockeyPresenter(options: {
         if (point !== undefined) {
           dot.position.set(point.x, point.y);
           dot.alpha = 0.2 * (1 - index / trail.length);
+          dot.tint = PUCK_PALETTES[puckPalette].fill;
         }
       }
       updateImpacts(state);
       updateConfetti(state);
       updateGeometry(state);
       const themedPaw1 = themeSprites.paw1; const themedPaw2 = themeSprites.paw2; const themedPuck = themeSprites.puck;
-      if (themedPaw1 !== undefined) { themedPaw1.position.copyFrom(paw1.position); themedPaw1.width = strikerRadius(state.activeMatchSettings, 1) * 2; themedPaw1.height = strikerRadius(state.activeMatchSettings, 1) * 2; paw1Graphic.visible = false; } else paw1Graphic.visible = true;
-      if (themedPaw2 !== undefined) { themedPaw2.position.copyFrom(paw2.position); themedPaw2.width = strikerRadius(state.activeMatchSettings, 2) * 2; themedPaw2.height = strikerRadius(state.activeMatchSettings, 2) * 2; themedPaw2.rotation = Math.PI; paw2Graphic.visible = false; } else paw2Graphic.visible = true;
-      if (themedPuck !== undefined) { themedPuck.position.copyFrom(puck.position); themedPuck.width = puckRadius(state.activeMatchSettings) * 2; themedPuck.height = puckRadius(state.activeMatchSettings) * 2; puckGraphic.visible = false; puckHighlight.visible = false; } else { puckGraphic.visible = true; puckHighlight.visible = true; }
+      if (themedPaw1 !== undefined) { themedPaw1.position.copyFrom(paw1.position); themedPaw1.width = strikerRadius(state.activeMatchSettings, 1) * 2 * contact.paws[1].scaleX; themedPaw1.height = strikerRadius(state.activeMatchSettings, 1) * 2 * contact.paws[1].scaleY; themedPaw1.rotation = contact.paws[1].rotation; paw1Graphic.visible = false; } else paw1Graphic.visible = true;
+      if (themedPaw2 !== undefined) { themedPaw2.position.copyFrom(paw2.position); themedPaw2.width = strikerRadius(state.activeMatchSettings, 2) * 2 * contact.paws[2].scaleX; themedPaw2.height = strikerRadius(state.activeMatchSettings, 2) * 2 * contact.paws[2].scaleY; themedPaw2.rotation = Math.PI + contact.paws[2].rotation; paw2Graphic.visible = false; } else paw2Graphic.visible = true;
+      if (themedPuck !== undefined) { themedPuck.position.copyFrom(puck.position); themedPuck.width = puckRadius(state.activeMatchSettings) * 2 * contact.puck.scaleX; themedPuck.height = puckRadius(state.activeMatchSettings) * 2 * contact.puck.scaleY; themedPuck.rotation = puck.rotation; puckGraphic.visible = false; puckHighlight.visible = false; } else { puckGraphic.visible = true; puckHighlight.visible = true; }
       lastScoreCatFrames = resolveScoreCatFrames(state);
       bottomCat.texture = scoreCatFrames1[lastScoreCatFrames[1].frame]!;
       topCat.texture = scoreCatFrames2[lastScoreCatFrames[2].frame]!;
@@ -696,6 +719,21 @@ export function createCatHockeyPresenter(options: {
       return Object.freeze({
         top: Object.freeze({ nominalDiameter: STRIKER_RADIUS * 2 * topScale, renderedScaleX: initialized ? paw2.scale.x : topScale, renderedScaleY: initialized ? paw2.scale.y : topScale, presentation: themeSprites.paw2 === undefined ? "procedural" as const : "theme" as const }),
         bottom: Object.freeze({ nominalDiameter: STRIKER_RADIUS * 2 * bottomScale, renderedScaleX: initialized ? paw1.scale.x : bottomScale, renderedScaleY: initialized ? paw1.scale.y : bottomScale, presentation: themeSprites.paw1 === undefined ? "procedural" as const : "theme" as const })
+      });
+    },
+    getPuckDiagnostics: () => {
+      const settings = lastPresentedState?.activeMatchSettings ?? DEFAULT_MATCH_SETTINGS;
+      const contact = lastContactPresentation;
+      return Object.freeze({
+        nominalDiameter: puckRadius(settings) * 2,
+        owner: contact?.owner ?? null,
+        palette: themeSprites.puck === undefined ? lastPuckPalette : "theme" as const,
+        renderedScaleX: initialized ? puck.scale.x : puckRadius(settings) / PUCK_RADIUS,
+        renderedScaleY: initialized ? puck.scale.y : puckRadius(settings) / PUCK_RADIUS,
+        rotation: initialized ? puck.rotation : 0,
+        contactPlayer: contact?.activePlayer ?? null,
+        contactAgeSeconds: contact?.ageSeconds ?? null,
+        presentation: themeSprites.puck === undefined ? "procedural" as const : "theme" as const
       });
     },
     getScoreCatDiagnostics: () => Object.freeze({

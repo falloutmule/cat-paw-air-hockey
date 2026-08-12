@@ -43,8 +43,8 @@
       </div>
     </section>
     <section id="settings-overlay" hidden aria-label="Shared settings" aria-modal="true" role="dialog">
-      <div class="settings-half settings-half--top"><div class="settings-view settings-view--top" data-menu-view="2"></div></div>
-      <div class="settings-half settings-half--bottom"><div class="settings-view settings-view--bottom" data-menu-view="1"></div></div>
+      <div class="settings-half settings-half--top"><div class="settings-panel settings-panel--top"><div class="settings-view settings-view--top" data-menu-view="2"></div><label class="settings-scroll"><span aria-hidden="true">↕</span><span class="sr-only">Scroll Player 2 settings</span><input data-settings-scroll="2" aria-label="Scroll Player 2 settings" type="range" min="0" max="100" step="1" value="0"></label></div></div>
+      <div class="settings-half settings-half--bottom"><div class="settings-panel settings-panel--bottom"><div class="settings-view settings-view--bottom" data-menu-view="1"></div><label class="settings-scroll"><span aria-hidden="true">↕</span><span class="sr-only">Scroll Player 1 settings</span><input data-settings-scroll="1" aria-label="Scroll Player 1 settings" type="range" min="0" max="100" step="1" value="0"></label></div></div>
       <output id="settings-live" class="sr-only" aria-live="polite"></output>
     </section>
     <input id="theme-file" type="file" accept="image/png" hidden>

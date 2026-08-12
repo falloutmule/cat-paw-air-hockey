@@ -15,5 +15,7 @@
 | D-011 | VERIFIED | The mandatory 2048×2048 atlas, generated theme guide authority, integrated control aprons, duplicated end controls, goal-side clusters, and artwork-baked controls/goals are rejected. Procedural/vector art remains fallback while later independent actor replacements are deferred. |
 | D-012 | VERIFIED | Mechanical side walls are the visible Board edges at x=0 and x=540; no invisible rail recreates the removed inset. |
 | D-013 | VERIFIED | Dynamic goals use persistent nearest-neighbor NineSlice couch sprites over mechanics-derived dual-contrast frames and outlined GOAL text. |
+| D-014 | VERIFIED | Normal speeds are 75%; normal puck, paw, and goal sizes are 125%. Speed ranges remain 70–130%; size ranges are 25–200%. Incompatible puck/goal combinations produce a strong warning but never trap the user in settings. |
+| D-015 | VERIFIED | Puck palette ownership and paw/puck contact deformation are pure presentation derived from the existing last-hitter and authoritative `paw-hit` event. Reduced motion retains palette ownership and suppresses transforms. |
 
 The detailed historical decision log is retained at [one-shot/DECISIONS.md](../one-shot/DECISIONS.md).

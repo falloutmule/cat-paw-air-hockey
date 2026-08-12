@@ -20,13 +20,13 @@ Each goal says `GOAL`. Exactly four shared controls straddle the center side edg
 
 ## Simulation
 
-The renderer observes serializable simulation state; input produces semantic actions and SFHS owns the 60 Hz fixed-step loop. Paws and puck collide with walls, posts, and goals. Global puck speed and player paw speed are adjustable. Each player also has a 70–130% return-speed multiplier applied once to that player's discrete paw hit; wall/post contacts do not reapply it. Settings changed during active motion apply at the next safe serve boundary.
+The renderer observes serializable simulation state; input produces semantic actions and SFHS owns the 60 Hz fixed-step loop. Paws and puck collide with walls, posts, and goals. The normal speed settings are 75% and remain adjustable from 70% to 130%. The normal puck, paw, and goal sizes are 125% and remain adjustable from 25% to 200%. Each player has an independent return-speed multiplier applied once to that player's discrete paw hit; wall/post contacts do not reapply it. Settings changed during active motion apply at the next safe serve boundary.
 
 ## Accessibility, audio, persistence, and content
 
 Accessible text explains shared-device placement and interaction. Reduced effects retains game-state information. Procedural Web Audio unlocks only after an intentional user gesture; mute and background recovery are supported. Local storage persists valid gameplay settings, reduced-motion preference, the independent 1080×2400 Board PNG, and the legacy optional local theme; malformed or missing records fall back safely. A saved 1080×1920 R2 Board is retained but marked incompatible, and the new default Board is shown until replacement. Final score capture uses the existing primary Pixi surface.
 
-The default art direction is a cute pixel-art cat rink with cat-paw strikers, a circular yarn puck, couch goals, and persistent impact effects. The under-couch opening is the scoring mouth. The static full-surface Board is a replaceable rectangular bitmap below the dynamic goals, cats, paws, puck, HUD, and effects. The procedural Board remains a safe fallback; all user artwork stays local and adds no runtime requests.
+The default art direction is a cute pixel-art cat rink with cat-paw strikers, a circular yarn puck, couch goals, and persistent impact effects. The yarn puck adopts the last hitter's score-cat palette; authoritative paw contact drives a presentation-only squash/pop and paw recoil. Reduced motion keeps the palette ownership but suppresses those transforms. The under-couch opening is the scoring mouth. The static full-surface Board is a replaceable rectangular bitmap below the dynamic goals, cats, paws, puck, HUD, and effects. The procedural Board remains a safe fallback; all user artwork stays local and adds no runtime requests.
 
 ## Non-goals and open decisions
 
