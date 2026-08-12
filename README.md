@@ -10,10 +10,10 @@ The readable source, tests, and SFHS project are authoritative. SCORE-CAT-GODOT-
 
 | Current canonical artifact | Value |
 | --- | --- |
-| Build ID | `cat-paw-air-hockey-235ab3123bc4` |
-| Source SHA-256 | `235ab3123bc48cd85d8f76541bd81d5c2ae66b5a7f109b27df386480d78fe70b` |
-| Artifact SHA-256 | `a2d26f85dbe66a8ba1db1a7c3df3d16fa7b044418198e57afdb4ca9429ab0b63` |
-| Bytes | 4,067,814 |
+| Build ID | `cat-paw-air-hockey-ffaa71fb1d0d` |
+| Source SHA-256 | `ffaa71fb1d0de2144997316b423628e84c0c43f928b195ad9041e42b47de8adf` |
+| Artifact SHA-256 | `7a12db4fec3c6f38cd0c9e4ed5d197b36be27c9fa3a23e97728dc2469587dad2` |
+| Bytes | 4,067,812 |
 | Verification | SFHS inspect, validate, check, pack, exact verify, and multi-viewport packed Chromium smoke |
 | Pages | [Currently deployed earlier build](https://falloutmule.github.io/cat-paw-air-hockey/); SCORE-CAT-GODOT-001 was not deployed |
 
@@ -31,7 +31,7 @@ The four shared controls straddle the center edges: Mute upper-left, Pause lower
 - Shared mirrored settings: puck speed/size, individual paw speed/size, goal opening, and return-speed handicaps (70–130%).
 - Optional local PNG theme, fullscreen controls, and final-score PNG capture.
 - One required Pixi v8 WebGL canvas, no runtime external requests, and a portrait-first adaptive viewport.
-- Godot 4.7.1-authored animated score cats with readable 120 x 120 nearest-neighbor presentation, palette-only P1/P2 sheets, slower exaggerated reactions, reduced-motion poses, and no runtime skeletal animation.
+- Godot 4.7.1-authored animated score cats with exact double-size 160 x 160 nearest-neighbor presentation, palette-only P1/P2 sheets, slower exaggerated reactions, reduced-motion poses, and no runtime skeletal animation.
 
 ## Limits
 

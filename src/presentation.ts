@@ -69,7 +69,7 @@ export async function prepareCatHockeyPresentationAssets(): Promise<void> {
 }
 
 const SCORE_CAT_CELL = 160;
-const SCORE_CAT_DISPLAY_SCALE = 0.75;
+const SCORE_CAT_DISPLAY_SCALE = 1;
 const SCORE_CAT_ANCHOR = Object.freeze({ x: 0.5, y: 0.9 });
 const SCORE_CAT_SHEETS = Object.freeze({
   1: Object.freeze({ identity: "cat-paw-score-cat-p1.png", sha256: "4ff95bc9de2c461a355a27b7a949735e6eaa2d9810d212a41e29ed5f9d8f2121" }),

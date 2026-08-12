@@ -1,6 +1,12 @@
 {
   "records": [
     {
+      "earlier": "cat-paw-air-hockey-235ab3123bc4 / a2d26f85dbe66a8ba1db1a7c3df3d16fa7b044418198e57afdb4ca9429ab0b63",
+      "status": "SUPERSEDED / REPORTED FAIL / NEEDS REPAIR",
+      "treatment": "The requested doubling was implemented as only a 50 percent increase from 80 x 80 to 120 x 120. The user rejected that artifact; its result does not transfer.",
+      "currentArtifact": "cat-paw-air-hockey-ffaa71fb1d0d / 7a12db4fec3c6f38cd0c9e4ed5d197b36be27c9fa3a23e97728dc2469587dad2"
+    },
+    {
       "earlier": "cat-paw-air-hockey-1e9558fbf0aa / c2fdf6b121ce015dcab6e7fe1be86f8f815ea20ffb1181f7dd407a2484413e94",
       "status": "SUPERSEDED / REPORTED FAIL / NEEDS REPAIR",
       "treatment": "Samsung photos showed the first Godot score cats were too small, the reactions too fast and subtle, and the neutral paws obscured the eyes. The report remains bound to that exact artifact and does not transfer.",

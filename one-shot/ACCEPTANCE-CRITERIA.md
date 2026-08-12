@@ -18,6 +18,6 @@
 - R3 Board: the full static Board maps to an exact 1080×2400 PNG slot; valid local art persists and resets, invalid replacements preserve the prior Board, and a legacy 1080×1920 record is retained but never stretched.
 - R3 goals: mechanical bounds and visible couch NineSlices resize independently from 75% to 125%, with readable contrasting frames and outlined GOAL labels.
 - R3 renderer proof: Board replacement reuses one persistent Pixi sprite in the sole WebGL canvas, does not mutate simulation/viewport/goals/controls, and makes no runtime network request.
-- Score cats: both sprites use the tracked 4 x 4 Godot sheets at a readable 120 x 120 logical display size, fixed `(40,72)` source anchors, nearest sampling, and a complete P2 rotation of pi without changing the separate 54 px scores.
+- Score cats: both sprites use the tracked 4 x 4 Godot sheets at an exact double-size 160 x 160 logical display size, fixed `(40,72)` source anchors, nearest sampling, and a complete P2 rotation of pi without changing the separate 54 px scores.
 - Score-cat reactions: both scoring directions, conceded assignment, final-goal transition, winner/defeated poses, rematch, pause/resume, reduced motion, and six-tick idle blinking follow the pure presentation resolver.
 - Score-cat physical gate: preview and packed artifact identities in `docs/expansion/SCORE-CAT-GODOT-001-PHYSICAL-TEST-SEED.md` require an artifact-bound Samsung verdict before framework extraction.
