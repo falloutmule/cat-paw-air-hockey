@@ -24,13 +24,13 @@
 ## Current exact state
 
 - Product implementation and automated verification: **PASS**.
-- Samsung physical result for these new visible bytes: **UNTESTED**.
+- Samsung physical result for these exact preview/game bytes: **REPORTED PASS** on 2026-08-12 (“Pass everything appears to work.”).
 - The previous settings artifact's reported PASS is retained but does not transfer.
 - Remote mutation: none; this branch is local-only.
 
 ## Remaining blocker
 
-Run the exact preview and packed game from the physical-test seed on Samsung. A FAIL remains a repair in this initiative and requires a new artifact identity.
+None for the bounded product initiative. Formal device/browser/thermal metadata remains unavailable and is not inferred.
 
 ## Evidence
 
@@ -52,7 +52,7 @@ Run the exact preview and packed game from the physical-test seed on Samsung. A 
 | Q capture/one-canvas presentation | PASS | Actors render in the sole Pixi WebGL canvas and the semantic capture path is unchanged. |
 | R deterministic generated media | PASS | Same-environment reruns produce identical PNG, metadata, validation, and SHA-256 values. |
 | S renderer/runtime boundary | PASS | Godot is authoring-time only; runtime uses pre-rendered Pixi textures with no skeletal system. |
-| T proof completeness | PENDING PHYSICAL | Automated evidence is exact-artifact bound; the Samsung verdict remains explicitly UNTESTED. |
+| T proof completeness | PASS / REPORTED | Automated evidence is exact-artifact bound and the user's Samsung PASS is recorded against the exact preview/game identities; missing formal metadata remains explicit. |
 
 ## GitHub and publication
 

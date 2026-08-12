@@ -16,7 +16,7 @@
 | GitHub Pages | VERIFIED IMPLEMENTED / SUPERSEDED ARTIFACT | [Live site](https://falloutmule.github.io/cat-paw-air-hockey/) remains historical; R3 is local only and no remote action was authorized |
 | Size-setting discoverability and deferred paw application | VERIFIED REPAIRED | Goal Size/Paw Size lead the menu; packed proof checks 90 -> 112.5 paw diameter at the safe boundary |
 | Approved BOARD-ART-001 default | VERIFIED INTEGRATED | Exact approved 1080×2400 PNG; nearest-neighbor Board sprite; packed composed visual proof |
-| Current-artifact Samsung acceptance | UNTESTED | Godot gameplay-actor sheets create a new exact artifact, so the previous settings/contact PASS does not transfer |
+| Current-artifact Samsung acceptance | REPORTED PASS | User reported “Pass everything appears to work” for the exact PUCK-PAW-GODOT-001 preview and packed artifact on 2026-08-12 |
 | Settings defaults and phone controls | VERIFIED REPAIRED | Sizes default to 200% over 25–200%; speeds default to 100% over 70–130%; mirrored sticky Close and one thin native scrollbar per half pass packed multi-viewport Chromium |
 | Godot puck-and-paw contact animation | VERIFIED IMPLEMENTED | Five deterministic sheets, last-hitter palette, seven synchronized frames, collision-normal recoil, static-theme fallback, reduced-motion rest frames, focused resolver/export tests, and normal-pointer semantic browser proof |
 
@@ -26,8 +26,7 @@ The locally verified PUCK-PAW-GODOT-001 target is build `cat-paw-air-hockey-0699
 
 ## Known limitations and blockers
 
-- A physical Samsung Galaxy S21 Ultra report must name the exact packed build, byte size, and SHA-256; no prior acceptance transfers automatically.
 - WebGL is mandatory.
-- A new exact-artifact Samsung Galaxy S21 Ultra puck-and-paw gameplay session remains required.
+- Formal device model, Android/Chrome versions, viewport/DPR, screenshots/video, custom-theme observation, and thermal measurements were not supplied with the PASS.
 
-Release terminology remains deliberately limited: automated gates pass, while artifact-bound physical-device acceptance is still UNTESTED. No R3 push, PR, release, or deployment has occurred.
+Release terminology remains deliberately limited: automated gates pass and artifact-bound physical-device acceptance is REPORTED PASS. No PUCK-PAW-GODOT-001 push, PR, release, or deployment has occurred.

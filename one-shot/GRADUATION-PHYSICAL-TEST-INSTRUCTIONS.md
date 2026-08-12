@@ -4,4 +4,4 @@ Test only the files bound by `test-results/PUCK-PAW-GODOT-001/phone/manifest.jso
 
 Follow [the PUCK-PAW-GODOT-001 physical test seed](../docs/expansion/PUCK-PAW-GODOT-001-PHYSICAL-TEST-SEED.md). Record Samsung model, Android version, numeric Chrome version, date, portrait viewport/DPR, screenshots or video, performance/heat notes, and **REPORTED PASS** or **REPORTED FAIL**.
 
-The prior reported PASS remains historical and does not transfer to these changed visual bytes. No push or deployment is authorized by this seed.
+Result: **REPORTED PASS** on 2026-08-12. The user stated, “Pass everything appears to work.” The durable artifact-bound report is `one-shot/PHYSICAL-REPORT-PUCK-PAW-GODOT-001.json`; missing formal metadata is recorded there rather than inferred. No push or deployment is authorized by this result.

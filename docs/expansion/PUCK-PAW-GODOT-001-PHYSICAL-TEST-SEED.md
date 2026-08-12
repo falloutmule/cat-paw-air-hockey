@@ -1,6 +1,6 @@
 # PUCK-PAW-GODOT-001 physical test seed
 
-Status: **UNTESTED — PRODUCT GATE**. Test only the exact local files recorded in `test-results/PUCK-PAW-GODOT-001/phone/manifest.json`.
+Status: **REPORTED PASS** on 2026-08-12. The user reported, “Pass everything appears to work.” The result is bound only to the exact local files recorded in `test-results/PUCK-PAW-GODOT-001/phone/manifest.json`.
 
 | File | Bytes | SHA-256 |
 | --- | ---: | --- |
@@ -22,4 +22,4 @@ The prior build `cat-paw-air-hockey-59c8fe2815c1` has a reported Samsung PASS. I
 7. Enable Reduced motion during play. Confirm frame 0 is stable and gameplay remains readable. If a custom theme is available, confirm its static paw/puck cells still react with the bounded fallback transform.
 8. Recheck simultaneous two-player touch, third-touch rejection, both scoring directions, pause/resume, fullscreen, final-score capture, rematch, landscape gate, performance, battery heat, and any visible stutter.
 
-Report `PASS` or `FAIL`, both tested file hashes from the manifest, device model, Android version, Chrome version, and any screenshot/video. A FAIL stays in PUCK-PAW-GODOT-001 and produces a new exact artifact. A PASS authorizes recording the artifact-bound result locally; it does not authorize a push or deployment.
+The durable report is `one-shot/PHYSICAL-REPORT-PUCK-PAW-GODOT-001.json`. Formal device model, Android/Chrome versions, viewport/DPR, screenshots/video, custom-theme observation, and thermal measurements were not supplied and are recorded as missing rather than inferred. The PASS does not authorize a push or deployment.

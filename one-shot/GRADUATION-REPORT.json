@@ -7,10 +7,10 @@
     "sha256": "51b92216c60556d2df9885ba5155bc427da6904b0fc3fc6a89c864e30215f42a",
     "verifier": "sfhs verify"
   },
-  "physical": "UNTESTED",
-  "physicalEvidence": "docs/expansion/PUCK-PAW-GODOT-001-PHYSICAL-TEST-SEED.md",
+  "physical": "REPORTED PASS",
+  "physicalEvidence": "one-shot/PHYSICAL-REPORT-PUCK-PAW-GODOT-001.json",
   "previousPhysicalEvidence": "one-shot/PHYSICAL-REPORT-CATPAW-SETTINGS-DEFAULTS-002.json",
   "remoteActions": "not-authorized-local-only",
   "schema": "sfhs.graduation-report@1",
-  "stage": "PRODUCT_PHYSICAL_GATE"
+  "stage": "GRADUATION_COMPLETE"
 }

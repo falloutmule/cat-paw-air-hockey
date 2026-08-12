@@ -1,5 +1,5 @@
 ---
-{"schema":"sfhs.one-shot-acceptance@1","status":"VERIFIED","facts":{"physicalDevice":"UNTESTED"}}
+{"schema":"sfhs.one-shot-acceptance@1","status":"VERIFIED","facts":{"physicalDevice":"REPORTED PASS"}}
 ---
 # Acceptance Criteria
 
@@ -10,7 +10,7 @@
 - Semantic scenario: ready hold, countdown, goal reset, first-to-five winner, and two-player rematch.
 - Required visual evidence: packed-artifact boot/play/landscape gate, one WebGL canvas, zero unexpected runtime requests.
 - Required-before-completion tests: input, physics, match flow, audio, orientation, lifecycle/browser smoke, pack and exact verify.
-- Deferred: the prior exact artifact has a REPORTED Samsung PASS; PUCK-PAW-GODOT-001 remains UNTESTED until the new exact files receive an artifact-bound verdict.
+- Physical result: the user reported PASS for the exact PUCK-PAW-GODOT-001 preview and packed artifact; missing formal device/browser/thermal metadata remains explicit rather than inferred.
 - Publication condition: a normal canonical-branch change runs the durable quality and Pages workflows; Pages serves only verified packed HTML whose downloaded SHA-256 matches the recorded canonical artifact.
 - Physical-device condition: Samsung acceptance remains separate and artifact-bound; it is not implied by publication.
 - R3 controls: exactly four shared buttons remain at the center side edges in the locked Mute/Pause/Menu/Fullscreen arrangement; winner Capture replaces only Pause; both defensive goal zones remain free.
@@ -25,4 +25,4 @@
 - Gameplay actors: the default paws and puck use tracked, deterministic Godot 4.7.1 RGBA sheets with eight ordered cells (idle plus seven contact frames), matching cross-palette alpha masks, nearest sampling, and metadata/validation hashes.
 - Contact presentation: an authoritative paw hit assigns the hitter's score-cat palette to the puck and synchronizes seven contact frames on the touching paw and puck over 0.64 seconds. Collision normal and strength affect presentation only; reduced motion holds frame 0 while preserving palette identity.
 - Theme compatibility: a valid custom paw or puck cell keeps the legacy static-cell renderer and receives the same bounded transform fallback without requiring new theme schema or save data.
-- Gameplay-actor physical gate: the exact preview, packed artifact, manifest identities, and Godot version in `docs/expansion/PUCK-PAW-GODOT-001-PHYSICAL-TEST-SEED.md` require an artifact-bound Samsung verdict.
+- Gameplay-actor physical gate: **REPORTED PASS** for the exact preview, packed artifact, manifest identities, and Godot version in `docs/expansion/PUCK-PAW-GODOT-001-PHYSICAL-TEST-SEED.md`.
