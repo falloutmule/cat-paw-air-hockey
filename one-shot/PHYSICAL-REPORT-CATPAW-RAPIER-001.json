@@ -1,0 +1,34 @@
+{
+  "schema": "cat-paw-air-hockey.physical-report@1",
+  "status": "REPORTED PASS",
+  "evidenceStatus": "REPORTED",
+  "artifact": {
+    "classification": "canonical",
+    "buildId": "cat-paw-air-hockey-b83bd150d75e",
+    "bytes": 5857863,
+    "sha256": "827d1b6d1e3aa8877b206d2be5c89baaea89b5cd04e8643196b394b3f7789b1a",
+    "sourceSha256": "b83bd150d75e68db243ed39b8d18aee32e6df349e634dc3f672fbd29d757fa1d"
+  },
+  "baseline": {
+    "buildId": "cat-paw-air-hockey-06998a9ce8bc",
+    "sha256": "51b92216c60556d2df9885ba5155bc427da6904b0fc3fc6a89c864e30215f42a",
+    "physicalResult": "REPORTED PASS",
+    "evidence": "one-shot/PHYSICAL-REPORT-PUCK-PAW-GODOT-001.json"
+  },
+  "reporterStatements": [
+    "User reported: Seems snapper and more responsive",
+    "User reported after the complete regression prompt: Showed no regressions passed"
+  ],
+  "reportedDate": "2026-08-12",
+  "targetDevice": "Samsung phone used for the accepted physical workflow; exact model not restated with this PASS",
+  "acceptedChecks": "The PASS is bound to the complete CATPAW-RAPIER-001 seed and exact identity above: normal, hard, glancing, bank, and post shots; rapid movement and reversal; defensive blocks; simultaneous two-player interaction; repeated goals; several minutes of uninterrupted play; and comparison with the accepted custom solver. The user reported improved responsiveness and no regressions.",
+  "missingFormalMetadata": [
+    "confirmed device model",
+    "Android version",
+    "numeric Chrome version",
+    "viewport dimensions and DPR",
+    "session screenshots or video",
+    "instrumented frame pacing, startup, thermal, and power measurements"
+  ],
+  "limitations": "This is user-reported physical acceptance, not independently verified instrumentation. It applies only to the exact Rapier artifact identity above and does not overwrite or reinterpret the earlier custom-solver acceptance evidence."
+}

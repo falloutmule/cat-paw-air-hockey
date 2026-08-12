@@ -1,5 +1,5 @@
 ---
-{"schema":"sfhs.one-shot-acceptance@1","status":"VERIFIED","facts":{"physicalDevice":"UNTESTED"}}
+{"schema":"sfhs.one-shot-acceptance@1","status":"VERIFIED","facts":{"physicalDevice":"REPORTED","physicalResult":"REPORTED PASS","physicalEvidence":["one-shot/PHYSICAL-REPORT-CATPAW-RAPIER-001.json"]}}
 ---
 # Acceptance Criteria
 
@@ -13,7 +13,7 @@
 - Rapier acceptance: dynamic CCD puck, position-based kinematic paws, visible fixed rails/posts, exact-once goals, finite stable state, and retained player constraints/settings.
 - Physical gate: compare normal, hard, glancing, bank, and post shots plus rapid and simultaneous two-player control against accepted build `cat-paw-air-hockey-06998a9ce8bc` for several uninterrupted minutes.
 
-All automated requirements are verified for CATPAW-RAPIER-001. Physical Samsung acceptance remains untested and is required before completion.
+All automated requirements are verified for CATPAW-RAPIER-001. The user completed the artifact-bound Samsung comparison and reported improved responsiveness with no regressions; the physical gate is REPORTED PASS.
 - Physical result: the user reported PASS for the exact PUCK-PAW-GODOT-001 preview and packed artifact; missing formal device/browser/thermal metadata remains explicit rather than inferred.
 - Publication condition: a normal canonical-branch change runs the durable quality and Pages workflows; Pages serves only verified packed HTML whose downloaded SHA-256 matches the recorded canonical artifact.
 - Physical-device condition: Samsung acceptance remains separate and artifact-bound; it is not implied by publication.

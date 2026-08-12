@@ -6,7 +6,7 @@
 
 ## Status
 
-The readable source, tests, and SFHS project are authoritative. CATPAW-RAPIER-001 is locally verified by the real pinned SFHS packer and exact verifier, including offline one-file boot. It is not deployed or pushed. Its Samsung comparison is still **UNTESTED**; the accepted custom-solver artifact and its 2026-08-12 reported PASS remain the physical baseline.
+The readable source, tests, and SFHS project are authoritative. CATPAW-RAPIER-001 is locally verified by the real pinned SFHS packer and exact verifier, including offline one-file boot. It is not deployed or pushed. On 2026-08-12 the user reported **Samsung PASS**, describing it as snappier and more responsive with no regressions against the accepted custom-solver baseline.
 
 | Current canonical artifact | Value |
 | --- | --- |
@@ -15,7 +15,7 @@ The readable source, tests, and SFHS project are authoritative. CATPAW-RAPIER-00
 | Artifact SHA-256 | `827d1b6d1e3aa8877b206d2be5c89baaea89b5cd04e8643196b394b3f7789b1a` |
 | Bytes | 5,857,863 |
 | Verification | SFHS inspect, validate, check, pack, exact verify, packed Chromium, and exact-file offline boot |
-| Samsung | UNTESTED candidate; accepted baseline remains `cat-paw-air-hockey-06998a9ce8bc` |
+| Samsung | REPORTED PASS; snappier and more responsive with no regressions versus `cat-paw-air-hockey-06998a9ce8bc` |
 | Pages | [Currently deployed earlier build](https://falloutmule.github.io/cat-paw-air-hockey/); CATPAW-RAPIER-001 was not deployed |
 
 ## Play
@@ -37,7 +37,7 @@ The four shared controls straddle the center edges: Mute upper-left, Pause lower
 
 ## Limits
 
-The primary device target is Samsung Galaxy S21 Ultra in stable Android Chrome. Automated Chromium evidence does not replace an artifact-bound physical session. CATPAW-RAPIER-001 has no reported Samsung result; the accepted custom-solver PASS does not transfer. WebGL is required; there is deliberately no hidden Canvas fallback.
+The primary device target is Samsung Galaxy S21 Ultra in stable Android Chrome. CATPAW-RAPIER-001 has an artifact-bound user-reported Samsung PASS; formal device/browser/thermal instrumentation was not supplied and is not inferred. WebGL is required; there is deliberately no hidden Canvas fallback.
 
 ## Architecture and verification
 

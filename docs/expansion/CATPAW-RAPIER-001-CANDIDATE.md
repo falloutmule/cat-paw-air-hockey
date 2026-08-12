@@ -1,6 +1,6 @@
-# CATPAW-RAPIER-001 Candidate
+# CATPAW-RAPIER-001 Completion
 
-CATPAW-RAPIER-001 is an automated-verification PASS and a physical-device candidate. It is not a completed or accepted upgrade until the exact packed artifact receives a Samsung verdict.
+CATPAW-RAPIER-001 is an automated-verification PASS and an artifact-bound user-reported Samsung PASS. The user described the exact build as snappier and more responsive and confirmed that the required physical session showed no regressions.
 
 ## Physics boundary
 
@@ -16,6 +16,6 @@ The source and materialized suites cover 23 Rapier physics scenarios plus input,
 
 The canonical browser snapshot reports backend `rapier2d`, 13 bodies, no page or console errors, and no runtime request outside the one-file artifact. The accepted custom-solver Samsung PASS remains separate historical evidence.
 
-## Samsung gate
+## Samsung result
 
-Test `test-results/CATPAW-RAPIER-001/phone/index.html` on the accepted Samsung device. Exercise normal, hard, glancing, bank, and post shots; rapid reversals; blocks; simultaneous two-player input; repeated goals; and several uninterrupted minutes. Report PASS only if the candidate feels better than, or at minimum clearly physically stronger than, build `cat-paw-air-hockey-06998a9ce8bc` without responsiveness, stability, heat, startup, or control regressions.
+On 2026-08-12 the user tested `test-results/CATPAW-RAPIER-001/phone/index.html` on the accepted Samsung device and reported “Seems snapper and more responsive.” After confirming the complete shot mix, simultaneous two-player play, repeated goals, and several uninterrupted minutes, the user reported “Showed no regressions passed.” The result is bound to the exact artifact in `one-shot/PHYSICAL-REPORT-CATPAW-RAPIER-001.json` and does not alter the preserved baseline report.

@@ -28,5 +28,6 @@
     "explicit better, equal, or worse physical-feel comparison against the baseline"
   ],
   "resultVocabulary": ["REPORTED PASS", "REPORTED FAIL"],
-  "status": "UNTESTED"
+  "status": "REPORTED PASS",
+  "evidence": "one-shot/PHYSICAL-REPORT-CATPAW-RAPIER-001.json"
 }
