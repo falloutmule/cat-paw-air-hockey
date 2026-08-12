@@ -29,5 +29,6 @@ The locally verified CATPAW-RAPIER-001 target is build `cat-paw-air-hockey-b83bd
 
 - WebGL is mandatory.
 - Formal device model, Android/Chrome versions, viewport/DPR, screenshots/video, and instrumented frame-pacing/thermal measurements were not supplied with the PASS.
+- The handoff-supplied baseline commit label `d034d165` is not a repository object. Repository commit `d034d16fb62c4d8c74a882f00f9ef042679398d2` records the exact matching baseline artifact report, but no equivalence between those commit labels is claimed; baseline acceptance remains bound to the full artifact identity.
 
 Release terminology remains deliberately limited: CATPAW-RAPIER-001 automated gates pass and artifact-bound physical-device acceptance is REPORTED PASS. No push, PR, release, or deployment has occurred.
