@@ -16,6 +16,7 @@ concurrency:
 
 jobs:
   build:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     outputs:
       artifact_sha256: ${{ steps.identity.outputs.sha256 }}
@@ -87,6 +88,7 @@ jobs:
           path: ${{ runner.temp }}/pages
 
   deploy:
+    if: github.ref == 'refs/heads/main'
     needs: build
     runs-on: ubuntu-latest
     environment:
