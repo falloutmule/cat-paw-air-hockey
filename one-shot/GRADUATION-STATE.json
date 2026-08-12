@@ -1,8 +1,8 @@
 {
   "deferredWork": [],
   "evidenceStatus": "VERIFIED",
-  "nextAction": "Run CATPAW-SETTINGS-DEFAULTS-002 on Samsung against the exact 100-percent speed, 200-percent size, single-scroll artifact and report PASS or FAIL.",
-  "physicalStatus": "UNTESTED",
+  "nextAction": "Begin the isolated renderer-neutral SFHS Godot animation workflow extraction.",
+  "physicalStatus": "REPORTED",
   "productStatus": "PRODUCT_COMPLETE",
   "projectRoot": ".",
   "records": {
@@ -16,7 +16,7 @@
     },
     "report": {
       "path": "one-shot/GRADUATION-REPORT.json",
-      "sha256": "9d1ded6c28d4cb21731c4feaab80797a8bb7266c15e133c60fcabb9fe6d8ae5f"
+      "sha256": "9cf455d673fe7efca419908f631cb1d62d9bcac2220c091e01602c0d5d9b78c6"
     },
     "source": {
       "path": "SOURCE-IDENTITY.json",
@@ -27,7 +27,7 @@
   "schema": "sfhs.graduation-state@1",
   "sfhsStatus": "SFHS_CANONICAL",
   "sourceId": "source-1-ea74d7d29909",
-  "stage": "GRADUATION_PHYSICAL_PENDING",
+  "stage": "GRADUATION_COMPLETE",
   "strategy": "DIRECT_CANONICALIZATION",
   "version": 1
 }

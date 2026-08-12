@@ -23,16 +23,16 @@
 ## Current exact state
 
 - Product implementation and automated verification: **PASS**.
-- Samsung physical result for these exact bytes: **UNTESTED**.
+- Samsung physical result for these exact bytes: **REPORTED PASS** on 2026-08-12.
 - Remote mutation: none; the Cat Paw branch remains local-only.
 
 ## Remaining blocker
 
-Physical Samsung acceptance is required for the 200% play feel and phone settings ergonomics. Automated browser success does not substitute for that verdict.
+None for the product gate. Formal device/browser metadata was not supplied with the PASS and is recorded as missing rather than inferred.
 
 ## Next
 
-Copy `test-results/CATPAW-SETTINGS-DEFAULTS-002/phone/index.html` and `score-cat-preview.html` to the Samsung, test the exact hashes in the physical seed, and report PASS or FAIL.
+Begin the isolated renderer-neutral SFHS Godot animation workflow extraction; do not modify or push the Cat Paw product branch.
 
 ## Evidence
 
@@ -53,7 +53,7 @@ Copy `test-results/CATPAW-SETTINGS-DEFAULTS-002/phone/index.html` and `score-cat
 | K touch scrolling | PASS | Native per-panel scrolling retained; duplicate outer touch sliders removed; Close remains sticky. |
 | N save/settings migration | PASS | v2-to-v3 focused and packed migration assertions preserve deliberate values. |
 | P/Q capture and one-canvas presentation | PASS | Semantic capture lane and packed one-canvas assertion pass. |
-| T proof completeness | PASS AUTOMATED / PHYSICAL UNTESTED | Evidence is artifact-bound; physical acceptance is explicitly withheld. |
+| T proof completeness | PASS | Automated evidence is artifact-bound and the user-reported Samsung PASS is bound to the exact artifact identity. Missing formal device metadata remains explicit. |
 | Other catalog modes | N/A | No corresponding system was changed by this repair. |
 
 ## GitHub and publication
