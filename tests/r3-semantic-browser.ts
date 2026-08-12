@@ -92,6 +92,21 @@ try {
   let observedContact = false;
   let observedContactPalette: string | undefined;
   let observedContactAnimation = false;
+  let contactEvidenceCaptured = false;
+  const observeContact = async (current: any): Promise<void> => {
+    if (current.puckPresentation?.contactPlayer != null) {
+      observedContact = true;
+      const paw = current.paws[current.puckPresentation.contactPlayer === 1 ? "bottom" : "top"];
+      const synchronizedFrame = current.puckPresentation.frame > 0 && paw.frame === current.puckPresentation.frame;
+      observedContactAnimation ||= synchronizedFrame;
+      if (synchronizedFrame && !contactEvidenceCaptured) {
+        await page.screenshot({ path: resolve(evidenceDirectory, "09-godot-puck-paw-contact.png") });
+        contactEvidenceCaptured = true;
+      }
+    }
+    if (current.state.puck.lastHitter === 1 && current.puckPresentation?.palette === "player1") observedContactPalette = "player1";
+    if (current.state.puck.lastHitter === 2 && current.puckPresentation?.palette === "player2") observedContactPalette = "player2";
+  };
   const scoreForPlayerOne = async (targetScore: number): Promise<void> => {
     const deadline = Date.now() + 90_000;
     let sweptThisDescent = false;
@@ -99,12 +114,7 @@ try {
     let serveSweepPending = true;
     while (Date.now() < deadline) {
       const current = await snapshot();
-      if (current.puckPresentation?.contactPlayer != null) {
-        observedContact = true;
-        observedContactAnimation ||= current.puckPresentation.frame > 0 && current.paws[current.puckPresentation.contactPlayer === 1 ? "bottom" : "top"].frame === current.puckPresentation.frame;
-      }
-      if (current.state.puck.lastHitter === 1 && current.puckPresentation?.palette === "player1") observedContactPalette = "player1";
-      if (current.state.puck.lastHitter === 2 && current.puckPresentation?.palette === "player2") observedContactPalette = "player2";
+      await observeContact(current);
       if (current.state.scores[1] >= targetScore) return;
       if (current.state.phase === "countdown") {
         await touch("pointermove", 1, 270, 800);
@@ -118,12 +128,7 @@ try {
           await touch("pointermove", 1, 270, 660);
           await page.waitForFunction(() => (window.__CAT_AIR_HOCKEY__!.snapshot() as any).puckPresentation?.contactPlayer != null, undefined, { timeout: 500 }).catch(() => undefined);
           const contact = await snapshot();
-          if (contact.puckPresentation?.contactPlayer != null) {
-            observedContact = true;
-            observedContactAnimation ||= contact.puckPresentation.frame > 0 && contact.paws[contact.puckPresentation.contactPlayer === 1 ? "bottom" : "top"].frame === contact.puckPresentation.frame;
-          }
-          if (contact.state.puck.lastHitter === 1 && contact.puckPresentation?.palette === "player1") observedContactPalette = "player1";
-          if (contact.state.puck.lastHitter === 2 && contact.puckPresentation?.palette === "player2") observedContactPalette = "player2";
+          await observeContact(contact);
           serveSweepPending = false;
           continue;
         }
@@ -189,24 +194,13 @@ try {
     throw new Error(`Normal touch rally did not reach Player 1 score ${targetScore}; ${JSON.stringify({ phase: current.state.phase, scores: current.state.scores, puck: current.state.puck, players: current.state.players, input: current.input, recentEvents: current.state.recentEvents })}`);
   };
 
-  const openingContactSeen = page.waitForFunction(() => {
-    const puck = (window.__CAT_AIR_HOCKEY__!.snapshot() as any).puckPresentation;
-    return puck?.contactPlayer != null && puck.frame > 0;
-  }, undefined, { timeout: 1_500 });
   await touch("pointermove", 1, 270, 690);
-  await openingContactSeen;
-  const openingContact = await snapshot();
-  observedContact = true;
-  observedContactAnimation = true;
-  await page.screenshot({ path: resolve(evidenceDirectory, "09-godot-puck-paw-contact.png") });
-  if (openingContact.state.puck.lastHitter === 1 && openingContact.puckPresentation?.palette === "player1") observedContactPalette = "player1";
-  if (openingContact.state.puck.lastHitter === 2 && openingContact.puckPresentation?.palette === "player2") observedContactPalette = "player2";
-
   await scoreForPlayerOne(1);
   assert.equal((await snapshot()).state.scores[1], 1);
   assert.equal(observedContact, true, "normal pointer play reaches the contact presentation lane");
   assert.ok(observedContactPalette === "player1" || observedContactPalette === "player2", "contact gives the puck the last hitter's cat palette");
   assert.equal(observedContactAnimation, true, "normal motion advances the synchronized Godot puck-and-paw contact frames");
+  assert.equal(contactEvidenceCaptured, true, "normal motion captures synchronized contact evidence");
 
   await page.locator("[data-action='menu']").click();
   await page.waitForFunction(() => (window.__CAT_AIR_HOCKEY__!.snapshot() as any).state.phase === "paused");
