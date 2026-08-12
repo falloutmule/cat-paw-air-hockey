@@ -18,6 +18,7 @@ jobs:
   build:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     outputs:
       artifact_sha256: ${{ steps.identity.outputs.sha256 }}
     steps:
@@ -63,8 +64,8 @@ jobs:
           node packages/cli/src/main.ts verify --project "$CAT_PAW_SFHS_PROJECT" --json
           node packages/cli/src/main.ts one-shot audit --project "$CAT_PAW_SFHS_PROJECT" --json
           popd
-      - name: Canonical browser smoke
-        run: SFHS_PLAYWRIGHT_RESOLVER="$RUNNER_TEMP/sfhs/packages/browser-runner/package.json" SFHS_BROWSER_REPORT="$CAT_PAW_SFHS_PROJECT/test-results/canonical-browser.json" pnpm --dir "$CAT_PAW_SFHS_PROJECT" test:browser
+      - name: One-file browser boot smoke
+        run: SFHS_PLAYWRIGHT_RESOLVER="$RUNNER_TEMP/sfhs/packages/browser-runner/package.json" pnpm --dir "$CAT_PAW_SFHS_PROJECT" test:ci-browser
       - id: identity
         name: Prepare verified Pages artifact
         shell: bash

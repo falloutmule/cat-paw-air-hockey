@@ -23,7 +23,7 @@ Status: **PROPOSED until the publication gates complete**. The plan is additive 
 - Mark superseded: the current Pages artifact and current release manifest after exact Rapier deployment parity passes.
 - Delete: nothing tracked. No stale heavy evidence meets all safe-deletion conditions; generated local material remains ignored.
 - Required compatibility repair: the already-tested minimal SFHS position-kinematic contract was published through SFHS PR #33, passed its full CI matrix, and merged without rewriting history.
-- Workflows: keep only a lean pull-request quality workflow and a `main`-only Pages workflow. Both run source tests, materialized lint/typecheck/product tests, inspect/validate, pack, exact verify, audits, and canonical browser/network smoke. SFHS framework tests stay in SFHS; the slower semantic match stays local/milestone evidence.
+- Workflows: keep only a lean pull-request quality workflow and a `main`-only Pages workflow. Both run source tests, materialized lint/typecheck/product tests, inspect/validate, pack, exact verify, audits, and one bounded one-file boot smoke. SFHS framework tests stay in SFHS; the richer offline/network and semantic match lanes stay local/milestone evidence.
 - Documentation: refresh README, status, roadmap, architecture, testing, decisions, authority, evidence retention, release manifest, and final release evidence with exact deployed facts.
 - Repository presentation: preserve public visibility and current name; retain the accurate description/homepage and normalize topics only if needed.
 
