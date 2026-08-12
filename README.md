@@ -50,7 +50,7 @@ pnpm install --frozen-lockfile
 pnpm test:source
 ```
 
-Use the pinned SFHS graduation materializer for linting, typechecking, the full product tests, canonical inspection, repeated packing, exact verification, and browser evidence. See [Testing](docs/TESTING.md) for the exact release sequence.
+Use the pinned SFHS graduation materializer for linting, typechecking, the full product tests, canonical inspection, packing, exact verification, and browser evidence. GitHub keeps this to one lean PR workflow and one `main`-only Pages workflow; see [Testing](docs/TESTING.md).
 
 The current approved roadmap contains only verified-main Pages publication. No additional gameplay expansion is approved; AI, networking, progression, shops, achievements, and new modes remain out of scope unless separately decided.
 

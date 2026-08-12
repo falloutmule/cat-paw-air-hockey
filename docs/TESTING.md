@@ -34,17 +34,19 @@ pnpm sfhs one-shot inspect --project <materialized-project> --json
 pnpm sfhs one-shot graduate audit --project <materialized-project> --json
 pnpm sfhs inspect --project <materialized-project> --json
 pnpm sfhs validate --project <materialized-project> --json
-pnpm sfhs check --project <materialized-project> --json
+pnpm --dir <materialized-project> run lint
+pnpm --dir <materialized-project> run typecheck
+pnpm --dir <materialized-project> test
 pnpm sfhs pack --project <materialized-project> --json
 pnpm sfhs verify --project <materialized-project> --json
 pnpm sfhs one-shot audit --project <materialized-project> --json
-pnpm test:r3-browser
+pnpm --dir <materialized-project> test:browser
 ```
 
 `pnpm run lint` and `pnpm run typecheck` are deliberately materialized-project commands: the source imports the pinned SFHS adapter/runtime/physics packages and the graduation materializer provides the approved tool overlay without vendoring framework source into this repository. `pnpm test:source` runs project-owned suites that do not require the materialized SFHS overlay; the full `pnpm test` runs after materialization.
 
-`one-shot graduate audit` runs against the untouched fresh materialization before pack or browser output is generated; those generated files deliberately change the disposable tree. The ordinary `one-shot audit` runs after pack and exact verify. Product paths are not passed to SFHS's framework-repository `--changed` selector: Cat Paw runs its complete project-owned suite directly, while `sfhs check --project` supplies the external-project lint, typecheck, full unit, and browser-smoke matrix. The shared Physics 2D change is separately covered by the SFHS PR's full quality and cross-platform determinism matrix. A canonical result additionally requires pack and exact verify of the same `dist/index.html`, a second same-source pack with an identical SHA-256, and packed-artifact Chromium evidence. The canonical browser lane checks HTTP and exact-file offline boot, one WebGL canvas, control layout, fullscreen, settings, capture, lifecycle/orientation, errors, physics timing, and runtime requests. The semantic lane uses normal UI/pointer actions to observe contact animation, reach a winner, capture, and rematch. R3 measures 412×915, 360×800, 390×844, and 360×640 portrait viewports, menu/document containment, independent half scrolling, Board pixel/logical independence, 20:9 input mapping, dynamic goal resizing, Board replacement invariance, and the normal-action match lifecycle.
+`one-shot graduate audit` runs against the untouched fresh materialization before pack or browser output is generated; those generated files deliberately change the disposable tree. The ordinary `one-shot audit` runs after pack and exact verify. GitHub runs Cat Paw's lint, typecheck, complete product suite, pack, exact verify, and canonical HTTP/offline browser smoke. It deliberately does not rerun the SFHS framework repository's own unit and determinism suites; those belong to SFHS and passed for the pinned Physics 2D change in PR #33. The slower semantic first-to-five/capture/rematch lane remains available as `pnpm test:r3-browser` for milestone or implementation evidence and is not required on every GitHub push.
 
 ## Pages release
 
-The Pages workflow runs on `main` only after source tests and the same materialized canonical gates. It deploys only verified `index.html` plus `.nojekyll`, uses least-privilege Pages permissions and cancel-in-progress concurrency, and never runs for pull requests. The post-deploy audit downloads the served HTML and compares SHA-256 with the artifact recorded by the workflow. Samsung physical testing remains a separate artifact-bound gate and is already REPORTED PASS for CATPAW-RAPIER-001.
+The repository has two workflows only. `quality.yml` runs the lean verification matrix on pull requests. `pages.yml` runs on `main`, rebuilds and verifies the one-file artifact, performs the canonical browser smoke, and deploys only `index.html` plus `.nojekyll`. The post-deploy step downloads the served HTML and compares SHA-256 with the verified artifact. Samsung physical testing remains a separate artifact-bound gate and is already REPORTED PASS for CATPAW-RAPIER-001.
