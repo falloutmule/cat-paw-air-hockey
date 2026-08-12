@@ -20,7 +20,7 @@ Each goal says `GOAL`. Exactly four shared controls straddle the center side edg
 
 ## Simulation
 
-The renderer observes serializable simulation state; input produces semantic actions and SFHS owns the 60 Hz fixed-step loop. Paws and puck collide with walls, posts, and goals. The normal speed settings are 75% and remain adjustable from 70% to 130%. The normal puck, paw, and goal sizes are 125% and remain adjustable from 25% to 200%. Each player has an independent return-speed multiplier applied once to that player's discrete paw hit; wall/post contacts do not reapply it. Settings changed during active motion apply at the next safe serve boundary.
+The renderer observes serializable simulation state; input produces semantic actions and SFHS owns the 60 Hz fixed-step loop. Paws and puck collide with walls, posts, and goals. The normal speed settings are 100% and remain adjustable from 70% to 130%. The normal puck, paw, and goal sizes are 200% and remain adjustable from 25% to 200%. Each player has an independent return-speed multiplier applied once to that player's discrete paw hit; wall/post contacts do not reapply it. Settings changed during active motion apply at the next safe serve boundary.
 
 ## Accessibility, audio, persistence, and content
 

@@ -1,9 +1,9 @@
 {
   "artifact": {
-    "buildId": "cat-paw-air-hockey-512728228085",
-    "bytes": 4022850,
+    "buildId": "cat-paw-air-hockey-59c8fe2815c1",
+    "bytes": 4073692,
     "path": "dist/index.html",
-    "sha256": "1d6201909bec095f81a11bed9e31dd416fbfe25f0d6bb2409fb35cdcf6a16d8c",
+    "sha256": "3310e4f0992803d06f64ad1ed30f9e1f62c19481f476fc74e7180c4af398aa4e",
     "verifier": "sfhs verify"
   },
   "classification": "canonical",
@@ -12,11 +12,11 @@
     "20:9 containment and edge-to-edge horizontal play",
     "approved BOARD-ART-001 couch/rug composition, puck/paw readability, and crisp pixel sampling",
     "deep defense at both couch goals",
-    "100-percent and 75/125-percent goal readability",
+    "200-percent default goal readability and 25-to-200-percent range behavior",
     "touch mapping before and after fullscreen",
     "return-speed handicap rally",
-    "immediately visible Goal Size/Paw Size controls, pending feedback, and 125-percent paw application after the next goal",
-    "mirrored settings and 1080 x 2400 Board copy",
+    "100-percent speed defaults and 200-percent size defaults, including v2 migration",
+    "mirrored settings, always-visible Close, one thin native scrollbar per half, and 1080 x 2400 Board copy",
     "first-to-five capture and rematch",
     "screenshots and thermal/performance notes"
   ],

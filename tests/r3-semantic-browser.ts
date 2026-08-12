@@ -74,7 +74,7 @@ try {
   await setRange("puckSpeed", 130);
   await setRange("pawSpeed1", 130);
   await setRange("returnSpeed1", 125);
-  await setRange("goalSize2", 125);
+  await setRange("goalSize2", 200);
   await page.locator(".settings-view--bottom [data-menu-action='close']").click();
   await page.locator("[data-action='pause']").click();
   await page.waitForFunction(() => (window.__CAT_AIR_HOCKEY__!.snapshot() as any).state.phase === "ready");
@@ -87,7 +87,7 @@ try {
   await page.waitForFunction(() => (window.__CAT_AIR_HOCKEY__!.snapshot() as any).state.phase === "playing", undefined, { timeout: 5_000 });
   await touch("pointermove", 1, 270, 1100);
   await touch("pointermove", 2, 100, 100);
-  await page.waitForFunction(() => { const state = (window.__CAT_AIR_HOCKEY__!.snapshot() as any).state; return state.players[1].position.y > 1_070 && state.players[2].position.x < 110 && state.players[2].position.y < 125; });
+  await page.waitForFunction(() => { const state = (window.__CAT_AIR_HOCKEY__!.snapshot() as any).state; return state.players[1].position.y > 1_050 && state.players[2].position.x < 150 && state.players[2].position.y < 150; });
 
   let observedContact = false;
   let observedContactPalette: string | undefined;
@@ -116,13 +116,23 @@ try {
       if (current.state.phase === "playing") {
         if (serveSweepPending) {
           await touch("pointermove", 1, 270, 660);
-          await page.waitForTimeout(260);
+          await page.waitForFunction(() => (window.__CAT_AIR_HOCKEY__!.snapshot() as any).puckPresentation?.contactPlayer != null, undefined, { timeout: 500 }).catch(() => undefined);
+          const contact = await snapshot();
+          if (contact.puckPresentation?.contactPlayer != null) {
+            observedContact = true;
+            observedContactDeformation ||= Math.abs(contact.puckPresentation.renderedScaleX - contact.puckPresentation.renderedScaleY) > 0.01;
+          }
+          if (contact.state.puck.lastHitter === 1 && contact.puckPresentation?.palette === "player1") observedContactPalette = "player1";
+          if (contact.state.puck.lastHitter === 2 && contact.puckPresentation?.palette === "player2") observedContactPalette = "player2";
           serveSweepPending = false;
           continue;
         }
         const puck = current.state.puck.position as { x: number; y: number };
         const velocity = current.state.puck.velocity as { x: number; y: number };
-        const x = Math.max(57, Math.min(483, puck.x));
+        const player1Radius = 45 * current.state.activeMatchSettings.pawSize[1] / 100;
+        const player2Radius = 45 * current.state.activeMatchSettings.pawSize[2] / 100;
+        const x = Math.max(player1Radius, Math.min(540 - player1Radius, puck.x));
+        const player2X = Math.max(player2Radius, Math.min(540 - player2Radius, puck.x));
         if (puck.y > 650 && Math.hypot(velocity.x, velocity.y) < 24) {
           await touch("pointermove", 1, x, Math.min(1_100, puck.y + 105));
           await page.waitForTimeout(220);
@@ -131,8 +141,8 @@ try {
           sweptThisDescent = true;
           continue;
         }
-        if (puck.y >= 500 && puck.y <= 650 && Math.hypot(velocity.x, velocity.y) < 24) {
-          const sweepX = x < 270 ? Math.min(483, x + 120) : Math.max(57, x - 120);
+        if (puck.y >= 600 && puck.y <= 650 && Math.hypot(velocity.x, velocity.y) < 24) {
+          const sweepX = x < 270 ? Math.min(540 - player1Radius, x + 120) : Math.max(player1Radius, x - 120);
           await touch("pointermove", 1, sweepX, 700);
           await page.waitForTimeout(120);
           await touch("pointermove", 1, x, 660);
@@ -140,12 +150,12 @@ try {
           continue;
         }
         if (puck.y > 620) topSweepComplete = false;
-        if (puck.y < 500 && Math.hypot(velocity.x, velocity.y) < 18) topSweepComplete = false;
-        if (puck.y < 500 && !topSweepComplete) {
+        if (puck.y < 620 && Math.hypot(velocity.x, velocity.y) < 18) topSweepComplete = false;
+        if (puck.y < 620 && !topSweepComplete) {
           const desiredY = Math.min(540, puck.y + 78);
           const player2 = current.state.players[2].position as { x: number; y: number };
-          await touch("pointermove", 2, x, desiredY);
-          if (Math.hypot(player2.x - x, player2.y - desiredY) < 52) {
+          await touch("pointermove", 2, player2X, desiredY);
+          if (Math.hypot(player2.x - player2X, player2.y - desiredY) < 52) {
             await touch("pointermove", 2, 270, 94);
             topSweepComplete = true;
             await page.waitForTimeout(180);
@@ -179,6 +189,18 @@ try {
     throw new Error(`Normal touch rally did not reach Player 1 score ${targetScore}; ${JSON.stringify({ phase: current.state.phase, scores: current.state.scores, puck: current.state.puck, players: current.state.players, input: current.input, recentEvents: current.state.recentEvents })}`);
   };
 
+  const openingContactSeen = page.waitForFunction(() => {
+    const puck = (window.__CAT_AIR_HOCKEY__!.snapshot() as any).puckPresentation;
+    return puck?.contactPlayer != null && Math.abs(puck.renderedScaleX - puck.renderedScaleY) > 0.01;
+  }, undefined, { timeout: 1_500 });
+  await touch("pointermove", 1, 270, 690);
+  await openingContactSeen;
+  const openingContact = await snapshot();
+  observedContact = true;
+  observedContactDeformation = true;
+  if (openingContact.state.puck.lastHitter === 1 && openingContact.puckPresentation?.palette === "player1") observedContactPalette = "player1";
+  if (openingContact.state.puck.lastHitter === 2 && openingContact.puckPresentation?.palette === "player2") observedContactPalette = "player2";
+
   await scoreForPlayerOne(1);
   assert.equal((await snapshot()).state.scores[1], 1);
   assert.equal(observedContact, true, "normal pointer play reaches the contact presentation lane");
@@ -192,9 +214,9 @@ try {
   await setRange("returnSpeed1", 70);
   await page.waitForFunction(() => { const state = (window.__CAT_AIR_HOCKEY__!.snapshot() as any).state; return state.pendingMatchSettings.goalSize[1] === 75 && state.pendingMatchSettings.pawSize[1] === 125 && state.pendingMatchSettings.returnSpeed[1] === 70; });
   let paused = await snapshot();
-  assert.equal(paused.state.activeMatchSettings.goalSize[1], 125, "mid-match goal resize waits for the next safe boundary");
-  assert.equal(paused.state.activeMatchSettings.pawSize[1], 125, "mid-match paw resize waits for the next safe boundary");
-  assert.equal(paused.paws.bottom.nominalDiameter, 112.5, "rendered paw remains at the active size during the paused rally");
+  assert.equal(paused.state.activeMatchSettings.goalSize[1], 200, "mid-match goal resize waits for the next safe boundary");
+  assert.equal(paused.state.activeMatchSettings.pawSize[1], 200, "mid-match paw resize waits for the next safe boundary");
+  assert.equal(paused.paws.bottom.nominalDiameter, 180, "rendered paw remains at the active size during the paused rally");
   assert.equal(paused.state.activeMatchSettings.returnSpeed[1], 125, "mid-match return handicap waits for the next safe boundary");
 
   const boardPng = await page.evaluate(async () => {
@@ -223,7 +245,7 @@ try {
   await page.waitForFunction(() => { const snapshot = window.__CAT_AIR_HOCKEY__!.snapshot() as any; const state = snapshot.state; return state.phase === "countdown" && state.activeMatchSettings.goalSize[1] === 75 && state.activeMatchSettings.pawSize[1] === 125 && state.activeMatchSettings.returnSpeed[1] === 70 && snapshot.paws.bottom.nominalDiameter === 112.5; }, undefined, { timeout: 3_000 });
   const applied = await snapshot();
   assert.equal(applied.goals.bottom.openingWidth, 138);
-  assert.equal(applied.goals.top.openingWidth, 230);
+  assert.equal(applied.goals.top.openingWidth, 368);
   assert.equal(applied.paws.bottom.nominalDiameter, 112.5);
   await page.screenshot({ path: resolve(evidenceDirectory, "11-paw-size-125-active.png") });
 

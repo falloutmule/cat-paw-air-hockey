@@ -1,10 +1,10 @@
 {
   "browserEvidence": "one-shot/canonical-browser.json",
   "canonicalArtifact": {
-    "buildId": "cat-paw-air-hockey-512728228085",
-    "bytes": 4022850,
+    "buildId": "cat-paw-air-hockey-59c8fe2815c1",
+    "bytes": 4073692,
     "path": "dist/index.html",
-    "sha256": "1d6201909bec095f81a11bed9e31dd416fbfe25f0d6bb2409fb35cdcf6a16d8c",
+    "sha256": "3310e4f0992803d06f64ad1ed30f9e1f62c19481f476fc74e7180c4af398aa4e",
     "verifier": "sfhs verify"
   },
   "physical": "UNTESTED",

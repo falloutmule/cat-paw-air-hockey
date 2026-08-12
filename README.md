@@ -10,10 +10,10 @@ The readable source, tests, and SFHS project are authoritative. SCORE-CAT-GODOT-
 
 | Current canonical artifact | Value |
 | --- | --- |
-| Build ID | `cat-paw-air-hockey-d9c204866261` |
-| Source SHA-256 | `d9c2048662618f62b1bdd2abe746fc4ecf93468e38850268e9fdce87acab4c7a` |
-| Artifact SHA-256 | `34a3bbd431243f27797a5801095e7c5f210dca0effc4a114a19bd1efabf6dbd8` |
-| Bytes | 4,075,821 |
+| Build ID | `cat-paw-air-hockey-59c8fe2815c1` |
+| Source SHA-256 | `59c8fe2815c1a9d9cc89ccac77b936c05c9623fef85cc7332047947353d24c06` |
+| Artifact SHA-256 | `3310e4f0992803d06f64ad1ed30f9e1f62c19481f476fc74e7180c4af398aa4e` |
+| Bytes | 4,073,692 |
 | Verification | SFHS inspect, validate, check, pack, exact verify, and multi-viewport packed Chromium smoke |
 | Pages | [Currently deployed earlier build](https://falloutmule.github.io/cat-paw-air-hockey/); SCORE-CAT-GODOT-001 was not deployed |
 
@@ -28,7 +28,7 @@ The four shared controls straddle the center edges: Mute upper-left, Pause lower
 - Simultaneous independent two-player touch ownership, cancellation cleanup, and third-touch rejection.
 - Fixed-step renderer-neutral air-hockey simulation with cat-paw strikers, yarn puck, posts, goals, winner, and rematch flow.
 - Pause, mute, user-gesture audio unlock, background recovery, reduced effects, and accessible instructions.
-- Shared mirrored settings with 75% normal speeds, 125% normal sizes, 70–130% speed ranges, and 25–200% size ranges. Each half has a sticky Close button and its own vertical scroll slider; incompatible puck/goal sizes warn without locking the players out.
+- Shared mirrored settings with 100% normal speeds, 200% normal sizes, 70–130% speed ranges, and 25–200% size ranges. Each half has a sticky Close button and one thin native scrollbar; incompatible puck/goal sizes warn without locking the players out.
 - Optional local PNG theme, fullscreen controls, and final-score PNG capture.
 - One required Pixi v8 WebGL canvas, no runtime external requests, and a portrait-first adaptive viewport.
 - Godot 4.7.1-authored animated score cats with exact double-size 160 x 160 nearest-neighbor presentation, palette-only P1/P2 sheets, slower exaggerated reactions, reduced-motion poses, and no runtime skeletal animation.

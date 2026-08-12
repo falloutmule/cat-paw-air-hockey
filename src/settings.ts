@@ -16,12 +16,12 @@ export const SPEED_SETTING_MINIMUM = 70;
 export const SPEED_SETTING_MAXIMUM = 130;
 
 export const DEFAULT_MATCH_SETTINGS: MatchSettings = Object.freeze({
-  puckSpeed: 75,
-  pawSpeed: Object.freeze({ 1: 75, 2: 75 }),
-  returnSpeed: Object.freeze({ 1: 75, 2: 75 }),
-  puckSize: 125,
-  pawSize: Object.freeze({ 1: 125, 2: 125 }),
-  goalSize: Object.freeze({ 1: 125, 2: 125 })
+  puckSpeed: 100,
+  pawSpeed: Object.freeze({ 1: 100, 2: 100 }),
+  returnSpeed: Object.freeze({ 1: 100, 2: 100 }),
+  puckSize: 200,
+  pawSize: Object.freeze({ 1: 200, 2: 200 }),
+  goalSize: Object.freeze({ 1: 200, 2: 200 })
 });
 
 const clampStep = (value: unknown, low: number, high: number, fallback: number): number => {

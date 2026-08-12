@@ -1,14 +1,14 @@
 {
   "deferredWork": [],
   "evidenceStatus": "VERIFIED",
-  "nextAction": "Run the settings/contact Samsung gameplay seed against the exact local canonical artifact and record usability, contact animation, reduced motion, and existing interaction gates.",
+  "nextAction": "Run CATPAW-SETTINGS-DEFAULTS-002 on Samsung against the exact 100-percent speed, 200-percent size, single-scroll artifact and report PASS or FAIL.",
   "physicalStatus": "UNTESTED",
   "productStatus": "PRODUCT_COMPLETE",
   "projectRoot": ".",
   "records": {
     "physicalSeed": {
       "path": "one-shot/GRADUATION-PHYSICAL-TEST-SEED.json",
-      "sha256": "01639da2d7f020b142124b36b0ae1e3098b678197ca3128fc50b608615b67612"
+      "sha256": "712771474b9b505a44f870aa27d7e7ea149e0c4587f789b265ffd2b6b3c80c53"
     },
     "plan": {
       "path": "one-shot/MIGRATION-PLAN.json",
@@ -16,7 +16,7 @@
     },
     "report": {
       "path": "one-shot/GRADUATION-REPORT.json",
-      "sha256": "56135289702258862cea4a962983f5b9bc81fcd99201aaf1300ba7dd607c64fb"
+      "sha256": "9d1ded6c28d4cb21731c4feaab80797a8bb7266c15e133c60fcabb9fe6d8ae5f"
     },
     "source": {
       "path": "SOURCE-IDENTITY.json",

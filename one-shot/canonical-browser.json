@@ -3,20 +3,20 @@
   "valid": true,
   "artifact": {
     "path": "dist/index.html",
-    "bytes": 4075821,
-    "sha256": "34a3bbd431243f27797a5801095e7c5f210dca0effc4a114a19bd1efabf6dbd8",
-    "buildId": "cat-paw-air-hockey-d9c204866261"
+    "bytes": 4073692,
+    "sha256": "3310e4f0992803d06f64ad1ed30f9e1f62c19481f476fc74e7180c4af398aa4e",
+    "buildId": "cat-paw-air-hockey-59c8fe2815c1"
   },
   "browser": "Chromium 149.0.7827.55",
   "checks": [
     "exact served bytes, one Pixi WebGL canvas, zero page/console errors, and zero external runtime requests",
     "540 x 1200 mechanics and 1080 x 2400 Board pixels remain independent",
     "uniform contain at 412 x 915, 360 x 800, 390 x 844, and 360 x 640",
-    "legacy v1 100-percent normal settings migrate once to v2 75-percent speeds and 125-percent sizes",
+    "legacy v2 75-percent speed and 125-percent size normals migrate once to v3 100-percent speeds and 200-percent sizes",
     "all five size controls expose 25 to 200 percent and all five speed controls expose 70 to 130 percent",
-    "both mirrored settings halves retain sticky Close controls and independent dedicated vertical scroll sliders",
+    "both mirrored settings halves retain sticky Close controls and one thin native scrollbar with no duplicate outer scroll control",
     "a 200-percent puck with a 25-percent goal warns visibly and remains closable",
-    "default goals render at 125 percent and default puck/paw diagnostics report 57.5/112.5 logical diameters",
+    "default goals render at 200 percent and default puck/paw diagnostics report 92/180 logical diameters",
     "normal touch play observes authoritative contact, last-hitter score-cat palette, visible puck deformation, first-to-five, capture, and rematch",
     "focused reduced-motion tests retain palette ownership and suppress puck/paw transforms",
     "both Godot score-cat sheets remain embedded in the sole Pixi canvas at exact double-size 160 x 160 display"

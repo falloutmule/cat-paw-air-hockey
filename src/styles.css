@@ -53,7 +53,7 @@ button { font: inherit; }
   box-shadow: 0 .18rem .65rem rgb(0 0 0 / 42%);
 }
 .shared-control:active { background: #315464; }
-.shared-control:focus-visible, .settings-view button:focus-visible, .settings-view input:focus-visible, .settings-scroll input:focus-visible { outline: 3px solid #ffd45c; outline-offset: 2px; }
+.shared-control:focus-visible, .settings-view button:focus-visible, .settings-view input:focus-visible { outline: 3px solid #ffd45c; outline-offset: 2px; }
 .icon { display: inline-block; width: 1.15rem; height: 1.15rem; position: relative; }
 .icon--menu::before, .icon--menu::after, .icon--menu { background: linear-gradient(#fff4d6 0 18%, transparent 18% 40%, #fff4d6 40% 58%, transparent 58% 80%, #fff4d6 80%); border-radius: 2px; }
 .shared-control[aria-pressed="true"] .icon--menu { background: none; }
@@ -67,16 +67,12 @@ button { font: inherit; }
 .icon--capture::before { content: ""; position: absolute; width: .3rem; height: .18rem; left: .34rem; top: -.22rem; background: #fff4d6; }
 #settings-overlay { position: absolute; z-index: 30; inset: 0; min-width: 0; min-height: 0; overflow: hidden; display: grid; grid-template-rows: minmax(0, 1fr) minmax(0, 1fr); gap: .5rem; padding: max(.65rem, env(safe-area-inset-top)) max(.65rem, env(safe-area-inset-right)) max(.65rem, env(safe-area-inset-bottom)) max(.65rem, env(safe-area-inset-left)); background: rgb(6 13 19 / 91%); pointer-events: auto; }
 #settings-overlay[hidden] { display: none; }
-.settings-half { min-width: 0; min-height: 0; overflow: hidden; display: grid; place-items: center; }
-.settings-panel { min-width: 0; min-height: 0; overflow: hidden; display: grid; grid-template-columns: minmax(0, 1fr) 2.8rem; gap: .4rem; width: min(100%, 41rem); height: 100%; }
-.settings-panel--top { transform: rotate(180deg); }
-.settings-view { min-width: 0; min-height: 0; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; touch-action: pan-y; width: 100%; height: 100%; padding: .8rem 1rem; border: 2px solid rgb(255 244 214 / 42%); border-radius: 1rem; color: #fff4d6; background: #172331; scrollbar-width: thin; scrollbar-color: #ffd45c #101923; }
+.settings-half { min-width: 0; min-height: 0; overflow: hidden; display: grid; }
+.settings-view { min-width: 0; min-height: 0; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; touch-action: pan-y; max-width: 38rem; width: min(100%, 38rem); height: 100%; justify-self: center; padding: .8rem 1rem; border: 2px solid rgb(255 244 214 / 42%); border-radius: 1rem; color: #fff4d6; background: #172331; scrollbar-width: thin; scrollbar-color: #ffd45c #101923; }
+.settings-view--top { transform: rotate(180deg); }
 .settings-view::-webkit-scrollbar { width: .55rem; }
 .settings-view::-webkit-scrollbar-track { background: #101923; border-radius: 999px; }
 .settings-view::-webkit-scrollbar-thumb { background: #ffd45c; border-radius: 999px; }
-.settings-scroll { min-width: 0; min-height: 0; display: grid; grid-template-rows: auto minmax(0, 1fr); justify-items: center; gap: .3rem; padding: .5rem .25rem; border: 2px solid rgb(255 244 214 / 42%); border-radius: 999px; color: #fff4d6; background: #172331; font-weight: 900; touch-action: none; }
-.settings-scroll input[type="range"] { appearance: slider-vertical; -webkit-appearance: slider-vertical; writing-mode: vertical-lr; direction: ltr; width: 2rem; height: 100%; min-height: 0; margin: 0; accent-color: #ffd45c; touch-action: none; }
-.settings-scroll input:disabled { opacity: .35; }
 .settings-view h2, .settings-view h3 { margin: .15rem 0 .55rem; }
 .settings-view fieldset { margin: .5rem 0; border: 1px solid rgb(255 244 214 / 25%); border-radius: .65rem; }
 .settings-view label { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .45rem; margin: .5rem 0; font-size: .88rem; }

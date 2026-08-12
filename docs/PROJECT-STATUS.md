@@ -17,12 +17,12 @@
 | Size-setting discoverability and deferred paw application | VERIFIED REPAIRED | Goal Size/Paw Size lead the menu; packed proof checks 90 -> 112.5 paw diameter at the safe boundary |
 | Approved BOARD-ART-001 default | VERIFIED INTEGRATED | Exact approved 1080×2400 PNG; nearest-neighbor Board sprite; packed composed visual proof |
 | Current-artifact Samsung acceptance | UNTESTED | Settings/contact changes create a new exact artifact, so prior device results do not transfer |
-| Settings defaults and phone controls | VERIFIED REPAIRED | Sizes default to 125% over 25–200%; speeds default to 75% over 70–130%; mirrored sticky Close and independent vertical scroll controls pass packed multi-viewport Chromium |
+| Settings defaults and phone controls | VERIFIED REPAIRED | Sizes default to 200% over 25–200%; speeds default to 100% over 70–130%; mirrored sticky Close and one thin native scrollbar per half pass packed multi-viewport Chromium |
 | Cat-matched contact puck | VERIFIED IMPLEMENTED | Last-hitter palette, puck squash/pop, paw recoil, reduced-motion suppression, focused resolver tests, and normal-pointer semantic browser proof |
 
 ## Canonical identity
 
-The locally verified settings/contact target is build `cat-paw-air-hockey-d9c204866261`, 4,075,821 bytes, SHA-256 `34a3bbd431243f27797a5801095e7c5f210dca0effc4a114a19bd1efabf6dbd8`, source SHA-256 `d9c2048662618f62b1bdd2abe746fc4ecf93468e38850268e9fdce87acab4c7a`. The exact approved Board source remains 2,562,705 bytes with SHA-256 `cfba2b87c4fec52fb0f9a491ac9fca8421fba015c86425eaa9abe9517c68bf2d`. It retains the real 540×1200 edge-wall mechanics, R2A's single viewport authority, and the accepted double-size score-cat sheets.
+The locally verified settings/contact target is build `cat-paw-air-hockey-59c8fe2815c1`, 4,073,692 bytes, SHA-256 `3310e4f0992803d06f64ad1ed30f9e1f62c19481f476fc74e7180c4af398aa4e`, source SHA-256 `59c8fe2815c1a9d9cc89ccac77b936c05c9623fef85cc7332047947353d24c06`. The exact approved Board source remains 2,562,705 bytes with SHA-256 `cfba2b87c4fec52fb0f9a491ac9fca8421fba015c86425eaa9abe9517c68bf2d`. It retains the real 540×1200 edge-wall mechanics, R2A's single viewport authority, and the accepted double-size score-cat sheets.
 
 ## Known limitations and blockers
 

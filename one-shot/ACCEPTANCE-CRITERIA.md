@@ -16,7 +16,7 @@
 - R3 controls: exactly four shared buttons remain at the center side edges in the locked Mute/Pause/Menu/Fullscreen arrangement; winner Capture replaces only Pause; both defensive goal zones remain free.
 - R3 mechanics: the deterministic logical Board is 540×1200 with rink bounds 0/540/54/1146, symmetric full-depth halves, and uniform contain scaling on every device.
 - R3 Board: the full static Board maps to an exact 1080×2400 PNG slot; valid local art persists and resets, invalid replacements preserve the prior Board, and a legacy 1080×1920 record is retained but never stretched.
-- Settings: normal sizes are 125% with 25–200% ranges; normal speeds are 75% with 70–130% ranges. Both mirrored halves retain an always-visible Close button and independent vertical scroll slider. Incompatible puck/goal combinations warn clearly but remain closable.
+- Settings: normal sizes are 200% with 25–200% ranges; normal speeds are 100% with 70–130% ranges. Both mirrored halves retain an always-visible Close button and one thin native scrollbar, with no duplicate outer scroll control. Incompatible puck/goal combinations warn clearly but remain closable.
 - R3 goals: mechanical bounds and visible couch NineSlices resize independently from 25% to 200%, with readable contrasting frames and outlined GOAL labels.
 - R3 renderer proof: Board replacement reuses one persistent Pixi sprite in the sole WebGL canvas, does not mutate simulation/viewport/goals/controls, and makes no runtime network request.
 - Score cats: both sprites use the tracked 4 x 4 Godot sheets at an exact double-size 160 x 160 logical display size, fixed `(40,72)` source anchors, nearest sampling, and a complete P2 rotation of pi without changing the separate 54 px scores.

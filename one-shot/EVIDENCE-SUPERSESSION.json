@@ -1,6 +1,12 @@
 {
   "records": [
     {
+      "earlier": "cat-paw-air-hockey-d9c204866261 / 34a3bbd431243f27797a5801095e7c5f210dca0effc4a114a19bd1efabf6dbd8",
+      "status": "SUPERSEDED / UNTESTED",
+      "treatment": "The prior settings/contact artifact is superseded by the requested 100-percent speed normals, 200-percent size normals, v3 migration, and removal of the duplicate large scroll control. No physical result transfers.",
+      "currentArtifact": "cat-paw-air-hockey-59c8fe2815c1 / 3310e4f0992803d06f64ad1ed30f9e1f62c19481f476fc74e7180c4af398aa4e"
+    },
+    {
       "earlier": "cat-paw-air-hockey-ffaa71fb1d0d / 7a12db4fec3c6f38cd0c9e4ed5d197b36be27c9fa3a23e97728dc2469587dad2",
       "status": "SUPERSEDED / UNTESTED",
       "treatment": "The exact-double score-cat artifact is superseded by requested settings defaults/ranges, always-visible settings controls, and cat-matched paw/puck contact presentation. No physical result transfers.",
