@@ -1,7 +1,5 @@
-# Cat Paw canonical physical test
+# Graduation Physical Test
 
-Test only `cat-paw-air-hockey-e1a629b12b42.html`: 560,146 bytes; SHA-256 `ecfd57a25c19c3347618cc72dca667a95d5a8c3206a4599bed2833e7af499f5e`; build `cat-paw-air-hockey-e1a629b12b42`.
+Test canonical `dist/index.html` (5,857,863 bytes, SHA-256 `827d1b6d1e3aa8877b206d2be5c89baaea89b5cd04e8643196b394b3f7789b1a`, build `cat-paw-air-hockey-b83bd150d75e`) on the Samsung target. Record device/browser metadata, portrait and landscape behavior, screenshots when supplied, the primary workflow, lifecycle/audio, performance/heat, and **REPORTED PASS** or **REPORTED FAIL** without inferring missing facts.
 
-Record Samsung model, Android version, numeric Chrome version, date, portrait and landscape viewport dimensions/DPR, and one screenshot for each orientation. In portrait verify two simultaneous fingers stay attached to their own paws; releasing either finger leaves the other active; a third touch cannot steal a paw; a puck hit, wall hit, goal/score, first-to-five/rematch, pause/background/resume, and sound unlock all work. Verify landscape shows the understandable rotate guide, then returning to portrait restores safe mapping. Record readability, finger occlusion, performance, heat, notes, and **REPORTED PASS** or **REPORTED FAIL**.
-
-This is canonical physical acceptance only for the exact SHA-256 above. Earlier candidate reports remain historical and do not transfer.
+Result: **REPORTED PASS** on 2026-08-12. The user described the exact Rapier artifact as snappier and more responsive, then confirmed the required session showed no regressions. The artifact-bound report is `one-shot/PHYSICAL-REPORT-CATPAW-RAPIER-001.json`; unavailable formal metadata is listed there rather than inferred. This graduation record does not itself authorize remote actions; the later current scope record carries the verified-main publication authorization.

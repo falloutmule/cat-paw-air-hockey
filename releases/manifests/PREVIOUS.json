@@ -1,11 +1,24 @@
 {
   "schema": "cat-paw.release-manifest@1",
   "status": "SUPERSEDED",
-  "artifact": {
-    "buildId": "cat-paw-air-hockey-63565c6a8410",
-    "path": "dist/index.html",
-    "bytes": 581838,
-    "sha256": "27f6fa3daccb99256f5a2ea01a3c45618846c02e87b0f9e1cfe0e061c66a25ba"
+  "source": {
+    "branch": "main",
+    "commit": "a85b2b05c23ff5a1e8dc2e718ed33ae85b2a15e1"
   },
-  "reason": "Fullscreen persistence and end-space/goal-label correction changed the artifact; physical acceptance does not transfer."
+  "artifact": {
+    "buildId": "cat-paw-air-hockey-64741220be29",
+    "path": "dist/index.html",
+    "bytes": 581644,
+    "sha256": "0d18270c36ff36987c8653579693a3dca3fc62b4271ea2cb55be0c13816f6b53",
+    "sourceSha256": "64741220be29f0db3a3044f977d4cbba8acb0fb92d4c181c571d11f8f3afeeca"
+  },
+  "sfhsCommit": "5acd8fc9a24834d9416a6e615bb78b8012962e30",
+  "physicalDevice": "UNTESTED",
+  "pages": {
+    "status": "SUPERSEDED",
+    "url": "https://falloutmule.github.io/cat-paw-air-hockey/",
+    "workflowRun": "31099501221",
+    "deployedSha256": "0d18270c36ff36987c8653579693a3dca3fc62b4271ea2cb55be0c13816f6b53"
+  },
+  "reason": "CATPAW-RAPIER-001 replaces the published custom-solver generation after separate automated and Samsung acceptance."
 }

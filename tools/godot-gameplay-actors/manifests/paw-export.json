@@ -1,0 +1,28 @@
+{
+  "schema": "sfhs.godot-animation-export@1",
+  "godotProject": "tools/godot-gameplay-actors",
+  "scene": "res://paw.tscn",
+  "animationPlayer": "AnimationPlayer",
+  "workingFrame": { "width": 112, "height": 112 },
+  "scale": 2,
+  "sheet": { "columns": 4, "rows": 2 },
+  "anchor": { "x": 56, "y": 56, "groundedTolerance": 0 },
+  "border": { "transparentPixels": 2 },
+  "variantAlphaParity": true,
+  "samples": [
+    { "id": "idle", "animation": "idle", "timeSeconds": 0 },
+    { "id": "contact-0", "animation": "contact", "timeSeconds": 0 },
+    { "id": "contact-1", "animation": "contact", "timeSeconds": 0.08 },
+    { "id": "contact-2", "animation": "contact", "timeSeconds": 0.17 },
+    { "id": "contact-3", "animation": "contact", "timeSeconds": 0.28 },
+    { "id": "contact-4", "animation": "contact", "timeSeconds": 0.40 },
+    { "id": "contact-5", "animation": "contact", "timeSeconds": 0.52 },
+    { "id": "contact-6", "animation": "contact", "timeSeconds": 0.64 }
+  ],
+  "variants": [
+    { "id": "player1", "parameters": { "fill": "f4d6ae", "dark": "8f5d52", "accent": "39b9b0", "cream": "fff0dc" }, "output": "art/gameplay-actors/cat-paw-player1.png" },
+    { "id": "player2", "parameters": { "fill": "bba6df", "dark": "625180", "accent": "ee746d", "cream": "f3eaff" }, "output": "art/gameplay-actors/cat-paw-player2.png" }
+  ],
+  "metadataOutput": "art/gameplay-actors/cat-paw-export-metadata.json",
+  "validationOutput": "art/gameplay-actors/cat-paw-export-validation.json"
+}

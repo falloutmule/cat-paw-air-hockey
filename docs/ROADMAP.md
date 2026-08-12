@@ -4,12 +4,12 @@
 
 | Item | Status | Intent and acceptance |
 | --- | --- | --- |
-| Verified-main GitHub Pages publication | APPROVED | Publish only an SFHS-packed and exactly verified artifact; deployed bytes must match local canonical bytes. |
-| Exact-artifact Samsung session | APPROVED | Exercise shared touch, fullscreen/end controls, return speeds, score capture, background recovery, and heat on the named device. |
+| Verified-main GitHub Pages publication | APPROVED | Publish only an SFHS-packed and exactly verified artifact; deployed bytes must match local canonical bytes. Status remains PROPOSED until parity passes. |
+| CATPAW-RAPIER-001 Samsung gate | REPORTED PASS | Exact Rapier artifact was reported snappier and more responsive with no regressions after the required session. |
 
 ## Next
 
-No additional product work is approved after the physical report. Record any device-visible issue before choosing a repair.
+No additional product work is approved. The renderer-neutral Godot workflow and bounded position-kinematic Physics 2D capability are consumed through the exact SFHS pin; no further framework extraction is part of this release.
 
 ## Later
 

@@ -1,0 +1,47 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource path="res://scripts/score_cat.gd" type="Script" id="1_root"]
+[ext_resource path="res://scripts/cat_part.gd" type="Script" id="2_part"]
+
+[node name="ScoreCat" type="Node2D"]
+script = ExtResource("1_root")
+
+[node name="Rig" type="Node2D" parent="."]
+
+[node name="Tail" type="Node2D" parent="Rig"]
+position = Vector2(0, -20)
+script = ExtResource("2_part")
+part = "tail"
+
+[node name="Body" type="Node2D" parent="Rig"]
+position = Vector2(0, -20)
+script = ExtResource("2_part")
+part = "body"
+
+[node name="RearPaws" type="Node2D" parent="Rig"]
+position = Vector2(0, -8)
+script = ExtResource("2_part")
+part = "rear_paws"
+
+[node name="Head" type="Node2D" parent="Rig"]
+position = Vector2(0, -23)
+script = ExtResource("2_part")
+part = "head"
+
+[node name="FrontPawLeft" type="Node2D" parent="Rig"]
+position = Vector2(-20, -14)
+script = ExtResource("2_part")
+part = "front_paw"
+
+[node name="FrontPawRight" type="Node2D" parent="Rig"]
+position = Vector2(20, -14)
+script = ExtResource("2_part")
+part = "front_paw"
+mirror = true
+
+[node name="Accents" type="Node2D" parent="Rig"]
+position = Vector2(0, -24)
+script = ExtResource("2_part")
+part = "accents"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]

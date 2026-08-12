@@ -1,0 +1,30 @@
+{
+  "schema": "cat-paw-air-hockey.physical-report@1",
+  "status": "REPORTED PASS",
+  "evidenceStatus": "REPORTED",
+  "artifact": {
+    "classification": "canonical",
+    "buildId": "cat-paw-air-hockey-06998a9ce8bc",
+    "bytes": 4117623,
+    "sha256": "51b92216c60556d2df9885ba5155bc427da6904b0fc3fc6a89c864e30215f42a",
+    "sourceSha256": "06998a9ce8bc8b8cd578018e42b716c3c4b5b017c13626d306aa609eddc5055b"
+  },
+  "preview": {
+    "bytes": 44921,
+    "sha256": "4b21e28ec5739aed2ecd5c2bfe806db80e0ba8a6e2ccd30f22178b2b1183be76"
+  },
+  "reporterStatement": "User reported: Pass everything appears to work.",
+  "reportedDate": "2026-08-12",
+  "targetDevice": "Samsung phone; exact model not restated with this PASS",
+  "acceptedChecks": "The PASS is bound to the complete PUCK-PAW-GODOT-001 physical seed and exact identities above, including both palette directions, seven-frame synchronized puck/paw impacts, reduced motion, size extremes, touch ownership, fullscreen, capture, rematch, responsiveness, and visible operation.",
+  "missingFormalMetadata": [
+    "confirmed device model",
+    "Android version",
+    "numeric Chrome version",
+    "viewport dimensions and DPR",
+    "session screenshots or video",
+    "thermal and performance measurements",
+    "explicit custom-theme fallback observation"
+  ],
+  "limitations": "This is user-reported physical acceptance, not independently verified instrumentation. It applies only to the exact preview and packed artifact identities above."
+}

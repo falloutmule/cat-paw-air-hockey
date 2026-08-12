@@ -1,0 +1,32 @@
+{
+  "schema": "cat-paw.score-cat-export@1",
+  "scene": "res://scenes/score_cat.tscn",
+  "animationPlayer": "AnimationPlayer",
+  "workingFrame": { "width": 80, "height": 80 },
+  "scale": 2,
+  "sheet": { "columns": 4, "rows": 4 },
+  "anchor": { "x": 40, "y": 72 },
+  "variants": [
+    { "id": "player1", "output": "art/score-cats/cat-paw-score-cat-p1.png" },
+    { "id": "player2", "output": "art/score-cats/cat-paw-score-cat-p2.png" }
+  ],
+  "frames": [
+    { "id": "idle-open", "animation": "idle", "sampleSeconds": 0.0, "grounded": true },
+    { "id": "idle-blink", "animation": "idle", "sampleSeconds": 0.5, "grounded": true },
+    { "id": "goal-alert", "animation": "goal", "sampleSeconds": 0.0, "grounded": true },
+    { "id": "goal-rise", "animation": "goal", "sampleSeconds": 0.14, "grounded": false },
+    { "id": "goal-cheer", "animation": "goal", "sampleSeconds": 0.36, "grounded": false },
+    { "id": "goal-settle", "animation": "goal", "sampleSeconds": 0.72, "grounded": true },
+    { "id": "conceded-startled", "animation": "conceded", "sampleSeconds": 0.0, "grounded": true },
+    { "id": "conceded-frazzled", "animation": "conceded", "sampleSeconds": 0.24, "grounded": false },
+    { "id": "conceded-settle", "animation": "conceded", "sampleSeconds": 0.72, "grounded": true },
+    { "id": "win-proud", "animation": "win", "sampleSeconds": 0.0, "grounded": true },
+    { "id": "win-rise", "animation": "win", "sampleSeconds": 0.16, "grounded": false },
+    { "id": "win-hop", "animation": "win", "sampleSeconds": 0.34, "grounded": false },
+    { "id": "win-dance", "animation": "win", "sampleSeconds": 0.52, "grounded": false },
+    { "id": "win-peak", "animation": "win", "sampleSeconds": 0.72, "grounded": false },
+    { "id": "win-settle", "animation": "win", "sampleSeconds": 1.05, "grounded": true },
+    { "id": "defeated", "animation": "defeated", "sampleSeconds": 0.0, "grounded": true }
+  ]
+}
+

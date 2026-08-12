@@ -21,6 +21,7 @@ interface MutablePlayerInput {
 export interface HockeyInputDiagnostics {
   readonly owners: Readonly<Record<PlayerId, number | null>>;
   readonly held: Readonly<Record<PlayerId, boolean>>;
+  readonly targets: Readonly<Record<PlayerId, LogicalPoint | null>>;
   readonly ignoredPointerCount: number;
   readonly captureFailureCount: number;
   readonly clearCount: number;
@@ -57,17 +58,17 @@ export function createHockeyInput(options: {
     ArrowUp: [2, "up"], ArrowDown: [2, "down"], ArrowLeft: [2, "left"], ArrowRight: [2, "right"]
   });
 
-  function mapPoint(event: PointerEvent): LogicalPoint | undefined {
+  function screenToLogical(clientX: number, clientY: number, requireInside: boolean): LogicalPoint | undefined {
     const canvas = getCanvas();
     if (canvas === undefined) return undefined;
     const bounds = canvas.getBoundingClientRect();
     if (bounds.width <= 0 || bounds.height <= 0) return undefined;
-    if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) {
+    if (requireInside && (clientX < bounds.left || clientX > bounds.right || clientY < bounds.top || clientY > bounds.bottom)) {
       return undefined;
     }
     return Object.freeze({
-      x: Math.min(LOGICAL_WIDTH, Math.max(0, (event.clientX - bounds.left) / bounds.width * LOGICAL_WIDTH)),
-      y: Math.min(LOGICAL_HEIGHT, Math.max(0, (event.clientY - bounds.top) / bounds.height * LOGICAL_HEIGHT))
+      x: Math.min(LOGICAL_WIDTH, Math.max(0, (clientX - bounds.left) / bounds.width * LOGICAL_WIDTH)),
+      y: Math.min(LOGICAL_HEIGHT, Math.max(0, (clientY - bounds.top) / bounds.height * LOGICAL_HEIGHT))
     });
   }
 
@@ -83,7 +84,7 @@ export function createHockeyInput(options: {
 
   function pointerDown(event: PointerEvent): void {
     if (event.pointerType === "mouse" && event.button !== 0) return;
-    const point = mapPoint(event);
+    const point = screenToLogical(event.clientX, event.clientY, true);
     if (point === undefined) return;
     const player = playerForStart(point);
     const slot = players[player];
@@ -110,14 +111,8 @@ export function createHockeyInput(options: {
     const player = ownerForPointer(event.pointerId);
     if (player === undefined) return;
     event.preventDefault();
-    const canvas = getCanvas();
-    if (canvas === undefined) return;
-    const bounds = canvas.getBoundingClientRect();
-    if (bounds.width <= 0 || bounds.height <= 0) return;
-    players[player].target = Object.freeze({
-      x: Math.min(LOGICAL_WIDTH, Math.max(0, (event.clientX - bounds.left) / bounds.width * LOGICAL_WIDTH)),
-      y: Math.min(LOGICAL_HEIGHT, Math.max(0, (event.clientY - bounds.top) / bounds.height * LOGICAL_HEIGHT))
-    });
+    const point = screenToLogical(event.clientX, event.clientY, false);
+    if (point !== undefined) players[player].target = point;
   }
 
   function releasePointer(event: PointerEvent, cancelled: boolean): void {
@@ -263,6 +258,7 @@ export function createHockeyInput(options: {
       return Object.freeze({
         owners: Object.freeze({ 1: players[1].pointerId ?? null, 2: players[2].pointerId ?? null }),
         held: Object.freeze({ 1: players[1].held, 2: players[2].held }),
+        targets: Object.freeze({ 1: players[1].target ?? null, 2: players[2].target ?? null }),
         ignoredPointerCount,
         captureFailureCount,
         clearCount

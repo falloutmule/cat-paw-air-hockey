@@ -1,14 +1,14 @@
 {
   "browserEvidence": "one-shot/canonical-browser.json",
   "canonicalArtifact": {
-    "buildId": "cat-paw-air-hockey-64741220be29",
-    "bytes": 581644,
+    "buildId": "cat-paw-air-hockey-b83bd150d75e",
+    "bytes": 5857863,
     "path": "dist/index.html",
-    "sha256": "0d18270c36ff36987c8653579693a3dca3fc62b4271ea2cb55be0c13816f6b53",
+    "sha256": "827d1b6d1e3aa8877b206d2be5c89baaea89b5cd04e8643196b394b3f7789b1a",
     "verifier": "sfhs verify"
   },
-  "physical": "UNTESTED",
-  "remoteActions": "authorized-pending-verified-main-publish",
+  "physical": "REPORTED",
+  "remoteActions": "not-authorized",
   "schema": "sfhs.graduation-report@1",
-  "stage": "GRADUATION_PHYSICAL_PENDING"
+  "stage": "GRADUATION_COMPLETE"
 }

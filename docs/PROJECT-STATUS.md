@@ -4,24 +4,31 @@
 
 | Area | Status | Evidence / note |
 | --- | --- | --- |
-| Shared-phone local two-player air hockey | VERIFIED IMPLEMENTED | Input, physics, and match-flow suites; packed Chromium smoke |
-| First-to-five, ready/countdown, goal reset, winner/rematch | VERIFIED IMPLEMENTED | Match-flow suite |
-| Pointer lifecycle, legal halves, third-touch rejection | VERIFIED IMPLEMENTED | 13 input scenarios and browser smoke |
+| Shared-phone local two-player air hockey | VERIFIED IMPLEMENTED / REPORTED PHYSICAL PASS | Input, Rapier physics, match-flow, packed semantic browser, and Samsung session |
+| 540×1200 edge-to-edge mechanics | VERIFIED IMPLEMENTED | Walls at x=0/540; 25 focused tall-board/art checks; deep-defense screenshots |
+| First-to-five, ready/countdown, goal reset, winner/capture/rematch | VERIFIED IMPLEMENTED | Match-flow and normal-action packed-browser proof |
+| Pointer lifecycle, legal halves, third-touch rejection | VERIFIED IMPLEMENTED | 13 input scenarios and packed browser proof |
 | Audio, mute, pause, background recovery, reduced effects | VERIFIED IMPLEMENTED | Audio suite and source/browser checks |
-| Fullscreen, mirrored settings, return-speed handicaps, score capture, local themes | VERIFIED IMPLEMENTED | Canonical packed artifact and browser smoke; Samsung evidence pending |
-| Shared center controls and independent Board PNG reskinning | VERIFIED IMPLEMENTED | Exactly four live shared controls; strict 1080×1920 Board loader/persistence/reset and packed browser proof |
-| One Pixi WebGL canvas / no runtime external requests | VERIFIED IMPLEMENTED | SFHS manifest and packed Chromium smoke |
-| GitHub Pages | VERIFIED IMPLEMENTED | [Live site](https://falloutmule.github.io/cat-paw-air-hockey/) from Pages workflow run `31099501221`; downloaded bytes match the canonical artifact |
-| Current-artifact Samsung acceptance | UNTESTED | Earlier device results are artifact-specific and SUPERSEDED |
+| Fullscreen, mirrored settings, return-speed handicaps, local themes | VERIFIED IMPLEMENTED | Canonical packed artifact, browser proof, and Samsung session |
+| Shared center controls and independent Board PNG | VERIFIED IMPLEMENTED | Four live controls; strict 1080×2400 Board migration/replacement/invariance proof |
+| Dynamic couch goals | VERIFIED IMPLEMENTED | Persistent Pixi NineSliceSprite goals; independent 75%–125% mechanics/presentation; thick dual-contrast frame and outlined GOAL text |
+| One Pixi WebGL canvas / no runtime external requests | VERIFIED IMPLEMENTED | SFHS manifest and packed Chromium proof |
+| GitHub Pages | VERIFIED WORKFLOW / SUPERSEDED ARTIFACT | [Live site](https://falloutmule.github.io/cat-paw-air-hockey/) remains historical; verified-main publication is authorized and pending exact deployed-byte parity |
+| Size-setting discoverability and deferred paw application | VERIFIED REPAIRED | Goal Size/Paw Size lead the menu; packed proof checks 90 -> 112.5 paw diameter at the safe boundary |
+| Approved BOARD-ART-001 default | VERIFIED INTEGRATED | Exact approved 1080×2400 PNG; nearest-neighbor Board sprite; packed composed visual proof |
+| Accepted custom-solver Samsung baseline | REPORTED PASS | Exact build `cat-paw-air-hockey-06998a9ce8bc`; preserved artifact-bound report from 2026-08-12 |
+| CATPAW-RAPIER-001 Samsung acceptance | REPORTED PASS | User reported snappier, more responsive play and no regressions for the exact artifact |
+| Settings defaults and phone controls | VERIFIED REPAIRED | Sizes default to 200% over 25–200%; speeds default to 100% over 70–130%; mirrored sticky Close and one thin native scrollbar per half pass packed multi-viewport Chromium |
+| Godot puck-and-paw contact animation | VERIFIED IMPLEMENTED | Five deterministic sheets, last-hitter palette, seven synchronized frames, collision-normal recoil, static-theme fallback, reduced-motion rest frames, focused resolver/export tests, and normal-pointer semantic browser proof |
 
 ## Canonical identity
 
-The verified touch-activation repair target is build `cat-paw-air-hockey-e15fc84c48fb`, 722,382 bytes, SHA-256 `2a45ce59d5a976a2196276de05d9672554f25467af6e44e3cbebda3f59d5d261`, source SHA-256 `e15fc84c48fb44ca4c8e6ddba9280c0586fde84e714e2e263d2b8e4f9d232cda`. Commit `eb7b3ce50e77aeec84c9d3144a3aa0d771f6270e` requests fullscreen from the trusted post-touch click instead of the pre-activation pointerdown. The prior Pages artifact is **SUPERSEDED** by the artifact-bound Samsung failure screenshot; physical acceptance has not transferred.
+The locally verified CATPAW-RAPIER-001 target is build `cat-paw-air-hockey-b83bd150d75e`, 5,857,863 bytes, SHA-256 `827d1b6d1e3aa8877b206d2be5c89baaea89b5cd04e8643196b394b3f7789b1a`, source SHA-256 `b83bd150d75e68db243ed39b8d18aee32e6df349e634dc3f672fbd29d757fa1d`. It uses SFHS commit `fce070a0a08a9b4e0fbebda75440eaee80bb95a9` and reports a 13-body Rapier 2D world. The prior accepted custom-solver identity remains unchanged as the physical baseline.
 
 ## Known limitations and blockers
 
-- A physical Samsung Galaxy S21 Ultra report must name the exact packed build, byte size, and SHA-256; no prior acceptance transfers automatically.
 - WebGL is mandatory.
-- A new exact-artifact Samsung Galaxy S21 Ultra session remains required, specifically confirming fullscreen entry and exit from the HTTPS GitHub Pages game in stable Android Chrome.
+- Formal device model, Android/Chrome versions, viewport/DPR, screenshots/video, and instrumented frame-pacing/thermal measurements were not supplied with the PASS.
+- The handoff-supplied baseline commit label `d034d165` is not a repository object. Repository commit `d034d16fb62c4d8c74a882f00f9ef042679398d2` records the exact matching baseline artifact report, but no equivalence between those commit labels is claimed; baseline acceptance remains bound to the full artifact identity.
 
-Release terminology remains deliberately limited: automated and deployment gates pass, while artifact-bound physical-device acceptance is still UNTESTED.
+Release terminology remains deliberately limited: CATPAW-RAPIER-001 automated gates pass and artifact-bound physical-device acceptance is REPORTED PASS. No push, PR, release, or deployment has occurred.

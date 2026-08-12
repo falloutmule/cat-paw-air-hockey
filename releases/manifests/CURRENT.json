@@ -1,20 +1,26 @@
 {
   "schema": "cat-paw.release-manifest@1",
-  "status": "VERIFIED",
-  "source": { "branch": "main", "commit": "a85b2b05c23ff5a1e8dc2e718ed33ae85b2a15e1" },
-  "artifact": {
-    "buildId": "cat-paw-air-hockey-64741220be29",
-    "path": "dist/index.html",
-    "bytes": 581644,
-    "sha256": "0d18270c36ff36987c8653579693a3dca3fc62b4271ea2cb55be0c13816f6b53",
-    "sourceSha256": "64741220be29f0db3a3044f977d4cbba8acb0fb92d4c181c571d11f8f3afeeca"
+  "status": "PROPOSED",
+  "source": {
+    "branch": "feature/cat-paw-rapier-001",
+    "commit": "6f256ac54ef85e6d14c7ec3def70e98feec4ad95"
   },
-  "sfhsCommit": "5acd8fc9a24834d9416a6e615bb78b8012962e30",
-  "physicalDevice": "UNTESTED",
+  "artifact": {
+    "buildId": "cat-paw-air-hockey-b83bd150d75e",
+    "path": "dist/index.html",
+    "bytes": 5857863,
+    "sha256": "827d1b6d1e3aa8877b206d2be5c89baaea89b5cd04e8643196b394b3f7789b1a",
+    "sourceSha256": "b83bd150d75e68db243ed39b8d18aee32e6df349e634dc3f672fbd29d757fa1d"
+  },
+  "sfhsCommit": "fce070a0a08a9b4e0fbebda75440eaee80bb95a9",
+  "adapter": "pixi-v8@^0.1.0",
+  "physics": "@sfhs/physics-2d / Rapier 2D",
+  "physicalDevice": "REPORTED PASS",
+  "physicalEvidence": "one-shot/PHYSICAL-REPORT-CATPAW-RAPIER-001.json",
   "pages": {
-    "status": "VERIFIED",
+    "status": "PROPOSED",
     "url": "https://falloutmule.github.io/cat-paw-air-hockey/",
-    "workflowRun": "31099501221",
-    "deployedSha256": "0d18270c36ff36987c8653579693a3dca3fc62b4271ea2cb55be0c13816f6b53"
+    "workflowRun": null,
+    "deployedSha256": null
   }
 }

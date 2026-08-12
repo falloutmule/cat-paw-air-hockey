@@ -1,12 +1,12 @@
 ---
-{"schema":"sfhs.one-shot-scope@1","status":"VERIFIED","facts":{"sfhsRevision":"5acd8fc9a24834d9416a6e615bb78b8012962e30","lane":"repository-graduation-001","remoteMutationAuthorized":true}}
+{"schema":"sfhs.one-shot-scope@1","status":"VERIFIED","facts":{"sfhsRevision":"fce070a0a08a9b4e0fbebda75440eaee80bb95a9","lane":"repository-graduation-001","remoteMutationAuthorized":true,"publicationMode":"verified-main-publish"}}
 ---
 # Authorized Scope
 
-## R2 allowed work
+## CATPAW-RAPIER-001 repository release
 
-On local branch `codex/fullscreen-menu-theme-001`, implement exactly four shared center-edge controls, a presentation-only rectangular Board bitmap layer, strict local Board PNG replace/reset/persistence, the exact derived Board template, focused proof, canonical SFHS verification, packed Chromium evidence, and one local commit.
+Normalize and publish the accepted Rapier game through current SFHS without redesigning it. Reconcile current `main`, preserve source and physical authority, publish the required bounded SFHS kinematic contract, update documentation/evidence/workflows/repository presentation, run the complete canonical and independent audit gates, merge verified work normally to `main`, deploy only the exact SFHS-packed artifact to GitHub Pages, and prove downloaded-byte parity.
 
 ## Explicit exclusions
 
-No physics, controls semantics, goal geometry, cats/paws/puck/goal bitmap work, atlas expansion, gameplay redesign, SFHS-core change, push, PR, merge, tag, release, publication, or deployment. Physical acceptance remains a separately reported artifact-bound device gate.
+No gameplay, story, art-direction, balance, control, mode, networking, editor, or unrelated SFHS expansion. No force push, history rewrite, visibility change, tag/release deletion, secret exposure, or unrelated-work mutation. Existing artifact-bound physical reports remain separate and are never inferred or transferred.

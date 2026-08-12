@@ -4,6 +4,8 @@ export type ThemeSlot = "paw1" | "paw2" | "puck" | "emblem" | "mascot1" | "masco
 export interface ThemePalette { readonly table: string; readonly felt: string; readonly rail: string; readonly markings: string; readonly player1: string; readonly player2: string; readonly yarn: string; readonly shadow: string; }
 export interface ValidTheme { readonly filename: string; readonly blob: Blob; readonly url: string; readonly palette: ThemePalette; readonly slots: Readonly<Record<ThemeSlot, boolean>>; }
 export interface ValidBoard { readonly filename: string; readonly blob: Blob; readonly url: string; readonly image: HTMLImageElement; readonly width: number; readonly height: number; }
+export interface LegacyBoardRecord { readonly filename: string; readonly format: "1080x1920"; }
+export interface StoredBoardState { readonly current?: File; readonly legacy?: LegacyBoardRecord; }
 export const BOARD_MAX_BYTES = 4 * 1024 * 1024;
 const slots: readonly ThemeSlot[] = ["paw1", "paw2", "puck", "emblem", "mascot1", "mascot2", "goal1", "goal2", "impact", "confetti", "winner", "corner", "felt", "rail"];
 const defaults: ThemePalette = Object.freeze({ table: "#172331", felt: "#263f4c", rail: "#a97549", markings: "#fff4d6", player1: "#41d8c7", player2: "#ff8c78", yarn: "#ffd45c", shadow: "#071018" });
@@ -30,9 +32,41 @@ export async function validateBoard(file: File): Promise<ValidBoard> {
   return Object.freeze({ filename: file.name, blob: file, url: decoded.url, image: decoded.image, width: BOARD.bitmapWidth, height: BOARD.bitmapHeight });
 }
 
-export async function saveBoard(board: ValidBoard): Promise<void> { const db = await database(); await new Promise<void>((resolve, reject) => { const request = db.transaction("themes", "readwrite").objectStore("themes").put({ filename: board.filename, blob: board.blob }, "board-r2"); request.onsuccess = () => resolve(); request.onerror = () => reject(request.error); }); db.close(); }
-export async function loadBoard(): Promise<File | undefined> { const db = await database(); const value = await new Promise<{ filename: string; blob: Blob } | undefined>((resolve, reject) => { const request = db.transaction("themes").objectStore("themes").get("board-r2"); request.onsuccess = () => resolve(request.result); request.onerror = () => reject(request.error); }); db.close(); return value === undefined ? undefined : new File([value.blob], value.filename, { type: "image/png" }); }
-export async function clearBoard(): Promise<void> { const db = await database(); await new Promise<void>((resolve, reject) => { const request = db.transaction("themes", "readwrite").objectStore("themes").delete("board-r2"); request.onsuccess = () => resolve(); request.onerror = () => reject(request.error); }); db.close(); }
+export async function saveBoard(board: ValidBoard): Promise<void> {
+  const db = await database();
+  await new Promise<void>((resolve, reject) => {
+    const request = db.transaction("themes", "readwrite").objectStore("themes").put({ filename: board.filename, blob: board.blob }, "board-r3");
+    request.onsuccess = () => resolve(); request.onerror = () => reject(request.error);
+  });
+  db.close();
+}
+
+export async function loadBoard(): Promise<StoredBoardState> {
+  const db = await database();
+  const values = await new Promise<readonly [{ filename: string; blob: Blob } | undefined, { filename: string; blob: Blob } | undefined]>((resolve, reject) => {
+    const transaction = db.transaction("themes");
+    const store = transaction.objectStore("themes");
+    const currentRequest = store.get("board-r3");
+    const legacyRequest = store.get("board-r2");
+    transaction.oncomplete = () => resolve([currentRequest.result, legacyRequest.result]);
+    transaction.onerror = () => reject(transaction.error);
+  });
+  db.close();
+  const [current, legacy] = values;
+  return Object.freeze({
+    ...(current === undefined ? {} : { current: new File([current.blob], current.filename, { type: "image/png" }) }),
+    ...(legacy === undefined ? {} : { legacy: Object.freeze({ filename: legacy.filename, format: "1080x1920" as const }) })
+  });
+}
+
+export async function clearBoard(): Promise<void> {
+  const db = await database();
+  await new Promise<void>((resolve, reject) => {
+    const request = db.transaction("themes", "readwrite").objectStore("themes").delete("board-r3");
+    request.onsuccess = () => resolve(); request.onerror = () => reject(request.error);
+  });
+  db.close();
+}
 export async function validateTheme(file: File): Promise<ValidTheme> {
   if (file.type !== "image/png" || file.size > 8 * 1024 * 1024) throw new Error("Theme must be a PNG no larger than 8 MiB.");
   const bitmap = await createImageBitmap(file); if (bitmap.width !== 1024 || bitmap.height !== 1024) { bitmap.close(); throw new Error("Theme must be exactly 1024 × 1024 pixels."); }

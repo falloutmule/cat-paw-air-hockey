@@ -29,7 +29,7 @@ class MockSurface extends EventTarget {
 }
 
 class MockCanvas {
-  bounds = { left: 0, top: 0, right: 540, bottom: 960, width: 540, height: 960 };
+  bounds = { left: 0, top: 0, right: 540, bottom: 1200, width: 540, height: 1200 };
   getBoundingClientRect(): DOMRect { return this.bounds as DOMRect; }
 }
 
@@ -147,7 +147,7 @@ scenario("mapping uses current canvas bounds after resize", () => {
   pointer(surface, "pointerdown", 99, 145, 420);
   const snapshot = input.sampleForStep();
   assert.ok(Math.abs((snapshot.players[1].target?.x ?? 0) - 270) < 0.001);
-  assert.ok(Math.abs((snapshot.players[1].target?.y ?? 0) - 800) < 0.001);
+  assert.ok(Math.abs((snapshot.players[1].target?.y ?? 0) - 1000) < 0.001);
   pointer(surface, "pointerup", 99, 145, 420);
 });
 

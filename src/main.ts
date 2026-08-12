@@ -1,16 +1,17 @@
 import { createSfhsPixiV8Presentation, supportsRequiredWebGl } from "@sfhs/adapter-pixi-v8";
 import { createSfhsPixiGameRuntime, type SfhsPixiGameRuntime } from "@sfhs/pixi-runtime";
+import { createPhysics2DWorld } from "@sfhs/physics-2d";
 import { createHockeyAudioController } from "./audio.ts";
 import { makeBoardTemplateBlob } from "./board-art.ts";
-import { MAXIMUM_FRAME_DELTA_MS, SIMULATION_HZ } from "./constants.ts";
+import { BOARD, LOGICAL_HEIGHT, LOGICAL_WIDTH, MAXIMUM_FRAME_DELTA_MS, SIMULATION_HZ } from "./constants.ts";
 import { lowerLeftControl } from "./controls.ts";
 import { fullscreenAvailable, fullscreenElement, toggleElementFullscreen } from "./fullscreen.ts";
 import { installDiagnostics } from "./diagnostics.ts";
 import { createHockeyInput } from "./input.ts";
-import { createCatHockeyPresenter } from "./presentation.ts";
-import { createCatHockeyScene } from "./scene.ts";
-import { DEFAULT_MATCH_SETTINGS, normalizeMatchSettings, settingsEqual, settingsSummary, type MatchSettings } from "./settings.ts";
-import { clearBoard, clearTheme, loadBoard, loadTheme, saveBoard, saveTheme, validateBoard, validateTheme, type ValidBoard, type ValidTheme } from "./theme.ts";
+import { createCatHockeyPresenter, prepareCatHockeyPresentationAssets } from "./presentation.ts";
+import { createCatHockeyScene, type CatHockeyScene } from "./scene.ts";
+import { DEFAULT_MATCH_SETTINGS, SIZE_SETTING_MAXIMUM, SIZE_SETTING_MINIMUM, SPEED_SETTING_MAXIMUM, SPEED_SETTING_MINIMUM, incompatibleGoalPlayers, minimumPlayableGoalSize, normalizeMatchSettings, settingsEqual, type MatchSettings } from "./settings.ts";
+import { clearBoard, clearTheme, loadBoard, loadTheme, saveBoard, saveTheme, validateBoard, validateTheme, type LegacyBoardRecord, type ValidBoard, type ValidTheme } from "./theme.ts";
 import type { HockeyGameState } from "./state.ts";
 import defaultBoardTemplateUrl from "../art/theme/cat-paw-board-template.png";
 
@@ -50,33 +51,67 @@ let viewportFrame = 0;
 let reducedEffects = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
 let currentTheme: ValidTheme | undefined;
 let currentBoard: ValidBoard | undefined;
-const settingsStorageKey = "cat-paw-air-hockey.settings.v1";
-function loadSettings(): MatchSettings { try { return normalizeMatchSettings(JSON.parse(localStorage.getItem(settingsStorageKey) ?? "null")); } catch { return DEFAULT_MATCH_SETTINGS; } }
+let legacyBoard: LegacyBoardRecord | undefined;
+const boardPixelLabel = `${BOARD.bitmapWidth} × ${BOARD.bitmapHeight}`;
+const settingsStorageKey = "cat-paw-air-hockey.settings.v3";
+const previousSettingsStorageKey = "cat-paw-air-hockey.settings.v2";
+const legacySettingsStorageKey = "cat-paw-air-hockey.settings.v1";
+const migrateDefaultValue = (value: unknown, previousDefault: number, nextDefault: number): unknown => value === previousDefault ? nextDefault : value;
+function migrateSettingsDefaults(value: Partial<MatchSettings> | undefined, previousSpeedDefault: number, previousSizeDefault: number): MatchSettings {
+  return normalizeMatchSettings({
+    puckSpeed: migrateDefaultValue(value?.puckSpeed, previousSpeedDefault, DEFAULT_MATCH_SETTINGS.puckSpeed) as number,
+    pawSpeed: { 1: migrateDefaultValue(value?.pawSpeed?.[1], previousSpeedDefault, DEFAULT_MATCH_SETTINGS.pawSpeed[1]) as number, 2: migrateDefaultValue(value?.pawSpeed?.[2], previousSpeedDefault, DEFAULT_MATCH_SETTINGS.pawSpeed[2]) as number },
+    returnSpeed: { 1: migrateDefaultValue(value?.returnSpeed?.[1], previousSpeedDefault, DEFAULT_MATCH_SETTINGS.returnSpeed[1]) as number, 2: migrateDefaultValue(value?.returnSpeed?.[2], previousSpeedDefault, DEFAULT_MATCH_SETTINGS.returnSpeed[2]) as number },
+    puckSize: migrateDefaultValue(value?.puckSize, previousSizeDefault, DEFAULT_MATCH_SETTINGS.puckSize) as number,
+    pawSize: { 1: migrateDefaultValue(value?.pawSize?.[1], previousSizeDefault, DEFAULT_MATCH_SETTINGS.pawSize[1]) as number, 2: migrateDefaultValue(value?.pawSize?.[2], previousSizeDefault, DEFAULT_MATCH_SETTINGS.pawSize[2]) as number },
+    goalSize: { 1: migrateDefaultValue(value?.goalSize?.[1], previousSizeDefault, DEFAULT_MATCH_SETTINGS.goalSize[1]) as number, 2: migrateDefaultValue(value?.goalSize?.[2], previousSizeDefault, DEFAULT_MATCH_SETTINGS.goalSize[2]) as number }
+  });
+}
+function loadSettings(): MatchSettings {
+  try {
+    const current = localStorage.getItem(settingsStorageKey);
+    if (current !== null) return normalizeMatchSettings(JSON.parse(current));
+    const previous = localStorage.getItem(previousSettingsStorageKey);
+    const legacy = localStorage.getItem(legacySettingsStorageKey);
+    if (previous === null && legacy === null) return DEFAULT_MATCH_SETTINGS;
+    const migrated = previous !== null ? migrateSettingsDefaults(JSON.parse(previous), 75, 125) : migrateSettingsDefaults(JSON.parse(legacy!), 100, 100);
+    localStorage.setItem(settingsStorageKey, JSON.stringify(migrated));
+    return migrated;
+  } catch { return DEFAULT_MATCH_SETTINGS; }
+}
 let menuSettings = loadSettings();
 try { const stored = localStorage.getItem("cat-paw-air-hockey.reduced-motion.v1"); if (stored !== null) reducedEffects = stored === "true"; } catch { /* session fallback */ }
 
 const audio = createHockeyAudioController();
-const scene = createCatHockeyScene();
-const presenter = createCatHockeyPresenter({ onEvents: (events) => audio.consume(events), boardTemplateMode });
+let scene: CatHockeyScene | undefined;
+const presenter = createCatHockeyPresenter({ onEvents: (events) => { audio.consume(events); if (events.length > 0) updateControls(); }, boardTemplateMode });
 const presentation = createSfhsPixiV8Presentation<HockeyGameState>({ backgroundColor: 0x172331, presenter });
 const input = createHockeyInput({ initialSurface: host, getCanvas: () => runtime?.getPrimarySurface(), onIntentionalGesture: () => { void audio.unlock().then(updateControls); } });
 
-const menuMarkup = `<h2>Cat Paw settings</h2><p class="settings-summary" data-summary></p><fieldset><legend>Gameplay</legend>
-${[["puckSpeed", "Puck speed", 70, 130], ["pawSpeed1", "Player 1 paw speed", 70, 130], ["pawSpeed2", "Player 2 paw speed", 70, 130], ["returnSpeed1", "Player 1 return speed", 70, 130], ["returnSpeed2", "Player 2 return speed", 70, 130], ["puckSize", "Puck size", 75, 125], ["pawSize1", "Player 1 paw size", 75, 125], ["pawSize2", "Player 2 paw size", 75, 125], ["goalSize1", "Player 1 goal opening", 75, 125], ["goalSize2", "Player 2 goal opening", 75, 125]].map(([key, label, min, max]) => `<label>${label}<output data-value="${key}"></output><input data-setting="${key}" type="range" min="${min}" max="${max}" step="5"></label>`).join("")}
-  <button type="button" data-menu-action="reset">Reset Gameplay Defaults</button></fieldset><fieldset><legend>Display</legend><label>Reduced motion <input data-menu-action="reduced" type="checkbox"></label><p data-fullscreen-status></p></fieldset><fieldset><legend>Theme</legend><div class="board-preview"><img data-board-preview alt="Current Board preview"><p data-board-status>Default Board</p></div><button type="button" data-menu-action="board-template">Download Board Template</button><button type="button" data-menu-action="load-board">Replace Board PNG</button><button type="button" data-menu-action="reset-board">Reset Board</button><details class="legacy-theme"><summary>Legacy composite theme</summary><button type="button" data-menu-action="load-theme">Load Legacy Theme PNG</button><button type="button" data-menu-action="reset-theme">Reset Legacy Theme</button><p data-theme-status>Classic legacy theme</p></details></fieldset><fieldset><legend>About / Reset</legend><p>Changes during a match apply next serve.</p><button type="button" data-menu-action="close">Close settings</button></fieldset>`;
+const settingControls = (settings: readonly (readonly [string, string, number, number])[]): string => settings.map(([key, label, min, max]) => `<label>${label}<output data-value="${key}"></output><input data-setting="${key}" aria-label="${label}" type="range" min="${min}" max="${max}" step="5"></label>`).join("");
+const menuMarkup = `<div class="settings-toolbar"><button class="settings-close" type="button" data-menu-action="close">Close settings</button><p class="settings-summary" data-summary></p></div><h2>Cat Paw settings</h2>
+  <fieldset data-settings-group="sizes"><legend>Sizes · normal 200%</legend>${settingControls([["goalSize1", "Player 1 goal size", SIZE_SETTING_MINIMUM, SIZE_SETTING_MAXIMUM], ["goalSize2", "Player 2 goal size", SIZE_SETTING_MINIMUM, SIZE_SETTING_MAXIMUM], ["pawSize1", "Player 1 paw size", SIZE_SETTING_MINIMUM, SIZE_SETTING_MAXIMUM], ["pawSize2", "Player 2 paw size", SIZE_SETTING_MINIMUM, SIZE_SETTING_MAXIMUM], ["puckSize", "Puck size", SIZE_SETTING_MINIMUM, SIZE_SETTING_MAXIMUM]])}</fieldset>
+  <fieldset data-settings-group="speeds"><legend>Speeds · normal 100%</legend>${settingControls([["puckSpeed", "Puck speed", SPEED_SETTING_MINIMUM, SPEED_SETTING_MAXIMUM], ["pawSpeed1", "Player 1 paw speed", SPEED_SETTING_MINIMUM, SPEED_SETTING_MAXIMUM], ["pawSpeed2", "Player 2 paw speed", SPEED_SETTING_MINIMUM, SPEED_SETTING_MAXIMUM], ["returnSpeed1", "Player 1 return speed", SPEED_SETTING_MINIMUM, SPEED_SETTING_MAXIMUM], ["returnSpeed2", "Player 2 return speed", SPEED_SETTING_MINIMUM, SPEED_SETTING_MAXIMUM]])}<button type="button" data-menu-action="reset">Reset to Normal · Sizes 200% · Speeds 100%</button></fieldset>
+  <fieldset><legend>Display</legend><label>Reduced motion <input data-menu-action="reduced" type="checkbox"></label><p data-fullscreen-status></p></fieldset><fieldset><legend>Theme</legend><div class="board-preview"><img data-board-preview alt="Current Board preview"><p data-board-status>Default Board</p></div><button type="button" data-menu-action="board-template">Download Board Template</button><button type="button" data-menu-action="load-board">Replace Board PNG</button><button type="button" data-menu-action="reset-board">Reset Board</button><details class="legacy-theme"><summary>Legacy composite theme</summary><button type="button" data-menu-action="load-theme">Load Legacy Theme PNG</button><button type="button" data-menu-action="reset-theme">Reset Legacy Theme</button><p data-theme-status>Classic legacy theme</p></details></fieldset><fieldset><legend>About</legend><p>Live-match size and speed changes apply after the next goal, before the next serve. Extreme puck and goal combinations may be intentionally unplayable; the warning above will remain visible.</p></fieldset>`;
 for (const view of menuViews) view.innerHTML = menuMarkup;
 
+function settingDefaultValue(key: string): number {
+  const values: Record<string, number> = { puckSpeed: DEFAULT_MATCH_SETTINGS.puckSpeed, pawSpeed1: DEFAULT_MATCH_SETTINGS.pawSpeed[1], pawSpeed2: DEFAULT_MATCH_SETTINGS.pawSpeed[2], returnSpeed1: DEFAULT_MATCH_SETTINGS.returnSpeed[1], returnSpeed2: DEFAULT_MATCH_SETTINGS.returnSpeed[2], puckSize: DEFAULT_MATCH_SETTINGS.puckSize, pawSize1: DEFAULT_MATCH_SETTINGS.pawSize[1], pawSize2: DEFAULT_MATCH_SETTINGS.pawSize[2], goalSize1: DEFAULT_MATCH_SETTINGS.goalSize[1], goalSize2: DEFAULT_MATCH_SETTINGS.goalSize[2] };
+  return values[key] ?? DEFAULT_MATCH_SETTINGS.puckSpeed;
+}
 function settingValue(key: string): number {
   const values: Record<string, number> = { puckSpeed: menuSettings.puckSpeed, pawSpeed1: menuSettings.pawSpeed[1], pawSpeed2: menuSettings.pawSpeed[2], returnSpeed1: menuSettings.returnSpeed[1], returnSpeed2: menuSettings.returnSpeed[2], puckSize: menuSettings.puckSize, pawSize1: menuSettings.pawSize[1], pawSize2: menuSettings.pawSize[2], goalSize1: menuSettings.goalSize[1], goalSize2: menuSettings.goalSize[2] };
-  return values[key] ?? 100;
+  return values[key] ?? settingDefaultValue(key);
 }
 function syncMenuViews(): void {
   const state = runtime?.getState();
+  const incompatible = incompatibleGoalPlayers(menuSettings);
+  const minimumGoal = minimumPlayableGoalSize(menuSettings.puckSize);
   for (const view of menuViews) {
-    for (const range of view.querySelectorAll<HTMLInputElement>("input[data-setting]")) { range.value = String(settingValue(range.dataset.setting ?? "")); range.setAttribute("aria-valuetext", `${range.value}%`); range.dataset.default = String(range.value === "100"); }
+    for (const range of view.querySelectorAll<HTMLInputElement>("input[data-setting]")) { const key = range.dataset.setting ?? ""; range.value = String(settingValue(key)); range.setAttribute("aria-valuetext", `${range.value}%`); range.dataset.default = String(Number(range.value) === settingDefaultValue(key)); const goalPlayer = key === "goalSize1" ? 1 : key === "goalSize2" ? 2 : undefined; if (goalPlayer === undefined) range.removeAttribute("aria-invalid"); else range.setAttribute("aria-invalid", String(incompatible.includes(goalPlayer))); }
     for (const output of view.querySelectorAll<HTMLOutputElement>("output[data-value]")) output.value = `${settingValue(output.dataset.value ?? "")}%`;
     const checkbox = view.querySelector<HTMLInputElement>("input[data-menu-action='reduced']"); if (checkbox !== null) checkbox.checked = reducedEffects;
-    const summary = view.querySelector<HTMLElement>("[data-summary]"); if (summary !== null) summary.textContent = settingsEqual(state?.activeMatchSettings ?? menuSettings, menuSettings) ? settingsSummary(menuSettings) : `${settingsSummary(menuSettings)} · Applies next serve`;
+    const summary = view.querySelector<HTMLElement>("[data-summary]"); if (summary !== null) { const pending = !settingsEqual(state?.activeMatchSettings ?? menuSettings, menuSettings); summary.dataset.pending = String(pending && incompatible.length === 0); summary.dataset.warning = String(incompatible.length > 0); summary.textContent = incompatible.length > 0 ? `Warning · ${incompatible.map((player) => `P${player} goal`).join(" and ")} cannot fit the ${menuSettings.puckSize}% puck · use at least ${minimumGoal}% goal size. Closing is still allowed.` : pending ? "Pending changes · visible after the next goal, before the next serve." : "All shown settings are active."; }
     const fullscreenStatus = view.querySelector<HTMLElement>("[data-fullscreen-status]"); if (fullscreenStatus !== null) fullscreenStatus.textContent = fullscreenAvailable(document.documentElement) ? (fullscreenElement() === null ? "Fullscreen available" : "Fullscreen active") : "Fullscreen unavailable in this browser view";
   }
 }
@@ -88,28 +123,43 @@ function updateSetting(key: string, value: number): void {
   else if (key === "returnSpeed1") next.returnSpeed[1] = value; else if (key === "returnSpeed2") next.returnSpeed[2] = value;
   else if (key === "pawSize1") next.pawSize[1] = value; else if (key === "pawSize2") next.pawSize[2] = value;
   else if (key === "goalSize1") next.goalSize[1] = value; else if (key === "goalSize2") next.goalSize[2] = value;
-  menuSettings = normalizeMatchSettings(next); input.requestSettings(menuSettings); persistPreferences(); syncMenuViews();
+  menuSettings = normalizeMatchSettings(next); input.requestSettings(menuSettings); persistPreferences(); syncMenuViews(); const incompatible = incompatibleGoalPlayers(menuSettings); if (incompatible.length > 0) settingsLive.value = `Warning: ${incompatible.map((player) => `Player ${player} goal`).join(" and ")} cannot fit the current puck. Closing settings is still allowed.`; setTimeout(syncMenuViews, 60);
 }
 
-function isLandscape(): boolean { const width = window.visualViewport?.width ?? window.innerWidth; const height = window.visualViewport?.height ?? window.innerHeight; return width > height; }
+function applyViewportGeometry(): void {
+  const viewport = runtime?.getViewport();
+  if (viewport === undefined) return;
+  const playfieldWidth = viewport.logicalWidth * viewport.scaleX;
+  const playfieldHeight = viewport.logicalHeight * viewport.scaleY;
+  shell.style.width = `${viewport.presentedWidth}px`;
+  shell.style.height = `${viewport.presentedHeight}px`;
+  shell.style.setProperty("--viewport-width", `${viewport.presentedWidth}px`);
+  shell.style.setProperty("--viewport-height", `${viewport.presentedHeight}px`);
+  shell.style.setProperty("--playfield-left", `${viewport.offsetX}px`);
+  shell.style.setProperty("--playfield-right", `${viewport.offsetX + playfieldWidth}px`);
+  shell.style.setProperty("--playfield-top", `${viewport.offsetY}px`);
+  shell.style.setProperty("--playfield-bottom", `${viewport.offsetY + playfieldHeight}px`);
+  shell.style.setProperty("--playfield-center-y", `${viewport.offsetY + playfieldHeight / 2}px`);
+  shell.dataset.orientation = viewport.orientation;
+}
 function applyOrientationGate(): void {
-  const landscape = isLandscape(); orientationGate.hidden = !landscape; shell.dataset.orientation = landscape ? "landscape" : "portrait";
+  const landscape = runtime?.getViewport().orientation === "landscape"; orientationGate.hidden = !landscape;
   if (runtime === undefined) return;
   if (landscape && !orientationPaused) { orientationPaused = true; runtime.pause(); input.clear(); }
   else if (!landscape && orientationPaused) { orientationPaused = false; if (!document.hidden) runtime.resume(); }
 }
-function scheduleViewport(): void { if (viewportFrame !== 0) return; viewportFrame = requestAnimationFrame(() => { viewportFrame = 0; applyOrientationGate(); updateControls(); }); }
+function scheduleViewport(): void { if (viewportFrame !== 0) return; viewportFrame = requestAnimationFrame(() => { viewportFrame = 0; applyViewportGeometry(); applyOrientationGate(); updateControls(); }); }
 function setMenuOpen(open: boolean): void {
   if (open) { input.clear(); if (runtime?.getState().phase !== "paused") input.requestPause(); menuOpen = true; settingsOverlay.hidden = false; settingsLive.value = "Settings open. Match paused."; }
-  else { input.clear(); menuOpen = false; settingsOverlay.hidden = true; settingsLive.value = "Settings closed. Press Resume to continue."; }
+  else { input.clear(); menuOpen = false; settingsOverlay.hidden = true; const pending = runtime !== undefined && !settingsEqual(runtime.getState().activeMatchSettings, menuSettings); settingsLive.value = pending ? "Settings saved. Changes apply after the next goal, before the next serve." : "Settings closed. Press Resume to continue."; if (pending) showControlFeedback("Settings saved · size changes appear after the next goal"); }
   updateControls();
 }
 function themeStatus(message: string): void { for (const view of menuViews) { const statusElement = view.querySelector<HTMLElement>("[data-theme-status]"); if (statusElement !== null) statusElement.textContent = message; } settingsLive.value = message; }
 function showControlFeedback(message: string): void { controlFeedback.value = message; controlFeedback.hidden = false; if (feedbackTimer !== undefined) clearTimeout(feedbackTimer); feedbackTimer = setTimeout(() => { controlFeedback.hidden = true; }, 4_000); }
-function syncBoardViews(): void { for (const view of menuViews) { const preview = view.querySelector<HTMLImageElement>("[data-board-preview]"); if (preview !== null) preview.src = currentBoard?.url ?? defaultBoardTemplateUrl; const boardStatusElement = view.querySelector<HTMLElement>("[data-board-status]"); if (boardStatusElement !== null) boardStatusElement.textContent = currentBoard === undefined ? "Default Board · 1080 × 1920 PNG" : `${currentBoard.filename} · 1080 × 1920 PNG`; } shell.dataset.board = currentBoard === undefined ? "default" : "custom"; }
+function syncBoardViews(): void { for (const view of menuViews) { const preview = view.querySelector<HTMLImageElement>("[data-board-preview]"); if (preview !== null) preview.src = currentBoard?.url ?? defaultBoardTemplateUrl; const boardStatusElement = view.querySelector<HTMLElement>("[data-board-status]"); if (boardStatusElement !== null) boardStatusElement.textContent = currentBoard !== undefined ? `${currentBoard.filename} · ${boardPixelLabel} PNG` : legacyBoard === undefined ? `Default Board · ${boardPixelLabel} PNG` : `Default Board · saved legacy ${legacyBoard.filename} (1080 × 1920) is incompatible; replace with ${boardPixelLabel}`; } shell.dataset.board = currentBoard === undefined ? "default" : "custom"; shell.dataset.legacyBoard = String(legacyBoard !== undefined); }
 function boardStatus(message: string): void { syncBoardViews(); for (const view of menuViews) { const statusElement = view.querySelector<HTMLElement>("[data-board-status]"); if (statusElement !== null) statusElement.textContent = message; } settingsLive.value = message; }
 async function downloadBoardTemplate(): Promise<void> {
-  try { const link = document.createElement("a"); let temporaryUrl: string | undefined; if (boardTemplateSourceMode) { temporaryUrl = URL.createObjectURL(await makeBoardTemplateBlob()); link.href = temporaryUrl; } else link.href = defaultBoardTemplateUrl; link.download = "cat-paw-board-template.png"; link.click(); if (temporaryUrl !== undefined) setTimeout(() => URL.revokeObjectURL(temporaryUrl!), 1_000); boardStatus("Board template downloaded · 1080 × 1920 PNG"); }
+  try { const link = document.createElement("a"); let temporaryUrl: string | undefined; if (boardTemplateSourceMode) { temporaryUrl = URL.createObjectURL(await makeBoardTemplateBlob()); link.href = temporaryUrl; } else link.href = defaultBoardTemplateUrl; link.download = "cat-paw-board-template.png"; link.click(); if (temporaryUrl !== undefined) setTimeout(() => URL.revokeObjectURL(temporaryUrl!), 1_000); boardStatus(`Board template downloaded · ${boardPixelLabel} PNG`); }
   catch (error) { boardStatus(error instanceof Error ? error.message : "Board template download failed"); }
 }
 async function acceptBoard(file: File): Promise<void> {
@@ -163,7 +213,7 @@ for (const button of fullscreenButtons) {
 }
 for (const button of captureButtons) button.addEventListener("click", () => { void captureScore(); });
 for (const view of menuViews) {
-  view.addEventListener("input", (event) => { const target = event.target as HTMLInputElement; if (target.dataset.setting !== undefined) updateSetting(target.dataset.setting, Number(target.value)); if (target.dataset.menuAction === "reduced") { reducedEffects = target.checked; scene.setReducedEffects(reducedEffects); presenter.setReducedEffects(reducedEffects); persistPreferences(); updateControls(); } });
+  view.addEventListener("input", (event) => { const target = event.target as HTMLInputElement; if (target.dataset.setting !== undefined) updateSetting(target.dataset.setting, Number(target.value)); if (target.dataset.menuAction === "reduced") { reducedEffects = target.checked; scene?.setReducedEffects(reducedEffects); presenter.setReducedEffects(reducedEffects); persistPreferences(); updateControls(); } });
   view.addEventListener("click", (event) => { const action = (event.target as HTMLElement).closest<HTMLElement>("[data-menu-action]")?.dataset.menuAction; if (action === "close") setMenuOpen(false); if (action === "reset") { menuSettings = DEFAULT_MATCH_SETTINGS; input.requestSettings(menuSettings); persistPreferences(); updateControls(); } if (action === "board-template") void downloadBoardTemplate(); if (action === "load-board") boardFile.click(); if (action === "reset-board") void resetBoard(); if (action === "load-theme") themeFile.click(); if (action === "reset-theme") { presenter.setTheme(undefined); currentTheme = undefined; void clearTheme().catch(() => undefined); themeStatus("Classic legacy theme restored"); } });
 }
 themeFile.addEventListener("change", () => { const file = themeFile.files?.[0]; if (file !== undefined) void acceptTheme(file); themeFile.value = ""; });
@@ -177,14 +227,16 @@ document.addEventListener("keydown", (event) => {
   event.preventDefault(); focusable[next]!.focus();
 });
 
-const removeDiagnostics = installDiagnostics({ getRuntime: () => runtime, input, getAudioStatus: () => audio.getStatus(), getOrientationGate: () => !orientationGate.hidden, getBoardDiagnostics: () => presenter.getBoardDiagnostics() });
+const removeDiagnostics = installDiagnostics({ getRuntime: () => runtime, input, getAudioStatus: () => audio.getStatus(), getOrientationGate: () => !orientationGate.hidden, getPhysicsDiagnostics: () => scene?.getPhysicsDiagnostics(), getBoardDiagnostics: () => presenter.getBoardDiagnostics(), getGoalDiagnostics: () => presenter.getGoalDiagnostics(), getPawDiagnostics: () => presenter.getPawDiagnostics(), getPuckDiagnostics: () => presenter.getPuckDiagnostics(), getScoreCatDiagnostics: () => presenter.getScoreCatDiagnostics() });
 async function boot(): Promise<void> {
   if (!supportsRequiredWebGl(document)) { capability.hidden = false; host.hidden = true; status.value = "WebGL unavailable"; return; }
   try {
-    runtime = await createSfhsPixiGameRuntime({ host, presentation, scene, actions: input, viewport: { mode: "fixed", logicalWidth: 540, logicalHeight: 960, maximumDevicePixelRatio: 2, scalePolicy: "contain" }, simulationHz: SIMULATION_HZ, maximumFrameDeltaMilliseconds: MAXIMUM_FRAME_DELTA_MS });
-    input.setSurface(host, () => runtime?.getPrimarySurface()); scene.setReducedEffects(reducedEffects); presenter.setReducedEffects(reducedEffects); input.requestSettings(menuSettings); runtime.start(); status.value = "Ready — both players hold a paw"; applyOrientationGate(); updateControls();
+    await prepareCatHockeyPresentationAssets();
+    scene = await createCatHockeyScene(createPhysics2DWorld);
+    runtime = await createSfhsPixiGameRuntime({ host, presentation, scene, actions: input, viewport: { mode: "fixed", logicalWidth: LOGICAL_WIDTH, logicalHeight: LOGICAL_HEIGHT, maximumDevicePixelRatio: 2, scalePolicy: "contain" }, simulationHz: SIMULATION_HZ, maximumFrameDeltaMilliseconds: MAXIMUM_FRAME_DELTA_MS });
+    applyViewportGeometry(); input.setSurface(host, () => runtime?.getPrimarySurface()); scene.setReducedEffects(reducedEffects); presenter.setReducedEffects(reducedEffects); input.requestSettings(menuSettings); runtime.start(); status.value = "Ready — both players hold a paw"; applyOrientationGate(); updateControls();
     void loadTheme().then((file) => { if (file !== undefined) void acceptTheme(file); }).catch(() => themeStatus("Classic legacy theme (storage unavailable)"));
-    void loadBoard().then((file) => { if (file !== undefined) void acceptBoard(file); else syncBoardViews(); }).catch(() => boardStatus("Default Board · storage unavailable"));
+    void loadBoard().then((stored) => { legacyBoard = stored.legacy; if (stored.current !== undefined) void acceptBoard(stored.current); else syncBoardViews(); }).catch(() => boardStatus("Default Board · storage unavailable"));
   } catch (error) { capability.hidden = false; capability.querySelector("p")!.textContent = "The required PixiJS WebGL renderer could not initialize."; host.hidden = true; status.value = error instanceof Error ? error.message : "Renderer initialization failed"; }
 }
 document.addEventListener("visibilitychange", () => { if (runtime === undefined) return; if (document.hidden) { hiddenPaused = true; runtime.pause(); input.clear(); } else if (hiddenPaused) { hiddenPaused = false; if (!orientationPaused) runtime.resume(); void audio.unlock().then(updateControls); } });
@@ -194,6 +246,6 @@ document.addEventListener("fullscreenchange", onFullscreenChange);
 document.addEventListener("webkitfullscreenchange", onFullscreenChange);
 document.addEventListener("fullscreenerror", onFullscreenError);
 document.addEventListener("webkitfullscreenerror", onFullscreenError);
-window.addEventListener("resize", scheduleViewport); window.addEventListener("orientationchange", scheduleViewport); window.visualViewport?.addEventListener("resize", scheduleViewport); window.visualViewport?.addEventListener("scroll", scheduleViewport);
-window.addEventListener("pagehide", () => { removeDiagnostics(); runtime?.destroy(); input.destroy(); if (currentBoard !== undefined) URL.revokeObjectURL(currentBoard.url); void audio.dispose(); }, { once: true });
+window.addEventListener("resize", scheduleViewport); window.addEventListener("orientationchange", scheduleViewport); window.visualViewport?.addEventListener("resize", scheduleViewport);
+window.addEventListener("pagehide", () => { removeDiagnostics(); runtime?.destroy(); if (runtime === undefined) scene?.destroy(); input.destroy(); if (currentBoard !== undefined) URL.revokeObjectURL(currentBoard.url); void audio.dispose(); }, { once: true });
 syncBoardViews(); updateControls(); void boot();

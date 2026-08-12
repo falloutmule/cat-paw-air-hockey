@@ -3,23 +3,397 @@
   "valid": true,
   "artifact": {
     "path": "dist/index.html",
-    "bytes": 722382,
-    "sha256": "2a45ce59d5a976a2196276de05d9672554f25467af6e44e3cbebda3f59d5d261",
-    "buildId": "cat-paw-air-hockey-e15fc84c48fb"
+    "bytes": 5857863,
+    "sha256": "827d1b6d1e3aa8877b206d2be5c89baaea89b5cd04e8643196b394b3f7789b1a"
   },
-  "browser": "Chromium 149.0.7827.55",
-  "checks": [
-    "exact served bytes",
-    "Pixi WebGL renderer and one visible canvas",
-    "zero page/console errors and zero unexpected runtime requests",
-    "exactly four live shared center-edge controls with no duplicated end sets",
-    "both defensive goal zones clear of controls",
-    "strict 1080 x 1920 Board PNG acceptance and wrong-size/corrupt rejection",
-    "failed replacement preserves prior Board",
-    "custom Board persists across reload and Reset Board restores default",
-    "one persistent Board sprite and owned superseded texture disposal",
-    "Board replacement leaves simulation and stage object count unchanged",
-    "independent pointers, release, cancellation, and third-touch rejection",
-    "ready/countdown, pause/resume, touch-driven fullscreen entry/exit, landscape gate, and portrait return"
-  ]
+  "browser": "149.0.7827.55",
+  "canvasCount": 1,
+  "requests": [
+    "/",
+    "/",
+    "/"
+  ],
+  "pageErrors": [],
+  "consoleErrors": [],
+  "offline": {
+    "valid": true,
+    "requests": [
+      "file:///C:/Users/fallo/Documents/Single-File-Html/.worktrees/sfhs-rapier-kinematic-001/examples/.sfhs-grad-cat-paw-rapier-001-66ade8a90f60/dist/index.html"
+    ],
+    "errors": [],
+    "backend": "rapier2d"
+  },
+  "snapshot": {
+    "schema": "cat-air-hockey.runtime-snapshot@3",
+    "renderer": {
+      "renderer": "PIXI",
+      "paused": false,
+      "destroyed": false,
+      "viewport": {
+        "logicalWidth": 540,
+        "logicalHeight": 1200,
+        "presentedWidth": 412,
+        "presentedHeight": 915,
+        "backingWidth": 1080,
+        "backingHeight": 2400,
+        "resolution": 2,
+        "scaleX": 0.7625,
+        "scaleY": 0.7625,
+        "offsetX": 0.125,
+        "offsetY": 0,
+        "orientation": "portrait"
+      },
+      "stage": {
+        "hierarchy": [
+          "worldRoot/backgroundLayer",
+          "worldRoot/environmentLayer",
+          "worldRoot/actorLayer",
+          "worldRoot/projectileLayer",
+          "worldRoot/worldEffectsLayer",
+          "screenEffectsLayer",
+          "debugLayer",
+          "hudLayer"
+        ],
+        "meaningfulObjectCount": 5
+      }
+    },
+    "viewport": {
+      "logicalWidth": 540,
+      "logicalHeight": 1200,
+      "presentedWidth": 412,
+      "presentedHeight": 915,
+      "backingWidth": 1080,
+      "backingHeight": 2400,
+      "resolution": 2,
+      "scaleX": 0.7625,
+      "scaleY": 0.7625,
+      "offsetX": 0.125,
+      "offsetY": 0,
+      "orientation": "portrait"
+    },
+    "input": {
+      "owners": {
+        "1": null,
+        "2": null
+      },
+      "held": {
+        "1": false,
+        "2": false
+      },
+      "targets": {
+        "1": {
+          "x": 270,
+          "y": 1116
+        },
+        "2": {
+          "x": 270,
+          "y": 84.00000000000001
+        }
+      },
+      "ignoredPointerCount": 1,
+      "captureFailureCount": 5,
+      "clearCount": 8
+    },
+    "audio": "ready",
+    "orientationGateActive": false,
+    "physics": {
+      "backend": "rapier2d",
+      "bodyCount": 13,
+      "initializationMilliseconds": 0.09999999776482582,
+      "steps": 236,
+      "timingMilliseconds": {
+        "mean": 0.08050847449734555,
+        "p95": 0.19999999925494194,
+        "worst": 5.300000000745058
+      }
+    },
+    "board": {
+      "mode": "default",
+      "spriteCount": 1,
+      "replacementCount": 2,
+      "disposedOwnedTextureCount": 1,
+      "logicalBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 540,
+        "height": 1200
+      },
+      "bitmapPixels": {
+        "width": 1080,
+        "height": 2400
+      },
+      "spriteLogicalSize": {
+        "width": 540,
+        "height": 1200
+      }
+    },
+    "goals": {
+      "architecture": "pixi-nine-slice",
+      "textureSampling": "nearest",
+      "top": {
+        "openingWidth": 230,
+        "visualWidth": 278,
+        "labelScale": 1.1,
+        "rotation": 3.141592653589793
+      },
+      "bottom": {
+        "openingWidth": 138,
+        "visualWidth": 186,
+        "labelScale": 0.9,
+        "rotation": 0
+      }
+    },
+    "paws": {
+      "top": {
+        "nominalDiameter": 180,
+        "frame": 0,
+        "sheet": "cat-paw-player2.png",
+        "sha256": "d6946cecf84386a6db9b7ab3c34a1bd56930217a239100e3cc8b7938c6595a43",
+        "anchor": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "renderedScaleX": 1,
+        "renderedScaleY": 1,
+        "rotation": 3.141592653589793,
+        "presentation": "godot-sheet"
+      },
+      "bottom": {
+        "nominalDiameter": 180,
+        "frame": 0,
+        "sheet": "cat-paw-player1.png",
+        "sha256": "2f350bdd7b8207f8ad9eadc774d87fd6ea8917a7974d83b50dc2b4688d9c7b09",
+        "anchor": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "renderedScaleX": 1,
+        "renderedScaleY": 1,
+        "rotation": 0,
+        "presentation": "godot-sheet"
+      }
+    },
+    "puckPresentation": {
+      "nominalDiameter": 92,
+      "owner": 1,
+      "palette": "player1",
+      "frame": 0,
+      "sheet": "cat-paw-puck-player1.png",
+      "sha256": "41acc3fee7711d6735d84347689f0de74fedad5698b19da9c4e593cb17633fc1",
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5
+      },
+      "offset": {
+        "x": 0,
+        "y": 0
+      },
+      "renderedScaleX": 1,
+      "renderedScaleY": 1,
+      "rotation": 0.1544111007058828,
+      "contactPlayer": null,
+      "contactEventId": null,
+      "contactAgeSeconds": null,
+      "contactStrength": 0,
+      "contactNormal": {
+        "x": 0,
+        "y": -1
+      },
+      "presentation": "godot-sheet"
+    },
+    "scoreCats": {
+      "top": {
+        "frame": 0,
+        "reaction": "idle",
+        "sheet": "cat-paw-score-cat-p2.png",
+        "sha256": "1282b14991195787f8fbb446f82c100780031bffcf5403f46a4e1ce4d5346928",
+        "scale": {
+          "x": 1,
+          "y": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.9
+        },
+        "rotation": 3.141592653589793
+      },
+      "bottom": {
+        "frame": 0,
+        "reaction": "idle",
+        "sheet": "cat-paw-score-cat-p1.png",
+        "sha256": "4ff95bc9de2c461a355a27b7a949735e6eaa2d9810d212a41e29ed5f9d8f2121",
+        "scale": {
+          "x": 1,
+          "y": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.9
+        },
+        "rotation": 0
+      }
+    },
+    "state": {
+      "phase": "playing",
+      "tick": 940,
+      "scores": {
+        "1": 0,
+        "2": 0
+      },
+      "winner": null,
+      "activeMatchSettings": {
+        "puckSpeed": 130,
+        "pawSpeed": {
+          "1": 100,
+          "2": 100
+        },
+        "returnSpeed": {
+          "1": 70,
+          "2": 100
+        },
+        "puckSize": 200,
+        "pawSize": {
+          "1": 200,
+          "2": 200
+        },
+        "goalSize": {
+          "1": 75,
+          "2": 125
+        }
+      },
+      "pendingMatchSettings": {
+        "puckSpeed": 130,
+        "pawSpeed": {
+          "1": 100,
+          "2": 100
+        },
+        "returnSpeed": {
+          "1": 70,
+          "2": 100
+        },
+        "puckSize": 200,
+        "pawSize": {
+          "1": 200,
+          "2": 200
+        },
+        "goalSize": {
+          "1": 75,
+          "2": 125
+        }
+      },
+      "puck": {
+        "position": {
+          "x": 197.82772064208984,
+          "y": 393.3084487915039
+        },
+        "previousPosition": {
+          "x": 197.92561531066895,
+          "y": 393.9645767211914
+        },
+        "velocity": {
+          "x": -5.816484242677689,
+          "y": -38.99267911911011
+        },
+        "trail": [
+          {
+            "x": 197.82772064208984,
+            "y": 393.3084487915039
+          },
+          {
+            "x": 197.92561531066895,
+            "y": 393.9645767211914
+          },
+          {
+            "x": 198.02441596984863,
+            "y": 394.6270942687988
+          },
+          {
+            "x": 198.12421798706055,
+            "y": 395.2960014343262
+          },
+          {
+            "x": 198.22497367858887,
+            "y": 395.9713935852051
+          },
+          {
+            "x": 198.3266830444336,
+            "y": 396.65327072143555
+          },
+          {
+            "x": 198.42939376831055,
+            "y": 397.3417282104492
+          },
+          {
+            "x": 198.53310585021973,
+            "y": 398.03686141967773
+          },
+          {
+            "x": 198.63781929016113,
+            "y": 398.7386703491211
+          }
+        ],
+        "lastHitter": 1
+      },
+      "players": {
+        "1": {
+          "position": {
+            "x": 270,
+            "y": 1056
+          },
+          "previousPosition": {
+            "x": 270,
+            "y": 1056
+          },
+          "velocity": {
+            "x": 0,
+            "y": 0
+          },
+          "readyProgress": 0,
+          "ready": false
+        },
+        "2": {
+          "position": {
+            "x": 270,
+            "y": 144
+          },
+          "previousPosition": {
+            "x": 270,
+            "y": 144
+          },
+          "velocity": {
+            "x": 0,
+            "y": 0
+          },
+          "readyProgress": 0,
+          "ready": false
+        }
+      },
+      "recentEvents": [
+        {
+          "id": 10,
+          "tick": 857,
+          "kind": "pause",
+          "x": 270,
+          "y": 600,
+          "strength": 0.35
+        },
+        {
+          "id": 11,
+          "tick": 911,
+          "kind": "resume",
+          "x": 270,
+          "y": 600,
+          "strength": 0.35
+        }
+      ]
+    }
+  }
 }

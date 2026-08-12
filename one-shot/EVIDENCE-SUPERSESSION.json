@@ -1,6 +1,66 @@
 {
   "records": [
     {
+      "earlier": "cat-paw-air-hockey-06998a9ce8bc / 51b92216c60556d2df9885ba5155bc427da6904b0fc3fc6a89c864e30215f42a",
+      "status": "SUPERSEDED / REPORTED PASS",
+      "treatment": "The accepted custom-solver artifact remains the physical comparison baseline. CATPAW-RAPIER-001 replaces its collision/motion layer with Rapier 2D and received a separate user-reported Samsung PASS as snappier and more responsive with no regressions; the earlier result is preserved and not reinterpreted.",
+      "currentArtifact": "cat-paw-air-hockey-b83bd150d75e / 827d1b6d1e3aa8877b206d2be5c89baaea89b5cd04e8643196b394b3f7789b1a"
+    },
+    {
+      "earlier": "cat-paw-air-hockey-59c8fe2815c1 / 3310e4f0992803d06f64ad1ed30f9e1f62c19481f476fc74e7180c4af398aa4e",
+      "status": "SUPERSEDED / REPORTED PASS",
+      "treatment": "The Samsung PASS remains bound to the settings-defaults artifact. PUCK-PAW-GODOT-001 replaces its procedural contact deformation with seven synchronized Godot-authored paw and puck frames, so the physical result does not transfer.",
+      "currentArtifact": "cat-paw-air-hockey-06998a9ce8bc / 51b92216c60556d2df9885ba5155bc427da6904b0fc3fc6a89c864e30215f42a"
+    },
+    {
+      "earlier": "cat-paw-air-hockey-d9c204866261 / 34a3bbd431243f27797a5801095e7c5f210dca0effc4a114a19bd1efabf6dbd8",
+      "status": "SUPERSEDED / UNTESTED",
+      "treatment": "The prior settings/contact artifact is superseded by the requested 100-percent speed normals, 200-percent size normals, v3 migration, and removal of the duplicate large scroll control. No physical result transfers.",
+      "currentArtifact": "cat-paw-air-hockey-59c8fe2815c1 / 3310e4f0992803d06f64ad1ed30f9e1f62c19481f476fc74e7180c4af398aa4e"
+    },
+    {
+      "earlier": "cat-paw-air-hockey-ffaa71fb1d0d / 7a12db4fec3c6f38cd0c9e4ed5d197b36be27c9fa3a23e97728dc2469587dad2",
+      "status": "SUPERSEDED / UNTESTED",
+      "treatment": "The exact-double score-cat artifact is superseded by requested settings defaults/ranges, always-visible settings controls, and cat-matched paw/puck contact presentation. No physical result transfers.",
+      "currentArtifact": "cat-paw-air-hockey-d9c204866261 / 34a3bbd431243f27797a5801095e7c5f210dca0effc4a114a19bd1efabf6dbd8"
+    },
+    {
+      "earlier": "cat-paw-air-hockey-235ab3123bc4 / a2d26f85dbe66a8ba1db1a7c3df3d16fa7b044418198e57afdb4ca9429ab0b63",
+      "status": "SUPERSEDED / REPORTED FAIL / NEEDS REPAIR",
+      "treatment": "The requested doubling was implemented as only a 50 percent increase from 80 x 80 to 120 x 120. The user rejected that artifact; its result does not transfer.",
+      "currentArtifact": "cat-paw-air-hockey-ffaa71fb1d0d / 7a12db4fec3c6f38cd0c9e4ed5d197b36be27c9fa3a23e97728dc2469587dad2"
+    },
+    {
+      "earlier": "cat-paw-air-hockey-1e9558fbf0aa / c2fdf6b121ce015dcab6e7fe1be86f8f815ea20ffb1181f7dd407a2484413e94",
+      "status": "SUPERSEDED / REPORTED FAIL / NEEDS REPAIR",
+      "treatment": "Samsung photos showed the first Godot score cats were too small, the reactions too fast and subtle, and the neutral paws obscured the eyes. The report remains bound to that exact artifact and does not transfer.",
+      "currentArtifact": "cat-paw-air-hockey-235ab3123bc4 / a2d26f85dbe66a8ba1db1a7c3df3d16fa7b044418198e57afdb4ca9429ab0b63"
+    },
+    {
+      "earlier": "cat-paw-air-hockey-32b6e5f50e9d / 47db45150895e881b94b370ff8b7e6a55b6f6d9d08891cbe420ddd76ed711416",
+      "status": "SUPERSEDED",
+      "treatment": "BOARD-ART-001 replaces only the default Board bitmap with the exact approved 1080 x 2400 art. Frozen mechanics, dynamic goals, viewport, and input architecture remain unchanged; physical acceptance does not transfer to changed bytes.",
+      "currentArtifact": "cat-paw-air-hockey-512728228085 / 1d6201909bec095f81a11bed9e31dd416fbfe25f0d6bb2409fb35cdcf6a16d8c"
+    },
+    {
+      "earlier": "cat-paw-air-hockey-4ed1cb3c5762 / 8bc85d72c1a3a39118fa36db4f9c4ba075ebeec9a8a6cd54b1259777d06afaeb",
+      "status": "SUPERSEDED / REPORTED FAIL / NEEDS REPAIR",
+      "treatment": "The Samsung report showed Goal Size/Paw Size controls were not discoverable in the initial settings fold and a paw-size change did not appear to work because safe-boundary application lacked clear feedback. The report remains bound to the earlier file and does not transfer.",
+      "currentArtifact": "cat-paw-air-hockey-32b6e5f50e9d / 47db45150895e881b94b370ff8b7e6a55b6f6d9d08891cbe420ddd76ed711416"
+    },
+    {
+      "earlier": "cat-paw-air-hockey-5735c4c572c2 / acb55aec6d8d8d6bf1afa4634eefe5caeec51d77d95a743e4ddd29950e9c9c",
+      "status": "SUPERSEDED",
+      "treatment": "R2A remains the required viewport architecture but its 540 x 960 mechanics and 1080 x 1920 Board artifact are superseded by R3. The artifact and evidence remain historical; physical acceptance does not transfer.",
+      "currentArtifact": "cat-paw-air-hockey-4ed1cb3c5762 / 8bc85d72c1a3a39118fa36db4f9c4ba075ebeec9a8a6cd54b1259777d06afaeb"
+    },
+    {
+      "earlier": "cat-paw-air-hockey-e15fc84c48fb / 2a45ce59d5a976a2196276de05d9672554f25467af6e44e3cbebda3f59d5d261",
+      "status": "SUPERSEDED",
+      "treatment": "The local post-touch fullscreen candidate is superseded by the mechanics-first viewport repair. The remotely verified 8115d17 artifact remains deployed, but its artifact-bound Samsung session reported the settings presentation physically wrong-sized and stopped testing. It is REPORTED FAIL / NEEDS REPAIR; physical acceptance did not occur and does not transfer.",
+      "currentArtifact": "cat-paw-air-hockey-5735c4c572c2 / acb55aec6d8d8d8d6bf1afa4634eefe5caeec51d77d95a743e4ddd29950e9c9c"
+    },
+    {
       "earlier": "cat-paw-air-hockey-8115d17dfa2c / 1ca4e332244149bcd3cb3db4893cfc9e4e79b715ae81bd870f9b8fb5acaff34f",
       "status": "SUPERSEDED",
       "treatment": "The artifact passed automated touch Chromium, but an artifact-bound Samsung HTTPS Pages screenshot proved fullscreen was requested before Android granted touch activation. Physical acceptance did not occur and does not transfer.",

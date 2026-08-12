@@ -1,5 +1,5 @@
 import type { PlayerId } from "./actions.ts";
-import { PLAYER_HOME, TARGET_SCORE } from "./constants.ts";
+import { LOGICAL_CENTER, PLAYER_HOME, TARGET_SCORE } from "./constants.ts";
 import { DEFAULT_MATCH_SETTINGS, type MatchSettings } from "./settings.ts";
 
 export interface Vector2 {
@@ -18,6 +18,7 @@ export interface PresentationEvent {
   readonly y: number;
   readonly strength: number;
   readonly player?: PlayerId;
+  readonly normal?: Vector2;
 }
 
 export interface StrikerState {
@@ -75,7 +76,7 @@ function striker(player: PlayerId): StrikerState {
 }
 
 export function createInitialGameState(): HockeyGameState {
-  const center = Object.freeze({ x: 270, y: 480 });
+  const center = LOGICAL_CENTER;
   return Object.freeze({
     phase: "ready",
     tick: 0,

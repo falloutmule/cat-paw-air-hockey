@@ -1,0 +1,275 @@
+{
+  "checks": [
+    "descriptor",
+    "path-and-symlink-guard",
+    "network-source-guard",
+    "godot-version",
+    "rgba8",
+    "alpha-nonempty",
+    "transparent-border",
+    "anchor-baseline",
+    "nearest-integer-scaling",
+    "row-major-sheet-packing",
+    "variant-alpha-parity"
+  ],
+  "outputs": [
+    {
+      "bytes": 8813,
+      "frames": [
+        {
+          "alphaPixels": 4890,
+          "alphaSha256": "25c7a40c38c4dcd15e53ef7f187e3a7867fa5ea10af398d6ae7a123fe5c143db",
+          "animation": "idle",
+          "bounds": {
+            "maxX": 100,
+            "maxY": 98,
+            "minX": 11,
+            "minY": 18
+          },
+          "id": "idle",
+          "index": 0,
+          "rgbaSha256": "a032587418a9a2125554f9296559aad738f09cd1324acc244d3393f1fb3e7982",
+          "timeSeconds": 0
+        },
+        {
+          "alphaPixels": 4814,
+          "alphaSha256": "deeba39dfae4b32d6dca6d9b88287b92e5fefaa21c442fd9e2454ed1007b1dfd",
+          "animation": "contact",
+          "bounds": {
+            "maxX": 103,
+            "maxY": 92,
+            "minX": 8,
+            "minY": 21
+          },
+          "id": "contact-0",
+          "index": 1,
+          "rgbaSha256": "a38d7431c699caaabbc5cbbf4c55729879e7f0933f0baac4f7d713f657a1ba59",
+          "timeSeconds": 0
+        },
+        {
+          "alphaPixels": 4848,
+          "alphaSha256": "dfddec40a66a52c1130a04bdcfa8741779d56d5a02d8cdf825767c48b2d34ec4",
+          "animation": "contact",
+          "bounds": {
+            "maxX": 98,
+            "maxY": 104,
+            "minX": 13,
+            "minY": 16
+          },
+          "id": "contact-1",
+          "index": 2,
+          "rgbaSha256": "20db6949f7834644a5dd45f1230691fc4579485c573fd1aa5b4c7f03fba2117b",
+          "timeSeconds": 0.08
+        },
+        {
+          "alphaPixels": 4984,
+          "alphaSha256": "0b1bc99a2985882b5638765e0c4365f97770c0201da2f3c53b0702368c7683eb",
+          "animation": "contact",
+          "bounds": {
+            "maxX": 102,
+            "maxY": 95,
+            "minX": 9,
+            "minY": 19
+          },
+          "id": "contact-2",
+          "index": 3,
+          "rgbaSha256": "dd31262f55f6156e060a9e97fca33717a41e458ffd3d5c5960b0b594b1bff15a",
+          "timeSeconds": 0.17
+        },
+        {
+          "alphaPixels": 4872,
+          "alphaSha256": "98a3c57349f39c379334d8322789821ff5983ba38aed845c9d5fcc186ebb31f0",
+          "animation": "contact",
+          "bounds": {
+            "maxX": 99,
+            "maxY": 100,
+            "minX": 12,
+            "minY": 17
+          },
+          "id": "contact-3",
+          "index": 4,
+          "rgbaSha256": "984991338d3d0140712407ef5d3928b7cf859272f56f23d5de9c1610b3aba7d4",
+          "timeSeconds": 0.28
+        },
+        {
+          "alphaPixels": 4950,
+          "alphaSha256": "2609b32dc4fe7844d5aae82a4b65e74d2e1beb2259fc4b68696e5fb2e2b227a9",
+          "animation": "contact",
+          "bounds": {
+            "maxX": 101,
+            "maxY": 97,
+            "minX": 10,
+            "minY": 19
+          },
+          "id": "contact-4",
+          "index": 5,
+          "rgbaSha256": "7c927e148970ed83379c22afdba48a6aca2cc47b072e12c5550f625449fd77af",
+          "timeSeconds": 0.4
+        },
+        {
+          "alphaPixels": 4856,
+          "alphaSha256": "3a863405ba2c1b00f1e789974ceba957d33cbf2ccef2206d638fa7856a0c87d3",
+          "animation": "contact",
+          "bounds": {
+            "maxX": 99,
+            "maxY": 99,
+            "minX": 11,
+            "minY": 18
+          },
+          "id": "contact-5",
+          "index": 6,
+          "rgbaSha256": "0842ffd2b3f8489390577448036ea563738ce36b64984c87a0a402fb66a40c14",
+          "timeSeconds": 0.52
+        },
+        {
+          "alphaPixels": 4898,
+          "alphaSha256": "666b5b12b5deb70e2583eb124e0a3d69aaf3771d4237ad62a50d08e39387aa9b",
+          "animation": "contact",
+          "bounds": {
+            "maxX": 100,
+            "maxY": 98,
+            "minX": 11,
+            "minY": 18
+          },
+          "id": "contact-6",
+          "index": 7,
+          "rgbaSha256": "44184e50e6630e1f91d4888cb4decbcf3004ec279e90fa2c1b8b21ee2547a69c",
+          "timeSeconds": 0.64
+        }
+      ],
+      "id": "player1",
+      "output": "art/gameplay-actors/cat-paw-player1.png",
+      "sha256": "2f350bdd7b8207f8ad9eadc774d87fd6ea8917a7974d83b50dc2b4688d9c7b09"
+    },
+    {
+      "bytes": 8814,
+      "frames": [
+        {
+          "alphaPixels": 4890,
+          "alphaSha256": "25c7a40c38c4dcd15e53ef7f187e3a7867fa5ea10af398d6ae7a123fe5c143db",
+          "animation": "idle",
+          "bounds": {
+            "maxX": 100,
+            "maxY": 98,
+            "minX": 11,
+            "minY": 18
+          },
+          "id": "idle",
+          "index": 0,
+          "rgbaSha256": "a56ba4e027088c8ecb829439bfe6a3efbfb52ca4d072a4d83fd5db47ed2c5879",
+          "timeSeconds": 0
+        },
+        {
+          "alphaPixels": 4814,
+          "alphaSha256": "deeba39dfae4b32d6dca6d9b88287b92e5fefaa21c442fd9e2454ed1007b1dfd",
+          "animation": "contact",
+          "bounds": {
+            "maxX": 103,
+            "maxY": 92,
+            "minX": 8,
+            "minY": 21
+          },
+          "id": "contact-0",
+          "index": 1,
+          "rgbaSha256": "c3e5935641f9255c9cd847b36a0d8ca0909511c30f04e3fc80bc1993a1a97e26",
+          "timeSeconds": 0
+        },
+        {
+          "alphaPixels": 4848,
+          "alphaSha256": "dfddec40a66a52c1130a04bdcfa8741779d56d5a02d8cdf825767c48b2d34ec4",
+          "animation": "contact",
+          "bounds": {
+            "maxX": 98,
+            "maxY": 104,
+            "minX": 13,
+            "minY": 16
+          },
+          "id": "contact-1",
+          "index": 2,
+          "rgbaSha256": "f25ea2265089fd7d38c6c4699925af06b3e6df30b51493cc6d1df8bde8ed28bd",
+          "timeSeconds": 0.08
+        },
+        {
+          "alphaPixels": 4984,
+          "alphaSha256": "0b1bc99a2985882b5638765e0c4365f97770c0201da2f3c53b0702368c7683eb",
+          "animation": "contact",
+          "bounds": {
+            "maxX": 102,
+            "maxY": 95,
+            "minX": 9,
+            "minY": 19
+          },
+          "id": "contact-2",
+          "index": 3,
+          "rgbaSha256": "1e3604399c6ff3af61ca45ee716b00dae3962822897fc10262f52dc36202cb51",
+          "timeSeconds": 0.17
+        },
+        {
+          "alphaPixels": 4872,
+          "alphaSha256": "98a3c57349f39c379334d8322789821ff5983ba38aed845c9d5fcc186ebb31f0",
+          "animation": "contact",
+          "bounds": {
+            "maxX": 99,
+            "maxY": 100,
+            "minX": 12,
+            "minY": 17
+          },
+          "id": "contact-3",
+          "index": 4,
+          "rgbaSha256": "b236505beeaf27fab805dc127ef7886a1ec09dd9e46847b2e811ee8130099b9f",
+          "timeSeconds": 0.28
+        },
+        {
+          "alphaPixels": 4950,
+          "alphaSha256": "2609b32dc4fe7844d5aae82a4b65e74d2e1beb2259fc4b68696e5fb2e2b227a9",
+          "animation": "contact",
+          "bounds": {
+            "maxX": 101,
+            "maxY": 97,
+            "minX": 10,
+            "minY": 19
+          },
+          "id": "contact-4",
+          "index": 5,
+          "rgbaSha256": "149442d5cf12f8047254f1f078490fd4d120d2e5f5bcadb22f24e57dab505e50",
+          "timeSeconds": 0.4
+        },
+        {
+          "alphaPixels": 4856,
+          "alphaSha256": "3a863405ba2c1b00f1e789974ceba957d33cbf2ccef2206d638fa7856a0c87d3",
+          "animation": "contact",
+          "bounds": {
+            "maxX": 99,
+            "maxY": 99,
+            "minX": 11,
+            "minY": 18
+          },
+          "id": "contact-5",
+          "index": 6,
+          "rgbaSha256": "91dfb6121b71e571259c1a16a15f43b1716df40b03493ec0fa0eace8c02daea8",
+          "timeSeconds": 0.52
+        },
+        {
+          "alphaPixels": 4898,
+          "alphaSha256": "666b5b12b5deb70e2583eb124e0a3d69aaf3771d4237ad62a50d08e39387aa9b",
+          "animation": "contact",
+          "bounds": {
+            "maxX": 100,
+            "maxY": 98,
+            "minX": 11,
+            "minY": 18
+          },
+          "id": "contact-6",
+          "index": 7,
+          "rgbaSha256": "ff222bdcfabee5b5c4b3dd7c8ed145d0f45ba7830e8a64c426eb0781f9320eac",
+          "timeSeconds": 0.64
+        }
+      ],
+      "id": "player2",
+      "output": "art/gameplay-actors/cat-paw-player2.png",
+      "sha256": "d6946cecf84386a6db9b7ab3c34a1bd56930217a239100e3cc8b7938c6595a43"
+    }
+  ],
+  "schema": "sfhs.godot-animation-validation@1",
+  "valid": true
+}

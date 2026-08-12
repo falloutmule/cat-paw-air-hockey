@@ -1,0 +1,25 @@
+{
+  "schema": "cat-paw-air-hockey.physical-report@1",
+  "status": "REPORTED PASS",
+  "evidenceStatus": "REPORTED",
+  "artifact": {
+    "classification": "canonical",
+    "buildId": "cat-paw-air-hockey-59c8fe2815c1",
+    "bytes": 4073692,
+    "sha256": "3310e4f0992803d06f64ad1ed30f9e1f62c19481f476fc74e7180c4af398aa4e",
+    "sourceSha256": "59c8fe2815c1a9d9cc89ccac77b936c05c9623fef85cc7332047947353d24c06"
+  },
+  "reporterStatement": "User reported: samsung pass.",
+  "reportedDate": "2026-08-12",
+  "targetDevice": "Samsung phone; exact model not restated with this PASS",
+  "acceptedChecks": "The PASS is bound to the complete CATPAW-SETTINGS-DEFAULTS-002 physical seed for the exact artifact identity above, including 100% speed defaults, 200% size defaults, the single thin settings scrollbar, puck/paw contact presentation, fullscreen, capture, and rematch.",
+  "missingFormalMetadata": [
+    "confirmed device model",
+    "Android version",
+    "numeric Chrome version",
+    "viewport dimensions and DPR",
+    "session screenshots or video",
+    "thermal and performance notes"
+  ],
+  "limitations": "This is user-reported physical acceptance, not independently verified instrumentation. It applies only to the exact artifact identity above."
+}

@@ -1,8 +1,10 @@
 import assert from "node:assert/strict";
 import { EMPTY_ACTION_SNAPSHOT, type HockeyActionSnapshot } from "../src/actions.ts";
-import { FIXED_STEP_SECONDS, PUCK_SPEED_CAP, READY_TARGET, RINK, TARGET_SCORE } from "../src/constants.ts";
-import { stepGame } from "../src/physics.ts";
+import { FIXED_STEP_SECONDS, LOGICAL_CENTER, PUCK_SPEED_CAP, READY_TARGET, RINK, TARGET_SCORE } from "../src/constants.ts";
 import { createInitialGameState, type HockeyGameState } from "../src/state.ts";
+import { createRapierTestSimulation } from "./rapier-harness.ts";
+
+const simulation = await createRapierTestSimulation();
 
 function heldReady(): HockeyActionSnapshot {
   return Object.freeze({
@@ -20,7 +22,7 @@ function pauseAction(): HockeyActionSnapshot {
 
 function step(state: HockeyGameState, action: HockeyActionSnapshot = EMPTY_ACTION_SNAPSHOT, count = 1): HockeyGameState {
   let result = state;
-  for (let index = 0; index < count; index += 1) result = stepGame(result, action, FIXED_STEP_SECONDS);
+  for (let index = 0; index < count; index += 1) result = simulation.stepGame(result, action, FIXED_STEP_SECONDS);
   return result;
 }
 
@@ -31,10 +33,10 @@ function forcePlayerOneGoal(state: HockeyGameState): HockeyGameState {
     phaseTimer: 0,
     puck: Object.freeze({
       ...state.puck,
-      position: Object.freeze({ x: 270, y: RINK.top + 2 }),
-      previousPosition: Object.freeze({ x: 270, y: RINK.top + 2 }),
+      position: Object.freeze({ x: LOGICAL_CENTER.x, y: RINK.top + 2 }),
+      previousPosition: Object.freeze({ x: LOGICAL_CENTER.x, y: RINK.top + 2 }),
       velocity: Object.freeze({ x: 0, y: -PUCK_SPEED_CAP }),
-      trail: Object.freeze([{ x: 270, y: RINK.top + 2 }])
+      trail: Object.freeze([{ x: LOGICAL_CENTER.x, y: RINK.top + 2 }])
     })
   });
   let next = playing as HockeyGameState;
@@ -45,7 +47,7 @@ function forcePlayerOneGoal(state: HockeyGameState): HockeyGameState {
 
 const results: Array<{ name: string; pass: boolean; details?: string }> = [];
 function scenario(name: string, run: () => void): void {
-  try { run(); results.push({ name, pass: true }); }
+  try { simulation.reset(); run(); results.push({ name, pass: true }); }
   catch (error) { results.push({ name, pass: false, details: error instanceof Error ? error.stack : String(error) }); }
 }
 
@@ -66,7 +68,7 @@ scenario("non-winning goal freezes, resets, and returns to play", () => {
   let state = Object.freeze({ ...createInitialGameState(), phase: "playing" as const }) as HockeyGameState;
   state = forcePlayerOneGoal(state);
   assert.equal(state.scores[1], 1);
-  assert.deepEqual(state.puck.position, { x: 270, y: 480 });
+  assert.deepEqual(state.puck.position, LOGICAL_CENTER);
   state = step(state, EMPTY_ACTION_SNAPSHOT, 70);
   assert.equal(state.phase, "countdown");
   state = step(state, EMPTY_ACTION_SNAPSHOT, 200);
@@ -117,3 +119,4 @@ scenario("pause and resume preserve the prior match phase", () => {
 const failed = results.filter((result) => !result.pass);
 console.log(JSON.stringify({ schema: "cat-air-hockey.match-flow@1", total: results.length, passed: results.length - failed.length, failed: failed.length, results }, null, 2));
 if (failed.length > 0) process.exitCode = 1;
+simulation.destroy();

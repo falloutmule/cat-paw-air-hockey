@@ -1,0 +1,403 @@
+{
+  "checks": [
+    "descriptor",
+    "path-and-symlink-guard",
+    "network-source-guard",
+    "godot-version",
+    "rgba8",
+    "alpha-nonempty",
+    "transparent-border",
+    "anchor-baseline",
+    "nearest-integer-scaling",
+    "row-major-sheet-packing",
+    "variant-alpha-parity"
+  ],
+  "outputs": [
+    {
+      "bytes": 4129,
+      "frames": [
+        {
+          "alphaPixels": 1664,
+          "alphaSha256": "8f493976575352ba444143dbec9a64fef7276df41ab4337391fee0c0ae9c6241",
+          "animation": "idle",
+          "bounds": {
+            "maxX": 54,
+            "maxY": 56,
+            "minX": 9,
+            "minY": 11
+          },
+          "id": "idle",
+          "index": 0,
+          "rgbaSha256": "bd04136927295f2377f68aaf371ad1f76525ecb936f5d0c324447685e5dc53df",
+          "timeSeconds": 0
+        },
+        {
+          "alphaPixels": 1605,
+          "alphaSha256": "088dafe66e99469010b585968bafd185c4a58a3b74dd9622d42f3f9555e99850",
+          "animation": "contact",
+          "bounds": {
+            "maxX": 58,
+            "maxY": 52,
+            "minX": 5,
+            "minY": 15
+          },
+          "id": "contact-0",
+          "index": 1,
+          "rgbaSha256": "cb5e8f9c8aa2e9ee47d27f943eb7271184748fcb41862acdaab558945876ed36",
+          "timeSeconds": 0
+        },
+        {
+          "alphaPixels": 1644,
+          "alphaSha256": "9d6526483cecfa2b306c62365f66943353eeeeb7f59093de255a906622cfa81a",
+          "animation": "contact",
+          "bounds": {
+            "maxX": 50,
+            "maxY": 60,
+            "minX": 12,
+            "minY": 7
+          },
+          "id": "contact-1",
+          "index": 2,
+          "rgbaSha256": "41d2d300864bca1cf7f47cacb7540cffd57a45dea0d9fe2f9285d6a5f1738435",
+          "timeSeconds": 0.08
+        },
+        {
+          "alphaPixels": 1676,
+          "alphaSha256": "fa850b135fb05e8c825114c5cb116e72aab65ab016cd5fdb3b0a67f28cc5f2e7",
+          "animation": "contact",
+          "bounds": {
+            "maxX": 57,
+            "maxY": 54,
+            "minX": 7,
+            "minY": 13
+          },
+          "id": "contact-2",
+          "index": 3,
+          "rgbaSha256": "1abb55d15afbce93d0a7fa347724709ecfa5c02948e40f92716cad61a4633363",
+          "timeSeconds": 0.17
+        },
+        {
+          "alphaPixels": 1675,
+          "alphaSha256": "c2ed60eaab0689b69ffcf09ef9776bed69514809fe96bd2f11cad6e25bd874b6",
+          "animation": "contact",
+          "bounds": {
+            "maxX": 52,
+            "maxY": 58,
+            "minX": 11,
+            "minY": 9
+          },
+          "id": "contact-3",
+          "index": 4,
+          "rgbaSha256": "877f8eab5ea394df72864f2c34ab4b4a9d84afd83bdd6485ab8e55655c2a71d3",
+          "timeSeconds": 0.28
+        },
+        {
+          "alphaPixels": 1670,
+          "alphaSha256": "90d596aa35a1a1665720792a90cd7ae276aea3d4f0af8aa9f3339895eaa167fa",
+          "animation": "contact",
+          "bounds": {
+            "maxX": 55,
+            "maxY": 55,
+            "minX": 8,
+            "minY": 12
+          },
+          "id": "contact-4",
+          "index": 5,
+          "rgbaSha256": "af183ab57161b5436eec167b4de5c4efce8ed6638be2f8041cc4ebe76149c531",
+          "timeSeconds": 0.4
+        },
+        {
+          "alphaPixels": 1675,
+          "alphaSha256": "f74f06d3ea14732eab9edea1512f526c85f81cfa74a95451b97f53258e3ea05a",
+          "animation": "contact",
+          "bounds": {
+            "maxX": 53,
+            "maxY": 57,
+            "minX": 10,
+            "minY": 10
+          },
+          "id": "contact-5",
+          "index": 6,
+          "rgbaSha256": "4d4953362ab63fcb34d5eba2e80910696a4ceab196b15567caeaee80c9e87108",
+          "timeSeconds": 0.52
+        },
+        {
+          "alphaPixels": 1668,
+          "alphaSha256": "e566a562d1a2d5f606ac516bd196dff0892e02e5e554d57f02def236bb599996",
+          "animation": "contact",
+          "bounds": {
+            "maxX": 54,
+            "maxY": 56,
+            "minX": 9,
+            "minY": 11
+          },
+          "id": "contact-6",
+          "index": 7,
+          "rgbaSha256": "6ef088ba23e72fd58f57d84dda507d1deaa147ac9fe999b3af933106d9369e24",
+          "timeSeconds": 0.64
+        }
+      ],
+      "id": "neutral",
+      "output": "art/gameplay-actors/cat-paw-puck-neutral.png",
+      "sha256": "db55b954f2a01dfc23c55f5b43bf0efe9ef4af25c583b20253c866f0f4e5bfbf"
+    },
+    {
+      "bytes": 4150,
+      "frames": [
+        {
+          "alphaPixels": 1664,
+          "alphaSha256": "8f493976575352ba444143dbec9a64fef7276df41ab4337391fee0c0ae9c6241",
+          "animation": "idle",
+          "bounds": {
+            "maxX": 54,
+            "maxY": 56,
+            "minX": 9,
+            "minY": 11
+          },
+          "id": "idle",
+          "index": 0,
+          "rgbaSha256": "677e6472d0819af307054e4e58be0843d67cb82f57ca122f387198de2d99a4db",
+          "timeSeconds": 0
+        },
+        {
+          "alphaPixels": 1605,
+          "alphaSha256": "088dafe66e99469010b585968bafd185c4a58a3b74dd9622d42f3f9555e99850",
+          "animation": "contact",
+          "bounds": {
+            "maxX": 58,
+            "maxY": 52,
+            "minX": 5,
+            "minY": 15
+          },
+          "id": "contact-0",
+          "index": 1,
+          "rgbaSha256": "e1a394d63017eb1faa4e0eabc68aad4bb041b892e87023dbc3e8acd66722f2a1",
+          "timeSeconds": 0
+        },
+        {
+          "alphaPixels": 1644,
+          "alphaSha256": "9d6526483cecfa2b306c62365f66943353eeeeb7f59093de255a906622cfa81a",
+          "animation": "contact",
+          "bounds": {
+            "maxX": 50,
+            "maxY": 60,
+            "minX": 12,
+            "minY": 7
+          },
+          "id": "contact-1",
+          "index": 2,
+          "rgbaSha256": "ee0316642640fa1bed24565d2b453b92c331964aa067731ef54a601342132311",
+          "timeSeconds": 0.08
+        },
+        {
+          "alphaPixels": 1676,
+          "alphaSha256": "fa850b135fb05e8c825114c5cb116e72aab65ab016cd5fdb3b0a67f28cc5f2e7",
+          "animation": "contact",
+          "bounds": {
+            "maxX": 57,
+            "maxY": 54,
+            "minX": 7,
+            "minY": 13
+          },
+          "id": "contact-2",
+          "index": 3,
+          "rgbaSha256": "dd65ee62c100ca727553ac53e2d90ae0adc0024e1b2bffe80b5b63eb2fab13cb",
+          "timeSeconds": 0.17
+        },
+        {
+          "alphaPixels": 1675,
+          "alphaSha256": "c2ed60eaab0689b69ffcf09ef9776bed69514809fe96bd2f11cad6e25bd874b6",
+          "animation": "contact",
+          "bounds": {
+            "maxX": 52,
+            "maxY": 58,
+            "minX": 11,
+            "minY": 9
+          },
+          "id": "contact-3",
+          "index": 4,
+          "rgbaSha256": "885f0a29d6fc28200fb3c366b4343140bab144c4e7e6d6a6a811965e99aae3f7",
+          "timeSeconds": 0.28
+        },
+        {
+          "alphaPixels": 1670,
+          "alphaSha256": "90d596aa35a1a1665720792a90cd7ae276aea3d4f0af8aa9f3339895eaa167fa",
+          "animation": "contact",
+          "bounds": {
+            "maxX": 55,
+            "maxY": 55,
+            "minX": 8,
+            "minY": 12
+          },
+          "id": "contact-4",
+          "index": 5,
+          "rgbaSha256": "43ee248968f17f822fa9407ac30625fd27ceb9a44fa23431805b0293da5c4326",
+          "timeSeconds": 0.4
+        },
+        {
+          "alphaPixels": 1675,
+          "alphaSha256": "f74f06d3ea14732eab9edea1512f526c85f81cfa74a95451b97f53258e3ea05a",
+          "animation": "contact",
+          "bounds": {
+            "maxX": 53,
+            "maxY": 57,
+            "minX": 10,
+            "minY": 10
+          },
+          "id": "contact-5",
+          "index": 6,
+          "rgbaSha256": "7f5ca1fce945bd30bc21391b229cfa8e719b695684f34588e0541f6624c66084",
+          "timeSeconds": 0.52
+        },
+        {
+          "alphaPixels": 1668,
+          "alphaSha256": "e566a562d1a2d5f606ac516bd196dff0892e02e5e554d57f02def236bb599996",
+          "animation": "contact",
+          "bounds": {
+            "maxX": 54,
+            "maxY": 56,
+            "minX": 9,
+            "minY": 11
+          },
+          "id": "contact-6",
+          "index": 7,
+          "rgbaSha256": "fb017f7ad767f4711cfa6b7a68abbf604a7c050359e56458393c5bedaac7906a",
+          "timeSeconds": 0.64
+        }
+      ],
+      "id": "player1",
+      "output": "art/gameplay-actors/cat-paw-puck-player1.png",
+      "sha256": "41acc3fee7711d6735d84347689f0de74fedad5698b19da9c4e593cb17633fc1"
+    },
+    {
+      "bytes": 4151,
+      "frames": [
+        {
+          "alphaPixels": 1664,
+          "alphaSha256": "8f493976575352ba444143dbec9a64fef7276df41ab4337391fee0c0ae9c6241",
+          "animation": "idle",
+          "bounds": {
+            "maxX": 54,
+            "maxY": 56,
+            "minX": 9,
+            "minY": 11
+          },
+          "id": "idle",
+          "index": 0,
+          "rgbaSha256": "344999416c87b8ff77782bfe5bc40e983d6bf790f1ab70742a4d0054bc356ed9",
+          "timeSeconds": 0
+        },
+        {
+          "alphaPixels": 1605,
+          "alphaSha256": "088dafe66e99469010b585968bafd185c4a58a3b74dd9622d42f3f9555e99850",
+          "animation": "contact",
+          "bounds": {
+            "maxX": 58,
+            "maxY": 52,
+            "minX": 5,
+            "minY": 15
+          },
+          "id": "contact-0",
+          "index": 1,
+          "rgbaSha256": "68f092c45c6ad30d5b44758a9696341b462ac2046680b6fd5ef4ba481c214950",
+          "timeSeconds": 0
+        },
+        {
+          "alphaPixels": 1644,
+          "alphaSha256": "9d6526483cecfa2b306c62365f66943353eeeeb7f59093de255a906622cfa81a",
+          "animation": "contact",
+          "bounds": {
+            "maxX": 50,
+            "maxY": 60,
+            "minX": 12,
+            "minY": 7
+          },
+          "id": "contact-1",
+          "index": 2,
+          "rgbaSha256": "19ee3b4382a9081fa2ba3e0c3751c1c89aef9322b0b9ba77137c234094b42795",
+          "timeSeconds": 0.08
+        },
+        {
+          "alphaPixels": 1676,
+          "alphaSha256": "fa850b135fb05e8c825114c5cb116e72aab65ab016cd5fdb3b0a67f28cc5f2e7",
+          "animation": "contact",
+          "bounds": {
+            "maxX": 57,
+            "maxY": 54,
+            "minX": 7,
+            "minY": 13
+          },
+          "id": "contact-2",
+          "index": 3,
+          "rgbaSha256": "1a22f61959c1a2541eacb2d400f1533fd0f6fc70f359712d58f3185fab150343",
+          "timeSeconds": 0.17
+        },
+        {
+          "alphaPixels": 1675,
+          "alphaSha256": "c2ed60eaab0689b69ffcf09ef9776bed69514809fe96bd2f11cad6e25bd874b6",
+          "animation": "contact",
+          "bounds": {
+            "maxX": 52,
+            "maxY": 58,
+            "minX": 11,
+            "minY": 9
+          },
+          "id": "contact-3",
+          "index": 4,
+          "rgbaSha256": "63e05632a42e8d5b170a055cc597541989f86c8e6c69d8f9eb03d83895ddb195",
+          "timeSeconds": 0.28
+        },
+        {
+          "alphaPixels": 1670,
+          "alphaSha256": "90d596aa35a1a1665720792a90cd7ae276aea3d4f0af8aa9f3339895eaa167fa",
+          "animation": "contact",
+          "bounds": {
+            "maxX": 55,
+            "maxY": 55,
+            "minX": 8,
+            "minY": 12
+          },
+          "id": "contact-4",
+          "index": 5,
+          "rgbaSha256": "78ef0a640ef14a453f40c85d8c1fedc87d2019fbe70cac99ef426d6bcfaefb8a",
+          "timeSeconds": 0.4
+        },
+        {
+          "alphaPixels": 1675,
+          "alphaSha256": "f74f06d3ea14732eab9edea1512f526c85f81cfa74a95451b97f53258e3ea05a",
+          "animation": "contact",
+          "bounds": {
+            "maxX": 53,
+            "maxY": 57,
+            "minX": 10,
+            "minY": 10
+          },
+          "id": "contact-5",
+          "index": 6,
+          "rgbaSha256": "4a00e7c3bf80b92f0afc5c316ed8ae75b3120cf10202df7082b7bc284a7ec7ad",
+          "timeSeconds": 0.52
+        },
+        {
+          "alphaPixels": 1668,
+          "alphaSha256": "e566a562d1a2d5f606ac516bd196dff0892e02e5e554d57f02def236bb599996",
+          "animation": "contact",
+          "bounds": {
+            "maxX": 54,
+            "maxY": 56,
+            "minX": 9,
+            "minY": 11
+          },
+          "id": "contact-6",
+          "index": 7,
+          "rgbaSha256": "8b37238de779e208441aebe81aa523a879c7b804e89426fd9fdfecd9f590a38e",
+          "timeSeconds": 0.64
+        }
+      ],
+      "id": "player2",
+      "output": "art/gameplay-actors/cat-paw-puck-player2.png",
+      "sha256": "f3b35382326a841d7df0eaa18ea5c88c2a097a8f9fcf9a4d381d8dda708779d9"
+    }
+  ],
+  "schema": "sfhs.godot-animation-validation@1",
+  "valid": true
+}
