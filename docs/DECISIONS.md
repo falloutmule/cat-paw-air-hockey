@@ -18,6 +18,8 @@
 | D-014 | SUPERSEDED | Normal speeds were 75%; normal puck, paw, and goal sizes were 125%. |
 | D-016 | VERIFIED | Normal speeds are 100%; normal puck, paw, and goal sizes are 200%. Speed ranges remain 70–130%; size ranges remain 25–200%. Each mirrored settings half uses one thin native scrollbar with an always-visible Close button; the duplicate outer scroll control is removed. |
 | D-015 | VERIFIED | Puck palette ownership and paw/puck contact deformation are pure presentation derived from the existing last-hitter and authoritative `paw-hit` event. Reduced motion retains palette ownership and suppresses transforms. |
-| D-017 | VERIFIED LOCALLY | Default paws and puck palettes use Godot 4.7.1 sheets exported by merged SFHS `@sfhs/godot-animation`. Seven synchronized contact frames replace the procedural default deformation; physics radii, scoring, settings, and saves remain unchanged. Static custom theme cells keep the transform fallback. |
+| D-017 | VERIFIED | Default paws and puck palettes use Godot 4.7.1 sheets exported by merged SFHS `@sfhs/godot-animation`. Seven synchronized contact frames replace the procedural default deformation; physics radii, scoring, settings, and saves remain unchanged. Static custom theme cells keep the transform fallback. |
+| D-018 | VERIFIED / REPORTED | Production rigid-body motion uses Rapier 2D with a dynamic CCD puck, position-based kinematic paws, and fixed visible rails/posts. Cat Paw retains goals, legal halves, settings, caps, match flow, and events. Automated gates pass and the exact artifact received a user-reported Samsung PASS. |
+| D-019 | VERIFIED | Current-plus-one-previous heavy evidence is retained without duplicating the SFHS One-Shot packet. Unique historical physical/failure/lineage records and lightweight release manifests remain preserved. |
 
 The detailed historical decision log is retained at [one-shot/DECISIONS.md](../one-shot/DECISIONS.md).

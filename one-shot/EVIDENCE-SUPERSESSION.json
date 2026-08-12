@@ -1,6 +1,12 @@
 {
   "records": [
     {
+      "earlier": "cat-paw-air-hockey-06998a9ce8bc / 51b92216c60556d2df9885ba5155bc427da6904b0fc3fc6a89c864e30215f42a",
+      "status": "SUPERSEDED / REPORTED PASS",
+      "treatment": "The accepted custom-solver artifact remains the physical comparison baseline. CATPAW-RAPIER-001 replaces its collision/motion layer with Rapier 2D and received a separate user-reported Samsung PASS as snappier and more responsive with no regressions; the earlier result is preserved and not reinterpreted.",
+      "currentArtifact": "cat-paw-air-hockey-b83bd150d75e / 827d1b6d1e3aa8877b206d2be5c89baaea89b5cd04e8643196b394b3f7789b1a"
+    },
+    {
       "earlier": "cat-paw-air-hockey-59c8fe2815c1 / 3310e4f0992803d06f64ad1ed30f9e1f62c19481f476fc74e7180c4af398aa4e",
       "status": "SUPERSEDED / REPORTED PASS",
       "treatment": "The Samsung PASS remains bound to the settings-defaults artifact. PUCK-PAW-GODOT-001 replaces its procedural contact deformation with seven synchronized Godot-authored paw and puck frames, so the physical result does not transfer.",

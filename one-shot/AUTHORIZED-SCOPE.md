@@ -1,12 +1,12 @@
 ---
-{"schema":"sfhs.one-shot-scope@1","status":"VERIFIED","facts":{"sfhsRevision":"37aa056b6bd0948d73fcd99c1aba558861f0037e","lane":"repository-graduation-001","remoteMutationAuthorized":false}}
+{"schema":"sfhs.one-shot-scope@1","status":"VERIFIED","facts":{"sfhsRevision":"fce070a0a08a9b4e0fbebda75440eaee80bb95a9","lane":"repository-graduation-001","remoteMutationAuthorized":true,"publicationMode":"verified-main-publish"}}
 ---
 # Authorized Scope
 
-## PUCK-PAW-GODOT-001 allowed work
+## CATPAW-RAPIER-001 repository release
 
-On local branch `codex/puck-paw-godot-001`, add deterministic Godot 4.7.1 authoring sources and merged-SFHS descriptors for the default paw and puck, integrate their pre-rendered sheets into the existing sole Pixi canvas, animate presentation from authoritative paw-hit data without changing mechanics, preserve custom-theme compatibility, add focused and packed evidence, produce exact phone files, and stop at the artifact-bound Samsung gate.
+Normalize and publish the accepted Rapier game through current SFHS without redesigning it. Reconcile current `main`, preserve source and physical authority, publish the required bounded SFHS kinematic contract, update documentation/evidence/workflows/repository presentation, run the complete canonical and independent audit gates, merge verified work normally to `main`, deploy only the exact SFHS-packed artifact to GitHub Pages, and prove downloaded-byte parity.
 
 ## Explicit exclusions
 
-No physics, scoring, save-schema, Board, goal, viewport, touch-ownership, score-cat, or runtime skeletal-animation expansion. No push, PR, merge, tag, release, publication, deployment, or unrelated-work mutation. Physical acceptance remains a separately reported artifact-bound device gate.
+No gameplay, story, art-direction, balance, control, mode, networking, editor, or unrelated SFHS expansion. No force push, history rewrite, visibility change, tag/release deletion, secret exposure, or unrelated-work mutation. Existing artifact-bound physical reports remain separate and are never inferred or transferred.

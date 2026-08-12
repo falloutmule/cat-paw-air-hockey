@@ -11,9 +11,11 @@ The readable source, tests, and SFHS project are authoritative. CATPAW-RAPIER-00
 | Current canonical artifact | Value |
 | --- | --- |
 | Build ID | `cat-paw-air-hockey-b83bd150d75e` |
+| Source commit | `6f256ac54ef85e6d14c7ec3def70e98feec4ad95` (gameplay/source identity; later commits are evidence/release records) |
 | Source SHA-256 | `b83bd150d75e68db243ed39b8d18aee32e6df349e634dc3f672fbd29d757fa1d` |
 | Artifact SHA-256 | `827d1b6d1e3aa8877b206d2be5c89baaea89b5cd04e8643196b394b3f7789b1a` |
 | Bytes | 5,857,863 |
+| Verification date | 2026-08-12 |
 | Verification | SFHS inspect, validate, check, pack, exact verify, packed Chromium, and exact-file offline boot |
 | Samsung | REPORTED PASS; snappier and more responsive with no regressions versus `cat-paw-air-hockey-06998a9ce8bc` |
 | Pages | [Currently deployed earlier build](https://falloutmule.github.io/cat-paw-air-hockey/); CATPAW-RAPIER-001 was not deployed |
@@ -45,10 +47,12 @@ Editable product source is `src/`, with `tests/`, `public/`, `sfhs.project.json`
 
 ```powershell
 pnpm install --frozen-lockfile
-pnpm test
+pnpm test:source
 ```
 
-Use the pinned SFHS graduation materializer for linting, typechecking, canonical inspection, packing, verification, and browser evidence. See [Testing](docs/TESTING.md) for the exact release sequence.
+Use the pinned SFHS graduation materializer for linting, typechecking, the full product tests, canonical inspection, repeated packing, exact verification, and browser evidence. See [Testing](docs/TESTING.md) for the exact release sequence.
+
+The current approved roadmap contains only verified-main Pages publication. No additional gameplay expansion is approved; AI, networking, progression, shops, achievements, and new modes remain out of scope unless separately decided.
 
 ## Project records
 

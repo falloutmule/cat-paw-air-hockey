@@ -52,16 +52,22 @@ jobs:
           while IFS= read -r path; do [ -z "$path" ] || args+=(--changed "$path"); done <<< "$changed"
           pnpm --dir "$CAT_PAW_SFHS_PROJECT" test
           pushd "$RUNNER_TEMP/sfhs"
+          node packages/cli/src/main.ts one-shot graduate audit --project "$CAT_PAW_SFHS_PROJECT" --json
           node packages/cli/src/main.ts inspect --json --project "$CAT_PAW_SFHS_PROJECT"
           node packages/cli/src/main.ts validate --json --project "$CAT_PAW_SFHS_PROJECT"
           SFHS_PLAYWRIGHT_RESOLVER="$RUNNER_TEMP/sfhs/packages/browser-runner/package.json" node packages/cli/src/main.ts check --json --project "$CAT_PAW_SFHS_PROJECT" "${args[@]}"
           node packages/cli/src/main.ts pack --json --project "$CAT_PAW_SFHS_PROJECT"
           node packages/cli/src/main.ts verify --json --project "$CAT_PAW_SFHS_PROJECT"
+          first_sha=$(sha256sum "$CAT_PAW_SFHS_PROJECT/dist/index.html" | awk '{print $1}')
+          node packages/cli/src/main.ts pack --json --project "$CAT_PAW_SFHS_PROJECT"
+          second_sha=$(sha256sum "$CAT_PAW_SFHS_PROJECT/dist/index.html" | awk '{print $1}')
+          test "$first_sha" = "$second_sha"
+          node packages/cli/src/main.ts verify --json --project "$CAT_PAW_SFHS_PROJECT"
           node packages/cli/src/main.ts one-shot audit --project "$CAT_PAW_SFHS_PROJECT" --json
           popd
-      - name: Packed-artifact browser smoke
+      - name: Packed-artifact canonical and semantic browser lanes
         run: |
-          SFHS_PLAYWRIGHT_RESOLVER="$RUNNER_TEMP/sfhs/packages/browser-runner/package.json" SFHS_BROWSER_REPORT="$CAT_PAW_SFHS_PROJECT/test-results/canonical-browser.json" pnpm --dir "$CAT_PAW_SFHS_PROJECT" test:browser
+          SFHS_PLAYWRIGHT_RESOLVER="$RUNNER_TEMP/sfhs/packages/browser-runner/package.json" SFHS_BROWSER_REPORT="$CAT_PAW_SFHS_PROJECT/test-results/canonical-browser.json" pnpm --dir "$CAT_PAW_SFHS_PROJECT" test:r3-browser
       - uses: actions/upload-artifact@v4
         if: always()
         with:

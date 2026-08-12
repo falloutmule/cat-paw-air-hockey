@@ -1,27 +1,26 @@
 {
   "artifact": {
-    "buildId": "cat-paw-air-hockey-06998a9ce8bc",
-    "bytes": 4117623,
+    "buildId": "cat-paw-air-hockey-b83bd150d75e",
+    "bytes": 5857863,
     "path": "dist/index.html",
-    "sha256": "51b92216c60556d2df9885ba5155bc427da6904b0fc3fc6a89c864e30215f42a",
+    "sha256": "827d1b6d1e3aa8877b206d2be5c89baaea89b5cd04e8643196b394b3f7789b1a",
     "verifier": "sfhs verify"
   },
   "classification": "canonical",
-  "preview": {
-    "bytes": 44921,
-    "path": "test-results/PUCK-PAW-GODOT-001/phone/puck-paw-preview.html",
-    "sha256": "4b21e28ec5739aed2ecd5c2bfe806db80e0ba8a6e2ccd30f22178b2b1183be76"
-  },
   "required": [
-    "device model, Android version, numeric Chrome version, viewport dimensions, and DPR",
-    "seven-frame synchronized P1 and P2 puck/paw contact sequences",
-    "direction and strength readability, including rapid alternating and glancing contacts",
-    "reduced motion holds frame zero while palette identity remains",
-    "25-percent, 100-percent, and 200-percent crisp actor rendering",
-    "touch ownership, third-touch rejection, fullscreen, capture, and rematch",
-    "custom-theme static-cell fallback when available",
-    "screenshots or video plus thermal/performance notes"
+    "device model",
+    "Android version",
+    "numeric Chrome version",
+    "portrait and landscape viewport dimensions and DPR",
+    "screenshots",
+    "primary workflow",
+    "background/return",
+    "audio",
+    "performance and heat"
   ],
-  "resultVocabulary": ["REPORTED PASS", "REPORTED FAIL"],
+  "resultVocabulary": [
+    "REPORTED PASS",
+    "REPORTED FAIL"
+  ],
   "schema": "sfhs.graduation-physical-test-seed@1"
 }

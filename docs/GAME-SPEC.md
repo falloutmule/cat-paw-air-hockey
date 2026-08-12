@@ -20,7 +20,7 @@ Each goal says `GOAL`. Exactly four shared controls straddle the center side edg
 
 ## Simulation
 
-The renderer observes serializable simulation state; input produces semantic actions and SFHS owns the 60 Hz fixed-step loop. Paws and puck collide with walls, posts, and goals. The normal speed settings are 100% and remain adjustable from 70% to 130%. The normal puck, paw, and goal sizes are 200% and remain adjustable from 25% to 200%. Each player has an independent return-speed multiplier applied once to that player's discrete paw hit; wall/post contacts do not reapply it. Settings changed during active motion apply at the next safe serve boundary.
+The renderer observes serializable simulation state; input produces semantic actions and SFHS owns the 60 Hz fixed-step loop. A private renderer-neutral Rapier 2D world advances a dynamic circular puck with CCD, position-based kinematic paws, and fixed visible rails/posts. Cat Paw retains goal crossing, exact-once scoring, legal halves, speed caps, event semantics, settings, and impossible closed-boundary recovery. The normal speed settings are 100% and remain adjustable from 70% to 130%. The normal puck, paw, and goal sizes are 200% and remain adjustable from 25% to 200%. Each player has an independent return-speed multiplier applied once to that player's discrete paw hit; wall/post contacts do not reapply it. Settings changed during active motion apply at the next safe serve boundary.
 
 ## Accessibility, audio, persistence, and content
 
@@ -30,4 +30,4 @@ The default art direction is a cute pixel-art cat rink with Godot-authored cat-p
 
 ## Non-goals and open decisions
 
-Not implemented: network play, AI opponent, progression, unlocks, shops, achievements, or additional game modes. Physical Samsung acceptance for the current exact artifact is unresolved; it is not an automated-browser substitute.
+Not implemented: network play, AI opponent, progression, unlocks, shops, achievements, or additional game modes. The exact Rapier artifact has an artifact-bound user-reported Samsung PASS; formal device/browser/thermal instrumentation remains unreported and is not inferred.

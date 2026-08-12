@@ -1,14 +1,14 @@
 {
   "deferredWork": [],
   "evidenceStatus": "VERIFIED",
-  "nextAction": "Begin the isolated renderer-neutral SFHS Godot animation workflow extraction.",
+  "nextAction": "Graduation complete; publish only through the separately authorized verified-main workflow.",
   "physicalStatus": "REPORTED",
   "productStatus": "PRODUCT_COMPLETE",
   "projectRoot": ".",
   "records": {
     "physicalSeed": {
       "path": "one-shot/GRADUATION-PHYSICAL-TEST-SEED.json",
-      "sha256": "712771474b9b505a44f870aa27d7e7ea149e0c4587f789b265ffd2b6b3c80c53"
+      "sha256": "34021b86b3fcc95fc6e88369e50b49daab78ca6b937912a3356afc49e1b9747d"
     },
     "plan": {
       "path": "one-shot/MIGRATION-PLAN.json",
@@ -16,7 +16,7 @@
     },
     "report": {
       "path": "one-shot/GRADUATION-REPORT.json",
-      "sha256": "9cf455d673fe7efca419908f631cb1d62d9bcac2220c091e01602c0d5d9b78c6"
+      "sha256": "d4f98db605b7161d2955174db32816890e2d9b654ce80c8021253bdab424bc8f"
     },
     "source": {
       "path": "SOURCE-IDENTITY.json",

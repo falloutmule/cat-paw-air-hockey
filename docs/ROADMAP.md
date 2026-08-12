@@ -4,13 +4,12 @@
 
 | Item | Status | Intent and acceptance |
 | --- | --- | --- |
-| Verified-main GitHub Pages publication | APPROVED | Publish only an SFHS-packed and exactly verified artifact; deployed bytes must match local canonical bytes. |
-| Exact-artifact Samsung session | APPROVED | Exercise shared touch, fullscreen/end controls, return speeds, score capture, background recovery, and heat on the named device. |
-| PUCK-PAW-GODOT-001 Samsung gate | REPORTED PASS | Exact preview and packed artifact accepted by the user on Samsung; formal device/browser/thermal metadata remains unreported. |
+| Verified-main GitHub Pages publication | APPROVED | Publish only an SFHS-packed and exactly verified artifact; deployed bytes must match local canonical bytes. Status remains PROPOSED until parity passes. |
+| CATPAW-RAPIER-001 Samsung gate | REPORTED PASS | Exact Rapier artifact was reported snappier and more responsive with no regressions after the required session. |
 
 ## Next
 
-No additional product work is approved. The merged renderer-neutral SFHS Godot animation workflow was already consumed at commit `37aa056b6bd0948d73fcd99c1aba558861f0037e`; no further framework extraction is required for this bounded initiative.
+No additional product work is approved. The renderer-neutral Godot workflow and bounded position-kinematic Physics 2D capability are consumed through the exact SFHS pin; no further framework extraction is part of this release.
 
 ## Later
 

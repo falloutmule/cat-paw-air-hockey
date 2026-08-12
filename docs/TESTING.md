@@ -31,19 +31,20 @@ Materialize a fresh disposable project through the exact commit in `one-shot/SFH
 
 ```powershell
 pnpm sfhs one-shot inspect --project <materialized-project> --json
-pnpm sfhs one-shot audit --project <materialized-project> --json
+pnpm sfhs one-shot graduate audit --project <materialized-project> --json
 pnpm sfhs inspect --project <materialized-project> --json
 pnpm sfhs validate --project <materialized-project> --json
 pnpm sfhs check --project <materialized-project> --changed <path> --json
 pnpm sfhs pack --project <materialized-project> --json
 pnpm sfhs verify --project <materialized-project> --json
+pnpm sfhs one-shot audit --project <materialized-project> --json
 pnpm test:r3-browser
 ```
 
 `pnpm run lint` and `pnpm run typecheck` are deliberately materialized-project commands: the source imports the pinned SFHS adapter/runtime/physics packages and the graduation materializer provides the approved tool overlay without vendoring framework source into this repository. `pnpm test:source` runs project-owned suites that do not require the materialized SFHS overlay; the full `pnpm test` runs after materialization.
 
-`SFHS_TEST_SELECTION_REVIEW_REQUIRED` can be a non-fatal warning for changed paths with broad runtime impact; it is recorded, never suppressed. A canonical result requires pack and exact verify of the same `dist/index.html` plus packed-artifact Chromium evidence. The browser evidence checks boot, one WebGL canvas, control layout, fullscreen, settings, capture, lifecycle/orientation, errors, and runtime requests. R3 measures 412×915, 360×800, 390×844, and 360×640 portrait viewports, menu/document containment, independent half scrolling, Board pixel/logical independence, 20:9 input mapping, dynamic goal resizing, Board replacement invariance, and the normal-action match lifecycle.
+`one-shot graduate audit` runs against the untouched fresh materialization before pack or browser output is generated; those generated files deliberately change the disposable tree. The ordinary `one-shot audit` runs after pack and exact verify. `SFHS_TEST_SELECTION_REVIEW_REQUIRED` can be a non-fatal warning for changed paths with broad runtime impact; it is recorded, never suppressed. A canonical result requires pack and exact verify of the same `dist/index.html`, a second same-source pack with an identical SHA-256, and packed-artifact Chromium evidence. The canonical browser lane checks HTTP and exact-file offline boot, one WebGL canvas, control layout, fullscreen, settings, capture, lifecycle/orientation, errors, physics timing, and runtime requests. The semantic lane uses normal UI/pointer actions to observe contact animation, reach a winner, capture, and rematch. R3 measures 412×915, 360×800, 390×844, and 360×640 portrait viewports, menu/document containment, independent half scrolling, Board pixel/logical independence, 20:9 input mapping, dynamic goal resizing, Board replacement invariance, and the normal-action match lifecycle.
 
 ## Pages release
 
-The Pages workflow runs on `main` only after source tests and the same materialized canonical gates. It deploys only the verified packed HTML. The post-deploy audit downloads the served HTML and compares SHA-256 with the artifact recorded by the workflow. Samsung physical testing remains a separate gate.
+The Pages workflow runs on `main` only after source tests and the same materialized canonical gates. It deploys only verified `index.html` plus `.nojekyll`, uses least-privilege Pages permissions and cancel-in-progress concurrency, and never runs for pull requests. The post-deploy audit downloads the served HTML and compares SHA-256 with the artifact recorded by the workflow. Samsung physical testing remains a separate artifact-bound gate and is already REPORTED PASS for CATPAW-RAPIER-001.

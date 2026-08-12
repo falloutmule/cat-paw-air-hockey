@@ -9,7 +9,7 @@ Status: **PROPOSED until the publication gates complete**. The plan is additive 
 | Editable source | `src/`, `tests/`, `public/`, `sfhs.project.json`, `one-shot/`, tracked authored art/tooling | VERIFIED |
 | Working lineage | `feature/cat-paw-rapier-001`, merged normally with current `origin/main` | VERIFIED |
 | Canonical branch | `main` | VERIFIED |
-| Toolchain | SFHS commit `fce070a0a08a9b4e0fbebda75440eaee80bb95a9` | VERIFIED locally / PROPOSED remotely |
+| Toolchain | SFHS commit `fce070a0a08a9b4e0fbebda75440eaee80bb95a9`, contained by SFHS `main` merge `391ed3afe75fa47794e7e1e9f3477e3ec53ecb12` | VERIFIED locally and remotely |
 | Canonical output | Packer-created `dist/index.html`; never committed or hand-edited | VERIFIED locally |
 | Publication | GitHub Actions Pages deployment from verified `main` only | PROPOSED |
 
@@ -22,7 +22,7 @@ Status: **PROPOSED until the publication gates complete**. The plan is additive 
 - Regenerate: a disposable pinned-SFHS materialization and its ignored `dist/index.html`; never copy candidate HTML into source.
 - Mark superseded: the current Pages artifact and current release manifest after exact Rapier deployment parity passes.
 - Delete: nothing tracked. No stale heavy evidence meets all safe-deletion conditions; generated local material remains ignored.
-- Required compatibility repair: publish the already-tested minimal SFHS position-kinematic contract so GitHub CI can fetch the exact pin.
+- Required compatibility repair: the already-tested minimal SFHS position-kinematic contract was published through SFHS PR #33, passed its full CI matrix, and merged without rewriting history.
 - Workflows: preserve source tests before materialization; require full materialized tests, inspect, validate, proportional/full checks, repeated deterministic pack identity, exact verify, One-Shot audit, browser/network smoke, and least-privilege Pages deployment from `main` only.
 - Documentation: refresh README, status, roadmap, architecture, testing, decisions, authority, evidence retention, release manifest, and final release evidence with exact deployed facts.
 - Repository presentation: preserve public visibility and current name; retain the accurate description/homepage and normalize topics only if needed.
