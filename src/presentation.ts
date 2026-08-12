@@ -69,11 +69,11 @@ export async function prepareCatHockeyPresentationAssets(): Promise<void> {
 }
 
 const SCORE_CAT_CELL = 160;
-const SCORE_CAT_DISPLAY_SCALE = 0.5;
+const SCORE_CAT_DISPLAY_SCALE = 0.75;
 const SCORE_CAT_ANCHOR = Object.freeze({ x: 0.5, y: 0.9 });
 const SCORE_CAT_SHEETS = Object.freeze({
-  1: Object.freeze({ identity: "cat-paw-score-cat-p1.png", sha256: "2ce9621a713749a2f4a4fb7487aa9c6736385bbf9e51437c00b697fc5095e4b7" }),
-  2: Object.freeze({ identity: "cat-paw-score-cat-p2.png", sha256: "b915f6f245fdf69658cb7d7736fb2eea2bc455e383cb1f3e889392b70313f9ec" })
+  1: Object.freeze({ identity: "cat-paw-score-cat-p1.png", sha256: "4ff95bc9de2c461a355a27b7a949735e6eaa2d9810d212a41e29ed5f9d8f2121" }),
+  2: Object.freeze({ identity: "cat-paw-score-cat-p2.png", sha256: "1282b14991195787f8fbb446f82c100780031bffcf5403f46a4e1ce4d5346928" })
 });
 
 const COLORS = Object.freeze({

@@ -3,9 +3,9 @@
   "valid": true,
   "artifact": {
     "path": "dist/index.html",
-    "bytes": 4065857,
-    "sha256": "c2fdf6b121ce015dcab6e7fe1be86f8f815ea20ffb1181f7dd407a2484413e94",
-    "buildId": "cat-paw-air-hockey-1e9558fbf0aa"
+    "bytes": 4067814,
+    "sha256": "a2d26f85dbe66a8ba1db1a7c3df3d16fa7b044418198e57afdb4ca9429ab0b63",
+    "buildId": "cat-paw-air-hockey-235ab3123bc4"
   },
   "browser": "Chromium 149.0.7827.55",
   "checks": [
@@ -24,6 +24,6 @@
     "deferred 125-percent paw sizing is 90 units during the rally and 112.5 units at the next safe boundary",
     "touch-driven ready, play, deep defense, deferred goal/return settings, fullscreen, first-to-five, capture, and rematch",
     "both Godot score-cat sheets are embedded in the sole Pixi canvas with nearest sampling and no legacy mascot duplicates",
-    "score-cat diagnostics report frame 0 idle, 0.5 scale, anchor 0.5/0.9, exact sheet hashes, and top rotation pi"
+    "score-cat diagnostics report frame 0 idle, 0.75 scale (120 x 120 logical size), anchor 0.5/0.9, exact repaired sheet hashes, and top rotation pi"
   ]
 }

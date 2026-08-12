@@ -34,7 +34,7 @@ function wonFrames(state: Readonly<HockeyGameState>, paused: boolean): ScoreCatF
   if (state.reducedEffects || paused) return pair(state.winner, { frame: 14, reaction: "win" }, { frame: 15, reaction: "defeated" });
   const winEvent = [...state.events].reverse().find((event) => event.kind === "win" && event.player === state.winner);
   const age = winEvent === undefined ? Number.POSITIVE_INFINITY : Math.max(0, (state.tick - winEvent.tick) / SIMULATION_HZ);
-  return pair(state.winner, { frame: sample(age, [9, 10, 11, 12, 13, 14], [0.14, 0.28, 0.46, 0.68, 0.92]), reaction: "win" }, { frame: 15, reaction: "defeated" });
+  return pair(state.winner, { frame: sample(age, [9, 10, 11, 12, 13, 14], [0.28, 0.62, 1.0, 1.45, 1.95]), reaction: "win" }, { frame: 15, reaction: "defeated" });
 }
 
 function goalFrames(state: Readonly<HockeyGameState>): ScoreCatFrames | undefined {
@@ -44,8 +44,8 @@ function goalFrames(state: Readonly<HockeyGameState>): ScoreCatFrames | undefine
   const age = Math.max(0, GOAL_FREEZE_SECONDS - state.phaseTimer);
   return pair(
     scorer,
-    { frame: sample(age, [2, 3, 4, 5], [0.10, 0.25, 0.52]), reaction: "goal" },
-    { frame: sample(age, [6, 7, 8], [0.14, 0.48]), reaction: "conceded" }
+    { frame: sample(age, [2, 3, 4, 5], [0.22, 0.50, 0.86]), reaction: "goal" },
+    { frame: sample(age, [6, 7, 8], [0.28, 0.76]), reaction: "conceded" }
   );
 }
 

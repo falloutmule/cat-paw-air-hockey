@@ -89,7 +89,7 @@ func draw_head() -> void:
 	polygon(PackedVector2Array([Vector2(-18, -25), Vector2(-17, -17), Vector2(-10, -23)]), palette.marking, 1.2)
 	polygon(PackedVector2Array([Vector2(18, -25), Vector2(17, -17), Vector2(10, -23)]), palette.marking, 1.2)
 	polygon(PackedVector2Array([Vector2(-9, -18), Vector2(0, -22), Vector2(9, -18), Vector2(7, -12), Vector2(-7, -12)]), palette.marking, 1.2)
-	var eye_y := -2.0
+	var eye_y := -5.0
 	if blink >= 0.5:
 		draw_line(Vector2(-13, eye_y), Vector2(-6, eye_y), palette.outline, 2.0, false)
 		draw_line(Vector2(6, eye_y), Vector2(13, eye_y), palette.outline, 2.0, false)
@@ -102,8 +102,10 @@ func draw_head() -> void:
 		draw_line(Vector2(-14, -5), Vector2(-6, 0), palette.outline, 2.0, false)
 		draw_line(Vector2(6, 0), Vector2(14, -5), palette.outline, 2.0, false)
 	else:
-		draw_circle(Vector2(-10, eye_y), 2.4, palette.outline, true, -1.0, false)
-		draw_circle(Vector2(10, eye_y), 2.4, palette.outline, true, -1.0, false)
+		draw_circle(Vector2(-10, eye_y), 3.0, palette.outline, true, -1.0, false)
+		draw_circle(Vector2(10, eye_y), 3.0, palette.outline, true, -1.0, false)
+		draw_circle(Vector2(-9.4, eye_y - 0.7), 0.8, palette.muzzle, true, -1.0, false)
+		draw_circle(Vector2(10.6, eye_y - 0.7), 0.8, palette.muzzle, true, -1.0, false)
 		if expression >= 0.8:
 			draw_circle(Vector2(-9.5, -3), 0.9, palette.muzzle, true, -1.0, false)
 			draw_circle(Vector2(10.5, -3), 0.9, palette.muzzle, true, -1.0, false)

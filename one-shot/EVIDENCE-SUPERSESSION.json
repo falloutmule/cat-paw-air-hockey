@@ -1,6 +1,12 @@
 {
   "records": [
     {
+      "earlier": "cat-paw-air-hockey-1e9558fbf0aa / c2fdf6b121ce015dcab6e7fe1be86f8f815ea20ffb1181f7dd407a2484413e94",
+      "status": "SUPERSEDED / REPORTED FAIL / NEEDS REPAIR",
+      "treatment": "Samsung photos showed the first Godot score cats were too small, the reactions too fast and subtle, and the neutral paws obscured the eyes. The report remains bound to that exact artifact and does not transfer.",
+      "currentArtifact": "cat-paw-air-hockey-235ab3123bc4 / a2d26f85dbe66a8ba1db1a7c3df3d16fa7b044418198e57afdb4ca9429ab0b63"
+    },
+    {
       "earlier": "cat-paw-air-hockey-32b6e5f50e9d / 47db45150895e881b94b370ff8b7e6a55b6f6d9d08891cbe420ddd76ed711416",
       "status": "SUPERSEDED",
       "treatment": "BOARD-ART-001 replaces only the default Board bitmap with the exact approved 1080 x 2400 art. Frozen mechanics, dynamic goals, viewport, and input architecture remain unchanged; physical acceptance does not transfer to changed bytes.",

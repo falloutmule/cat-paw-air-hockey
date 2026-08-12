@@ -24,23 +24,23 @@ script = ExtResource("2_part")
 part = "rear_paws"
 
 [node name="Head" type="Node2D" parent="Rig"]
-position = Vector2(0, -25)
+position = Vector2(0, -23)
 script = ExtResource("2_part")
 part = "head"
 
 [node name="FrontPawLeft" type="Node2D" parent="Rig"]
-position = Vector2(-14, -22)
+position = Vector2(-20, -14)
 script = ExtResource("2_part")
 part = "front_paw"
 
 [node name="FrontPawRight" type="Node2D" parent="Rig"]
-position = Vector2(14, -22)
+position = Vector2(20, -14)
 script = ExtResource("2_part")
 part = "front_paw"
 mirror = true
 
 [node name="Accents" type="Node2D" parent="Rig"]
-position = Vector2(0, -26)
+position = Vector2(0, -24)
 script = ExtResource("2_part")
 part = "accents"
 

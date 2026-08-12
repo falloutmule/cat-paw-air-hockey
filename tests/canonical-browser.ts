@@ -64,6 +64,14 @@ try {
   assert.deepEqual(initial.goals, { architecture: "pixi-nine-slice", textureSampling: "nearest", top: { openingWidth: 184, visualWidth: 232, labelScale: 1, rotation: Math.PI }, bottom: { openingWidth: 184, visualWidth: 232, labelScale: 1, rotation: 0 } });
   assert.equal(initial.paws.top.nominalDiameter, 90);
   assert.equal(initial.paws.bottom.nominalDiameter, 90);
+  assert.deepEqual(initial.scoreCats.top.scale, { x: 0.75, y: 0.75 });
+  assert.deepEqual(initial.scoreCats.bottom.scale, { x: 0.75, y: 0.75 });
+  assert.deepEqual(initial.scoreCats.top.anchor, { x: 0.5, y: 0.9 });
+  assert.deepEqual(initial.scoreCats.bottom.anchor, { x: 0.5, y: 0.9 });
+  assert.equal(initial.scoreCats.top.rotation, Math.PI);
+  assert.equal(initial.scoreCats.bottom.rotation, 0);
+  assert.equal(initial.scoreCats.top.frame, 0);
+  assert.equal(initial.scoreCats.bottom.frame, 0);
   assert.notEqual(initial.board.logicalBounds.width, initial.board.bitmapPixels.width, "Board bitmap pixels do not become logical layout units");
   assert.equal(await page.locator("#game-shell").getAttribute("data-board"), "default");
   assert.equal(await page.locator("#pixi-host canvas").count(), 1);
