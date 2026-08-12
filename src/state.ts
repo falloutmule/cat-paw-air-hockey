@@ -18,6 +18,7 @@ export interface PresentationEvent {
   readonly y: number;
   readonly strength: number;
   readonly player?: PlayerId;
+  readonly normal?: Vector2;
 }
 
 export interface StrikerState {

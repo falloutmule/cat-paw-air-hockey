@@ -3,22 +3,378 @@
   "valid": true,
   "artifact": {
     "path": "dist/index.html",
-    "bytes": 4073692,
-    "sha256": "3310e4f0992803d06f64ad1ed30f9e1f62c19481f476fc74e7180c4af398aa4e",
-    "buildId": "cat-paw-air-hockey-59c8fe2815c1"
+    "bytes": 4117623,
+    "sha256": "51b92216c60556d2df9885ba5155bc427da6904b0fc3fc6a89c864e30215f42a"
   },
-  "browser": "Chromium 149.0.7827.55",
-  "checks": [
-    "exact served bytes, one Pixi WebGL canvas, zero page/console errors, and zero external runtime requests",
-    "540 x 1200 mechanics and 1080 x 2400 Board pixels remain independent",
-    "uniform contain at 412 x 915, 360 x 800, 390 x 844, and 360 x 640",
-    "legacy v2 75-percent speed and 125-percent size normals migrate once to v3 100-percent speeds and 200-percent sizes",
-    "all five size controls expose 25 to 200 percent and all five speed controls expose 70 to 130 percent",
-    "both mirrored settings halves retain sticky Close controls and one thin native scrollbar with no duplicate outer scroll control",
-    "a 200-percent puck with a 25-percent goal warns visibly and remains closable",
-    "default goals render at 200 percent and default puck/paw diagnostics report 92/180 logical diameters",
-    "normal touch play observes authoritative contact, last-hitter score-cat palette, visible puck deformation, first-to-five, capture, and rematch",
-    "focused reduced-motion tests retain palette ownership and suppress puck/paw transforms",
-    "both Godot score-cat sheets remain embedded in the sole Pixi canvas at exact double-size 160 x 160 display"
-  ]
+  "browser": "149.0.7827.55",
+  "canvasCount": 1,
+  "requests": [
+    "/",
+    "/",
+    "/"
+  ],
+  "pageErrors": [],
+  "consoleErrors": [],
+  "snapshot": {
+    "schema": "cat-air-hockey.runtime-snapshot@2",
+    "renderer": {
+      "renderer": "PIXI",
+      "paused": false,
+      "destroyed": false,
+      "viewport": {
+        "logicalWidth": 540,
+        "logicalHeight": 1200,
+        "presentedWidth": 412,
+        "presentedHeight": 915,
+        "backingWidth": 1080,
+        "backingHeight": 2400,
+        "resolution": 2,
+        "scaleX": 0.7625,
+        "scaleY": 0.7625,
+        "offsetX": 0.125,
+        "offsetY": 0,
+        "orientation": "portrait"
+      },
+      "stage": {
+        "hierarchy": [
+          "worldRoot/backgroundLayer",
+          "worldRoot/environmentLayer",
+          "worldRoot/actorLayer",
+          "worldRoot/projectileLayer",
+          "worldRoot/worldEffectsLayer",
+          "screenEffectsLayer",
+          "debugLayer",
+          "hudLayer"
+        ],
+        "meaningfulObjectCount": 5
+      }
+    },
+    "viewport": {
+      "logicalWidth": 540,
+      "logicalHeight": 1200,
+      "presentedWidth": 412,
+      "presentedHeight": 915,
+      "backingWidth": 1080,
+      "backingHeight": 2400,
+      "resolution": 2,
+      "scaleX": 0.7625,
+      "scaleY": 0.7625,
+      "offsetX": 0.125,
+      "offsetY": 0,
+      "orientation": "portrait"
+    },
+    "input": {
+      "owners": {
+        "1": null,
+        "2": null
+      },
+      "held": {
+        "1": false,
+        "2": false
+      },
+      "targets": {
+        "1": {
+          "x": 270,
+          "y": 1116
+        },
+        "2": {
+          "x": 270,
+          "y": 84.00000000000001
+        }
+      },
+      "ignoredPointerCount": 1,
+      "captureFailureCount": 5,
+      "clearCount": 8
+    },
+    "audio": "ready",
+    "orientationGateActive": false,
+    "board": {
+      "mode": "default",
+      "spriteCount": 1,
+      "replacementCount": 2,
+      "disposedOwnedTextureCount": 1,
+      "logicalBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 540,
+        "height": 1200
+      },
+      "bitmapPixels": {
+        "width": 1080,
+        "height": 2400
+      },
+      "spriteLogicalSize": {
+        "width": 540,
+        "height": 1200
+      }
+    },
+    "goals": {
+      "architecture": "pixi-nine-slice",
+      "textureSampling": "nearest",
+      "top": {
+        "openingWidth": 230,
+        "visualWidth": 278,
+        "labelScale": 1.1,
+        "rotation": 3.141592653589793
+      },
+      "bottom": {
+        "openingWidth": 138,
+        "visualWidth": 186,
+        "labelScale": 0.9,
+        "rotation": 0
+      }
+    },
+    "paws": {
+      "top": {
+        "nominalDiameter": 180,
+        "frame": 0,
+        "sheet": "cat-paw-player2.png",
+        "sha256": "d6946cecf84386a6db9b7ab3c34a1bd56930217a239100e3cc8b7938c6595a43",
+        "anchor": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "renderedScaleX": 1,
+        "renderedScaleY": 1,
+        "rotation": 3.141592653589793,
+        "presentation": "godot-sheet"
+      },
+      "bottom": {
+        "nominalDiameter": 180,
+        "frame": 0,
+        "sheet": "cat-paw-player1.png",
+        "sha256": "2f350bdd7b8207f8ad9eadc774d87fd6ea8917a7974d83b50dc2b4688d9c7b09",
+        "anchor": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "renderedScaleX": 1,
+        "renderedScaleY": 1,
+        "rotation": 0,
+        "presentation": "godot-sheet"
+      }
+    },
+    "puckPresentation": {
+      "nominalDiameter": 92,
+      "owner": 1,
+      "palette": "player1",
+      "frame": 0,
+      "sheet": "cat-paw-puck-player1.png",
+      "sha256": "41acc3fee7711d6735d84347689f0de74fedad5698b19da9c4e593cb17633fc1",
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5
+      },
+      "offset": {
+        "x": 0,
+        "y": 0
+      },
+      "renderedScaleX": 1,
+      "renderedScaleY": 1,
+      "rotation": 0.12982120568306152,
+      "contactPlayer": null,
+      "contactEventId": null,
+      "contactAgeSeconds": null,
+      "contactStrength": 0,
+      "contactNormal": {
+        "x": 0,
+        "y": -1
+      },
+      "presentation": "godot-sheet"
+    },
+    "scoreCats": {
+      "top": {
+        "frame": 0,
+        "reaction": "idle",
+        "sheet": "cat-paw-score-cat-p2.png",
+        "sha256": "1282b14991195787f8fbb446f82c100780031bffcf5403f46a4e1ce4d5346928",
+        "scale": {
+          "x": 1,
+          "y": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.9
+        },
+        "rotation": 3.141592653589793
+      },
+      "bottom": {
+        "frame": 0,
+        "reaction": "idle",
+        "sheet": "cat-paw-score-cat-p1.png",
+        "sha256": "4ff95bc9de2c461a355a27b7a949735e6eaa2d9810d212a41e29ed5f9d8f2121",
+        "scale": {
+          "x": 1,
+          "y": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.9
+        },
+        "rotation": 0
+      }
+    },
+    "state": {
+      "phase": "playing",
+      "tick": 962,
+      "scores": {
+        "1": 0,
+        "2": 0
+      },
+      "winner": null,
+      "activeMatchSettings": {
+        "puckSpeed": 130,
+        "pawSpeed": {
+          "1": 100,
+          "2": 100
+        },
+        "returnSpeed": {
+          "1": 70,
+          "2": 100
+        },
+        "puckSize": 200,
+        "pawSize": {
+          "1": 200,
+          "2": 200
+        },
+        "goalSize": {
+          "1": 75,
+          "2": 125
+        }
+      },
+      "pendingMatchSettings": {
+        "puckSpeed": 130,
+        "pawSpeed": {
+          "1": 100,
+          "2": 100
+        },
+        "returnSpeed": {
+          "1": 70,
+          "2": 100
+        },
+        "puckSize": 200,
+        "pawSize": {
+          "1": 200,
+          "2": 200
+        },
+        "goalSize": {
+          "1": 75,
+          "2": 125
+        }
+      },
+      "puck": {
+        "position": {
+          "x": 196.22291045345852,
+          "y": 376.9143536728336
+        },
+        "previousPosition": {
+          "x": 196.30238623399117,
+          "y": 377.4535668952652
+        },
+        "velocity": {
+          "x": -4.722687246664776,
+          "y": -32.04165334072995
+        },
+        "trail": [
+          {
+            "x": 196.22291045345852,
+            "y": 376.9143536728336
+          },
+          {
+            "x": 196.30238623399117,
+            "y": 377.4535668952652
+          },
+          {
+            "x": 196.38263376292588,
+            "y": 377.9980161397906
+          },
+          {
+            "x": 196.46366053431422,
+            "y": 378.54775225072547
+          },
+          {
+            "x": 196.5454741149786,
+            "y": 379.1028265661087
+          },
+          {
+            "x": 196.62808214521894,
+            "y": 379.66329092249634
+          },
+          {
+            "x": 196.71149233952625,
+            "y": 380.2291976598026
+          },
+          {
+            "x": 196.79571248730292,
+            "y": 380.80059962618753
+          },
+          {
+            "x": 196.88075045359025,
+            "y": 381.37755018299265
+          }
+        ],
+        "lastHitter": 1
+      },
+      "players": {
+        "1": {
+          "position": {
+            "x": 270,
+            "y": 1056
+          },
+          "previousPosition": {
+            "x": 270,
+            "y": 1056
+          },
+          "velocity": {
+            "x": 0,
+            "y": 0
+          },
+          "readyProgress": 0,
+          "ready": false
+        },
+        "2": {
+          "position": {
+            "x": 270,
+            "y": 144
+          },
+          "previousPosition": {
+            "x": 270,
+            "y": 144
+          },
+          "velocity": {
+            "x": 0,
+            "y": 0
+          },
+          "readyProgress": 0,
+          "ready": false
+        }
+      },
+      "recentEvents": [
+        {
+          "id": 10,
+          "tick": 894,
+          "kind": "pause",
+          "x": 270,
+          "y": 600,
+          "strength": 0.35
+        },
+        {
+          "id": 11,
+          "tick": 938,
+          "kind": "resume",
+          "x": 270,
+          "y": 600,
+          "strength": 0.35
+        }
+      ]
+    }
+  }
 }

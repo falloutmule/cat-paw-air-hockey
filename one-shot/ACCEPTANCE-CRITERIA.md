@@ -10,7 +10,7 @@
 - Semantic scenario: ready hold, countdown, goal reset, first-to-five winner, and two-player rematch.
 - Required visual evidence: packed-artifact boot/play/landscape gate, one WebGL canvas, zero unexpected runtime requests.
 - Required-before-completion tests: input, physics, match flow, audio, orientation, lifecycle/browser smoke, pack and exact verify.
-- Deferred: exact-artifact Samsung retest remains REPORTED historical acceptance until new device metadata/evidence is supplied.
+- Deferred: the prior exact artifact has a REPORTED Samsung PASS; PUCK-PAW-GODOT-001 remains UNTESTED until the new exact files receive an artifact-bound verdict.
 - Publication condition: a normal canonical-branch change runs the durable quality and Pages workflows; Pages serves only verified packed HTML whose downloaded SHA-256 matches the recorded canonical artifact.
 - Physical-device condition: Samsung acceptance remains separate and artifact-bound; it is not implied by publication.
 - R3 controls: exactly four shared buttons remain at the center side edges in the locked Mute/Pause/Menu/Fullscreen arrangement; winner Capture replaces only Pause; both defensive goal zones remain free.
@@ -22,4 +22,7 @@
 - Score cats: both sprites use the tracked 4 x 4 Godot sheets at an exact double-size 160 x 160 logical display size, fixed `(40,72)` source anchors, nearest sampling, and a complete P2 rotation of pi without changing the separate 54 px scores.
 - Score-cat reactions: both scoring directions, conceded assignment, final-goal transition, winner/defeated poses, rematch, pause/resume, reduced motion, and six-tick idle blinking follow the pure presentation resolver.
 - Score-cat physical gate: preview and packed artifact identities in `docs/expansion/SCORE-CAT-GODOT-001-PHYSICAL-TEST-SEED.md` require an artifact-bound Samsung verdict before framework extraction.
-- Contact presentation: an authoritative paw hit assigns the hitter's score-cat palette to the puck and drives a short puck squash/pop plus paw recoil. Reduced motion keeps the palette and suppresses the transforms.
+- Gameplay actors: the default paws and puck use tracked, deterministic Godot 4.7.1 RGBA sheets with eight ordered cells (idle plus seven contact frames), matching cross-palette alpha masks, nearest sampling, and metadata/validation hashes.
+- Contact presentation: an authoritative paw hit assigns the hitter's score-cat palette to the puck and synchronizes seven contact frames on the touching paw and puck over 0.64 seconds. Collision normal and strength affect presentation only; reduced motion holds frame 0 while preserving palette identity.
+- Theme compatibility: a valid custom paw or puck cell keeps the legacy static-cell renderer and receives the same bounded transform fallback without requiring new theme schema or save data.
+- Gameplay-actor physical gate: the exact preview, packed artifact, manifest identities, and Godot version in `docs/expansion/PUCK-PAW-GODOT-001-PHYSICAL-TEST-SEED.md` require an artifact-bound Samsung verdict.

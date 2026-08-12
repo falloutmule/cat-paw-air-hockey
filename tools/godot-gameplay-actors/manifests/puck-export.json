@@ -1,0 +1,29 @@
+{
+  "schema": "sfhs.godot-animation-export@1",
+  "godotProject": "tools/godot-gameplay-actors",
+  "scene": "res://puck.tscn",
+  "animationPlayer": "AnimationPlayer",
+  "workingFrame": { "width": 64, "height": 64 },
+  "scale": 2,
+  "sheet": { "columns": 4, "rows": 2 },
+  "anchor": { "x": 32, "y": 32, "groundedTolerance": 0 },
+  "border": { "transparentPixels": 2 },
+  "variantAlphaParity": true,
+  "samples": [
+    { "id": "idle", "animation": "idle", "timeSeconds": 0 },
+    { "id": "contact-0", "animation": "contact", "timeSeconds": 0 },
+    { "id": "contact-1", "animation": "contact", "timeSeconds": 0.08 },
+    { "id": "contact-2", "animation": "contact", "timeSeconds": 0.17 },
+    { "id": "contact-3", "animation": "contact", "timeSeconds": 0.28 },
+    { "id": "contact-4", "animation": "contact", "timeSeconds": 0.40 },
+    { "id": "contact-5", "animation": "contact", "timeSeconds": 0.52 },
+    { "id": "contact-6", "animation": "contact", "timeSeconds": 0.64 }
+  ],
+  "variants": [
+    { "id": "neutral", "parameters": { "fill": "ffd45c", "strand": "c36b32", "accent": "fff4d6", "highlight": "ffffff" }, "output": "art/gameplay-actors/cat-paw-puck-neutral.png" },
+    { "id": "player1", "parameters": { "fill": "f4d6ae", "strand": "efad8f", "accent": "39b9b0", "highlight": "fff0dc" }, "output": "art/gameplay-actors/cat-paw-puck-player1.png" },
+    { "id": "player2", "parameters": { "fill": "bba6df", "strand": "d8c8ef", "accent": "ee746d", "highlight": "f3eaff" }, "output": "art/gameplay-actors/cat-paw-puck-player2.png" }
+  ],
+  "metadataOutput": "art/gameplay-actors/cat-paw-puck-export-metadata.json",
+  "validationOutput": "art/gameplay-actors/cat-paw-puck-export-validation.json"
+}

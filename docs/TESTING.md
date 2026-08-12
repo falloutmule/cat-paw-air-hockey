@@ -15,7 +15,15 @@ pnpm score-cats:build -- --godot-executable <path-to-Godot_v4.7.1-stable_win64_c
 
 Run it twice and compare the two sheet hashes before canonical materialization. Windows uses a hidden OpenGL compatibility window because Godot's literal `--headless` mode selects the non-rendering Dummy driver.
 
-The suite covers 13 input lifecycle scenarios, 16 physics scenarios, 6 match-flow scenarios, 6 audio scenarios, orientation, settings migration/synchronization and 25–200% extremes, return-speed behavior, the exact shared-control contract, 29 focused tall-board checks, 34 score-cat cases, and 18 contact-presentation cases. Packed Chromium additionally covers strict 1080×2400 Board dimensions/decode, safe R2 legacy retention, failed-replacement preservation, IndexedDB reload, reset, texture disposal, one persistent sprite, 25–200% settings, 200% default couch goals, sticky Close controls, one thin native scrollbar per mirrored half, fullscreen, and goal-zone clearance. The semantic browser lane observes real paw/puck deformation and palette transfer, reaches a winner, saves the real canvas capture, and starts a rematch through normal UI and pointer actions.
+The gameplay actors use the merged renderer-neutral SFHS exporter at commit `37aa056b6bd0948d73fcd99c1aba558861f0037e`:
+
+```powershell
+pnpm gameplay-actors:build -- --godot-executable <path-to-Godot_v4.7.1-stable_win64_console.exe> --sfhs-root <clean-sfhs-37aa056-checkout>
+```
+
+Run it twice. The second run must verify all five existing sheets byte-for-byte. The actor tests bind sheet dimensions, SHA-256 identities, ordered distinct frames, transparent borders, and cross-palette alpha parity.
+
+The suite covers 13 input lifecycle scenarios, 16 physics scenarios, 6 match-flow scenarios, 6 audio scenarios, orientation, settings migration/synchronization and 25–200% extremes, return-speed behavior, the exact shared-control contract, 29 focused tall-board checks, 34 score-cat cases, 35 contact-resolver cases, and 31 gameplay-actor identity/validation cases. Packed Chromium additionally covers strict 1080×2400 Board dimensions/decode, safe R2 legacy retention, failed-replacement preservation, IndexedDB reload, reset, texture disposal, one persistent sprite, all five Godot actor sheets, 25–200% settings, 200% default couch goals, sticky Close controls, one thin native scrollbar per mirrored half, fullscreen, and goal-zone clearance. The semantic browser lane observes synchronized real paw/puck frames and palette transfer, reaches a winner, saves the real canvas capture, and starts a rematch through normal UI and pointer actions.
 
 ## Canonical SFHS sequence
 

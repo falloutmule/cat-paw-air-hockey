@@ -1,0 +1,91 @@
+{
+  "anchor": {
+    "groundedTolerance": 0,
+    "x": 32,
+    "y": 32
+  },
+  "descriptor": {
+    "path": "tools/godot-gameplay-actors/manifests/puck-export.json",
+    "sha256": "8f29d3c087ca9859180b99bbb62297f6c31b03e975de351f7e09cdaf6f36367e"
+  },
+  "godot": {
+    "executableSha256": "35dab11e04ece16a2b93035e65204f4a944a3e00b020d43e54409193379d5eef",
+    "executionMode": "noninteractive-offscreen-window",
+    "renderer": "gl_compatibility",
+    "sourceGuard": "fail-closed textual preflight; not an OS syscall sandbox",
+    "supportedVersion": "4.7.1.stable",
+    "version": "4.7.1.stable.official.a13da4feb"
+  },
+  "outputs": [
+    {
+      "bytes": 4129,
+      "id": "neutral",
+      "output": "art/gameplay-actors/cat-paw-puck-neutral.png",
+      "sha256": "db55b954f2a01dfc23c55f5b43bf0efe9ef4af25c583b20253c866f0f4e5bfbf"
+    },
+    {
+      "bytes": 4150,
+      "id": "player1",
+      "output": "art/gameplay-actors/cat-paw-puck-player1.png",
+      "sha256": "41acc3fee7711d6735d84347689f0de74fedad5698b19da9c4e593cb17633fc1"
+    },
+    {
+      "bytes": 4151,
+      "id": "player2",
+      "output": "art/gameplay-actors/cat-paw-puck-player2.png",
+      "sha256": "f3b35382326a841d7df0eaa18ea5c88c2a097a8f9fcf9a4d381d8dda708779d9"
+    }
+  ],
+  "samples": [
+    {
+      "animation": "idle",
+      "id": "idle",
+      "timeSeconds": 0
+    },
+    {
+      "animation": "contact",
+      "id": "contact-0",
+      "timeSeconds": 0
+    },
+    {
+      "animation": "contact",
+      "id": "contact-1",
+      "timeSeconds": 0.08
+    },
+    {
+      "animation": "contact",
+      "id": "contact-2",
+      "timeSeconds": 0.17
+    },
+    {
+      "animation": "contact",
+      "id": "contact-3",
+      "timeSeconds": 0.28
+    },
+    {
+      "animation": "contact",
+      "id": "contact-4",
+      "timeSeconds": 0.4
+    },
+    {
+      "animation": "contact",
+      "id": "contact-5",
+      "timeSeconds": 0.52
+    },
+    {
+      "animation": "contact",
+      "id": "contact-6",
+      "timeSeconds": 0.64
+    }
+  ],
+  "scale": 2,
+  "schema": "sfhs.godot-animation-export-metadata@1",
+  "sheet": {
+    "columns": 4,
+    "rows": 2
+  },
+  "workingFrame": {
+    "height": 64,
+    "width": 64
+  }
+}

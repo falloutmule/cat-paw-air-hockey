@@ -1,6 +1,12 @@
 {
   "records": [
     {
+      "earlier": "cat-paw-air-hockey-59c8fe2815c1 / 3310e4f0992803d06f64ad1ed30f9e1f62c19481f476fc74e7180c4af398aa4e",
+      "status": "SUPERSEDED / REPORTED PASS",
+      "treatment": "The Samsung PASS remains bound to the settings-defaults artifact. PUCK-PAW-GODOT-001 replaces its procedural contact deformation with seven synchronized Godot-authored paw and puck frames, so the physical result does not transfer.",
+      "currentArtifact": "cat-paw-air-hockey-06998a9ce8bc / 51b92216c60556d2df9885ba5155bc427da6904b0fc3fc6a89c864e30215f42a"
+    },
+    {
       "earlier": "cat-paw-air-hockey-d9c204866261 / 34a3bbd431243f27797a5801095e7c5f210dca0effc4a114a19bd1efabf6dbd8",
       "status": "SUPERSEDED / UNTESTED",
       "treatment": "The prior settings/contact artifact is superseded by the requested 100-percent speed normals, 200-percent size normals, v3 migration, and removal of the duplicate large scroll control. No physical result transfers.",

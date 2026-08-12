@@ -68,6 +68,9 @@ scenario("stationary striker impact reflects puck", () => {
   state = withPuck(state, 270, 620, 0, 900);
   const next = step(state, EMPTY_ACTION_SNAPSHOT, 4);
   assert.ok(next.puck.velocity.y < 0);
+  const contact = [...next.events].reverse().find((event) => event.kind === "paw-hit");
+  assert.equal(contact?.player, 1);
+  assert.ok(contact?.normal !== undefined && Math.abs(Math.hypot(contact.normal.x, contact.normal.y) - 1) < 0.0001, "authoritative paw-hit event records a normalized presentation direction");
 });
 scenario("fast moving striker transfers more energy", () => {
   let state = mutablePlaying();

@@ -28,7 +28,7 @@ export function installDiagnostics(options: {
       const runtime = options.getRuntime();
       const state = runtime?.getState();
       return Object.freeze({
-        schema: "cat-air-hockey.runtime-snapshot@1",
+        schema: "cat-air-hockey.runtime-snapshot@2",
         renderer: runtime?.getDiagnostics() ?? null,
         viewport: runtime?.getViewport() ?? null,
         input: options.input.getDiagnostics(),

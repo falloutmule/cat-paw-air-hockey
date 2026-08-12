@@ -6,16 +6,16 @@
 
 ## Status
 
-The readable source, tests, and SFHS project are authoritative. SCORE-CAT-GODOT-001 is locally verified by the real pinned SFHS packer and exact verifier. It is not deployed or pushed under this local-only boundary, and its Samsung Galaxy S21 Ultra session is **UNTESTED**.
+The readable source, tests, and SFHS project are authoritative. PUCK-PAW-GODOT-001 is locally verified by the real pinned SFHS packer and exact verifier. It is not deployed or pushed under this local-only boundary, and its Samsung Galaxy S21 Ultra session is **UNTESTED**.
 
 | Current canonical artifact | Value |
 | --- | --- |
-| Build ID | `cat-paw-air-hockey-59c8fe2815c1` |
-| Source SHA-256 | `59c8fe2815c1a9d9cc89ccac77b936c05c9623fef85cc7332047947353d24c06` |
-| Artifact SHA-256 | `3310e4f0992803d06f64ad1ed30f9e1f62c19481f476fc74e7180c4af398aa4e` |
-| Bytes | 4,073,692 |
+| Build ID | `cat-paw-air-hockey-06998a9ce8bc` |
+| Source SHA-256 | `06998a9ce8bc8b8cd578018e42b716c3c4b5b017c13626d306aa609eddc5055b` |
+| Artifact SHA-256 | `51b92216c60556d2df9885ba5155bc427da6904b0fc3fc6a89c864e30215f42a` |
+| Bytes | 4,117,623 |
 | Verification | SFHS inspect, validate, check, pack, exact verify, and multi-viewport packed Chromium smoke |
-| Pages | [Currently deployed earlier build](https://falloutmule.github.io/cat-paw-air-hockey/); SCORE-CAT-GODOT-001 was not deployed |
+| Pages | [Currently deployed earlier build](https://falloutmule.github.io/cat-paw-air-hockey/); PUCK-PAW-GODOT-001 was not deployed |
 
 ## Play
 
@@ -32,11 +32,11 @@ The four shared controls straddle the center edges: Mute upper-left, Pause lower
 - Optional local PNG theme, fullscreen controls, and final-score PNG capture.
 - One required Pixi v8 WebGL canvas, no runtime external requests, and a portrait-first adaptive viewport.
 - Godot 4.7.1-authored animated score cats with exact double-size 160 x 160 nearest-neighbor presentation, palette-only P1/P2 sheets, slower exaggerated reactions, reduced-motion poses, and no runtime skeletal animation.
-- Last-hit puck palettes match the P1/P2 score cats. Each authoritative paw contact drives a short squash/pop and paw recoil; reduced motion preserves the palette transfer while suppressing the transforms.
+- Godot 4.7.1-authored gameplay paws and yarn puck use palette-only variants matching the score cats. Each authoritative paw contact synchronizes seven slower squash, stretch, recoil, overshoot, wobble, and settle frames; reduced motion preserves palette transfer while holding frame 0.
 
 ## Limits
 
-The primary device target is Samsung Galaxy S21 Ultra in stable Android Chrome. Automated Chromium evidence does not replace an artifact-bound physical session. The current artifact has no reported Samsung result. WebGL is required; there is deliberately no hidden Canvas fallback.
+The primary device target is Samsung Galaxy S21 Ultra in stable Android Chrome. Automated Chromium evidence does not replace an artifact-bound physical session. The current puck-and-paw artifact has no reported Samsung result; the previous settings artifact's PASS does not transfer. WebGL is required; there is deliberately no hidden Canvas fallback.
 
 ## Architecture and verification
 

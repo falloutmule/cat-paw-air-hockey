@@ -91,7 +91,7 @@ try {
 
   let observedContact = false;
   let observedContactPalette: string | undefined;
-  let observedContactDeformation = false;
+  let observedContactAnimation = false;
   const scoreForPlayerOne = async (targetScore: number): Promise<void> => {
     const deadline = Date.now() + 90_000;
     let sweptThisDescent = false;
@@ -101,7 +101,7 @@ try {
       const current = await snapshot();
       if (current.puckPresentation?.contactPlayer != null) {
         observedContact = true;
-        observedContactDeformation ||= Math.abs(current.puckPresentation.renderedScaleX - current.puckPresentation.renderedScaleY) > 0.01;
+        observedContactAnimation ||= current.puckPresentation.frame > 0 && current.paws[current.puckPresentation.contactPlayer === 1 ? "bottom" : "top"].frame === current.puckPresentation.frame;
       }
       if (current.state.puck.lastHitter === 1 && current.puckPresentation?.palette === "player1") observedContactPalette = "player1";
       if (current.state.puck.lastHitter === 2 && current.puckPresentation?.palette === "player2") observedContactPalette = "player2";
@@ -120,7 +120,7 @@ try {
           const contact = await snapshot();
           if (contact.puckPresentation?.contactPlayer != null) {
             observedContact = true;
-            observedContactDeformation ||= Math.abs(contact.puckPresentation.renderedScaleX - contact.puckPresentation.renderedScaleY) > 0.01;
+            observedContactAnimation ||= contact.puckPresentation.frame > 0 && contact.paws[contact.puckPresentation.contactPlayer === 1 ? "bottom" : "top"].frame === contact.puckPresentation.frame;
           }
           if (contact.state.puck.lastHitter === 1 && contact.puckPresentation?.palette === "player1") observedContactPalette = "player1";
           if (contact.state.puck.lastHitter === 2 && contact.puckPresentation?.palette === "player2") observedContactPalette = "player2";
@@ -191,13 +191,14 @@ try {
 
   const openingContactSeen = page.waitForFunction(() => {
     const puck = (window.__CAT_AIR_HOCKEY__!.snapshot() as any).puckPresentation;
-    return puck?.contactPlayer != null && Math.abs(puck.renderedScaleX - puck.renderedScaleY) > 0.01;
+    return puck?.contactPlayer != null && puck.frame > 0;
   }, undefined, { timeout: 1_500 });
   await touch("pointermove", 1, 270, 690);
   await openingContactSeen;
   const openingContact = await snapshot();
   observedContact = true;
-  observedContactDeformation = true;
+  observedContactAnimation = true;
+  await page.screenshot({ path: resolve(evidenceDirectory, "09-godot-puck-paw-contact.png") });
   if (openingContact.state.puck.lastHitter === 1 && openingContact.puckPresentation?.palette === "player1") observedContactPalette = "player1";
   if (openingContact.state.puck.lastHitter === 2 && openingContact.puckPresentation?.palette === "player2") observedContactPalette = "player2";
 
@@ -205,7 +206,7 @@ try {
   assert.equal((await snapshot()).state.scores[1], 1);
   assert.equal(observedContact, true, "normal pointer play reaches the contact presentation lane");
   assert.ok(observedContactPalette === "player1" || observedContactPalette === "player2", "contact gives the puck the last hitter's cat palette");
-  assert.equal(observedContactDeformation, true, "normal motion visibly deforms the puck during contact");
+  assert.equal(observedContactAnimation, true, "normal motion advances the synchronized Godot puck-and-paw contact frames");
 
   await page.locator("[data-action='menu']").click();
   await page.waitForFunction(() => (window.__CAT_AIR_HOCKEY__!.snapshot() as any).state.phase === "paused");
@@ -283,7 +284,7 @@ try {
     artifact: { bytes: artifact.byteLength, sha256: artifactSha256 },
     browser: await browser.version(), scoresBeforeRematch: won.state.scores,
     rematch: { phase: rematch.state.phase, scores: rematch.state.scores },
-    contactPresentation: { observedContact, observedContactPalette, observedContactDeformation },
+    contactPresentation: { observedContact, observedContactPalette, observedContactAnimation },
     actions: ["boot", "ready", "play", "paw and puck contact animation", "deep defense", "score", "defer goal resize", "defer return handicap", "load Board", "fullscreen enter/exit", "continue", "first to five", "capture", "rematch"],
     requests, pageErrors, consoleErrors
   }, null, 2));

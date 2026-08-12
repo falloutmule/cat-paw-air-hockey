@@ -7,9 +7,14 @@
         { "alias": "default-board-template", "src": "../../art/theme/cat-paw-board-template.png" },
         { "alias": "default-couch-goal", "src": "../../art/goals/cat-paw-couch-goal.png" },
         { "alias": "score-cat-player-1", "src": "../../art/score-cats/cat-paw-score-cat-p1.png" },
-        { "alias": "score-cat-player-2", "src": "../../art/score-cats/cat-paw-score-cat-p2.png" }
+        { "alias": "score-cat-player-2", "src": "../../art/score-cats/cat-paw-score-cat-p2.png" },
+        { "alias": "gameplay-paw-player-1", "src": "../../art/gameplay-actors/cat-paw-player1.png" },
+        { "alias": "gameplay-paw-player-2", "src": "../../art/gameplay-actors/cat-paw-player2.png" },
+        { "alias": "gameplay-puck-neutral", "src": "../../art/gameplay-actors/cat-paw-puck-neutral.png" },
+        { "alias": "gameplay-puck-player-1", "src": "../../art/gameplay-actors/cat-paw-puck-player1.png" },
+        { "alias": "gameplay-puck-player-2", "src": "../../art/gameplay-actors/cat-paw-puck-player2.png" }
       ]
     }
   ],
-  "notes": "The exact default Board, couch-goal, and Godot-authored score-cat PNGs are inlined. Gameplay actors, effects, and sound remain procedural. No runtime asset URLs are required."
+  "notes": "The exact default Board, couch-goal, Godot-authored score cats, paws, and puck palettes are inlined. Effects and sound remain procedural. No runtime asset URLs are required."
 }

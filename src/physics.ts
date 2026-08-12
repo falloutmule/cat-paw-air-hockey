@@ -66,7 +66,7 @@ function freezeStriker(striker: MutableStriker): StrikerState {
   });
 }
 
-function emit(context: MutableContext, kind: PresentationEvent["kind"], x: number, y: number, strength: number, player?: PlayerId): void {
+function emit(context: MutableContext, kind: PresentationEvent["kind"], x: number, y: number, strength: number, player?: PlayerId, normal?: Vector2): void {
   context.events.push(Object.freeze({
     id: context.nextEventId++,
     tick: context.tick,
@@ -74,7 +74,8 @@ function emit(context: MutableContext, kind: PresentationEvent["kind"], x: numbe
     x,
     y,
     strength: clamp(strength, 0, 1),
-    ...(player === undefined ? {} : { player })
+    ...(player === undefined ? {} : { player }),
+    ...(normal === undefined ? {} : { normal: freezeVector(normal) })
   }));
 }
 
@@ -167,10 +168,10 @@ function servePuck(puck: MutablePuck, serveNumber: number, settings: MatchSettin
   puck.velocity.y = direction * 410 * scale;
 }
 
-function impactEvent(context: MutableContext, key: "wall" | "player1" | "player2", kind: "wall-hit" | "paw-hit", x: number, y: number, speed: number, player?: PlayerId): void {
+function impactEvent(context: MutableContext, key: "wall" | "player1" | "player2", kind: "wall-hit" | "paw-hit", x: number, y: number, speed: number, player?: PlayerId, normal?: Vector2): void {
   if (context.cooldowns[key] > 0 || speed < 42) return;
   context.cooldowns[key] = kind === "wall-hit" ? 0.04 : 0.055;
-  emit(context, kind, x, y, clamp((speed - 35) / 1_250, 0.08, 1), player);
+  emit(context, kind, x, y, clamp((speed - 35) / 1_250, 0.08, 1), player, normal);
 }
 
 function resolvePost(puck: MutablePuck, cx: number, cy: number, settings: MatchSettings, context: MutableContext): void {
@@ -228,7 +229,7 @@ function resolveStriker(puck: MutablePuck, striker: MutableStriker, interpolated
     puck.velocity.y *= settings.returnSpeed[player] / 100;
     puck.lastHitter = player;
     capVelocity(puck.velocity, returnSpeedCap(settings, player));
-    impactEvent(context, player === 1 ? "player1" : "player2", "paw-hit", puck.position.x, puck.position.y, speed, player);
+    impactEvent(context, player === 1 ? "player1" : "player2", "paw-hit", puck.position.x, puck.position.y, speed, player, { x: nx, y: ny });
   }
 }
 

@@ -4,5 +4,6 @@ artifacts/
 test-results/
 .sfhs-*/
 .sfhs-grad-*/
+.sfhs-godot-*/
 candidate/
 *.log

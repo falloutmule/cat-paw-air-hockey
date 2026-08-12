@@ -1,0 +1,85 @@
+{
+  "anchor": {
+    "groundedTolerance": 0,
+    "x": 56,
+    "y": 56
+  },
+  "descriptor": {
+    "path": "tools/godot-gameplay-actors/manifests/paw-export.json",
+    "sha256": "6fb8addc2262653ab9612c2bcd2b47d6f715d2d8ff30b304dccc932fb0ba1bd5"
+  },
+  "godot": {
+    "executableSha256": "35dab11e04ece16a2b93035e65204f4a944a3e00b020d43e54409193379d5eef",
+    "executionMode": "noninteractive-offscreen-window",
+    "renderer": "gl_compatibility",
+    "sourceGuard": "fail-closed textual preflight; not an OS syscall sandbox",
+    "supportedVersion": "4.7.1.stable",
+    "version": "4.7.1.stable.official.a13da4feb"
+  },
+  "outputs": [
+    {
+      "bytes": 8813,
+      "id": "player1",
+      "output": "art/gameplay-actors/cat-paw-player1.png",
+      "sha256": "2f350bdd7b8207f8ad9eadc774d87fd6ea8917a7974d83b50dc2b4688d9c7b09"
+    },
+    {
+      "bytes": 8814,
+      "id": "player2",
+      "output": "art/gameplay-actors/cat-paw-player2.png",
+      "sha256": "d6946cecf84386a6db9b7ab3c34a1bd56930217a239100e3cc8b7938c6595a43"
+    }
+  ],
+  "samples": [
+    {
+      "animation": "idle",
+      "id": "idle",
+      "timeSeconds": 0
+    },
+    {
+      "animation": "contact",
+      "id": "contact-0",
+      "timeSeconds": 0
+    },
+    {
+      "animation": "contact",
+      "id": "contact-1",
+      "timeSeconds": 0.08
+    },
+    {
+      "animation": "contact",
+      "id": "contact-2",
+      "timeSeconds": 0.17
+    },
+    {
+      "animation": "contact",
+      "id": "contact-3",
+      "timeSeconds": 0.28
+    },
+    {
+      "animation": "contact",
+      "id": "contact-4",
+      "timeSeconds": 0.4
+    },
+    {
+      "animation": "contact",
+      "id": "contact-5",
+      "timeSeconds": 0.52
+    },
+    {
+      "animation": "contact",
+      "id": "contact-6",
+      "timeSeconds": 0.64
+    }
+  ],
+  "scale": 2,
+  "schema": "sfhs.godot-animation-export-metadata@1",
+  "sheet": {
+    "columns": 4,
+    "rows": 2
+  },
+  "workingFrame": {
+    "height": 112,
+    "width": 112
+  }
+}

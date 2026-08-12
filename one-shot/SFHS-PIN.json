@@ -3,7 +3,7 @@
   "node": ">=24",
   "pnpm": "11.9.0",
   "schema": "sfhs.graduation-sfhs-pin@1",
-  "sfhsCommit": "5acd8fc9a24834d9416a6e615bb78b8012962e30",
+  "sfhsCommit": "37aa056b6bd0948d73fcd99c1aba558861f0037e",
   "sfhsRepository": "falloutmule/single-file-html-software",
   "sourceProductIdentity": "cf42d1907066450c5661d57c2d9017f1311a372f386aa52d20fee888c62d66f5",
   "workspacePackages": [

@@ -16,18 +16,18 @@
 | GitHub Pages | VERIFIED IMPLEMENTED / SUPERSEDED ARTIFACT | [Live site](https://falloutmule.github.io/cat-paw-air-hockey/) remains historical; R3 is local only and no remote action was authorized |
 | Size-setting discoverability and deferred paw application | VERIFIED REPAIRED | Goal Size/Paw Size lead the menu; packed proof checks 90 -> 112.5 paw diameter at the safe boundary |
 | Approved BOARD-ART-001 default | VERIFIED INTEGRATED | Exact approved 1080×2400 PNG; nearest-neighbor Board sprite; packed composed visual proof |
-| Current-artifact Samsung acceptance | UNTESTED | Settings/contact changes create a new exact artifact, so prior device results do not transfer |
+| Current-artifact Samsung acceptance | UNTESTED | Godot gameplay-actor sheets create a new exact artifact, so the previous settings/contact PASS does not transfer |
 | Settings defaults and phone controls | VERIFIED REPAIRED | Sizes default to 200% over 25–200%; speeds default to 100% over 70–130%; mirrored sticky Close and one thin native scrollbar per half pass packed multi-viewport Chromium |
-| Cat-matched contact puck | VERIFIED IMPLEMENTED | Last-hitter palette, puck squash/pop, paw recoil, reduced-motion suppression, focused resolver tests, and normal-pointer semantic browser proof |
+| Godot puck-and-paw contact animation | VERIFIED IMPLEMENTED | Five deterministic sheets, last-hitter palette, seven synchronized frames, collision-normal recoil, static-theme fallback, reduced-motion rest frames, focused resolver/export tests, and normal-pointer semantic browser proof |
 
 ## Canonical identity
 
-The locally verified settings/contact target is build `cat-paw-air-hockey-59c8fe2815c1`, 4,073,692 bytes, SHA-256 `3310e4f0992803d06f64ad1ed30f9e1f62c19481f476fc74e7180c4af398aa4e`, source SHA-256 `59c8fe2815c1a9d9cc89ccac77b936c05c9623fef85cc7332047947353d24c06`. The exact approved Board source remains 2,562,705 bytes with SHA-256 `cfba2b87c4fec52fb0f9a491ac9fca8421fba015c86425eaa9abe9517c68bf2d`. It retains the real 540×1200 edge-wall mechanics, R2A's single viewport authority, and the accepted double-size score-cat sheets.
+The locally verified PUCK-PAW-GODOT-001 target is build `cat-paw-air-hockey-06998a9ce8bc`, 4,117,623 bytes, SHA-256 `51b92216c60556d2df9885ba5155bc427da6904b0fc3fc6a89c864e30215f42a`, source SHA-256 `06998a9ce8bc8b8cd578018e42b716c3c4b5b017c13626d306aa609eddc5055b`. The five gameplay-actor sheets were exported twice with Godot `4.7.1.stable.official.a13da4feb` and merged SFHS commit `37aa056b6bd0948d73fcd99c1aba558861f0037e`. It retains the real 540×1200 edge-wall mechanics, R2A's single viewport authority, and the accepted double-size score-cat sheets.
 
 ## Known limitations and blockers
 
 - A physical Samsung Galaxy S21 Ultra report must name the exact packed build, byte size, and SHA-256; no prior acceptance transfers automatically.
 - WebGL is mandatory.
-- A new exact-artifact Samsung Galaxy S21 Ultra settings/contact gameplay session remains required.
+- A new exact-artifact Samsung Galaxy S21 Ultra puck-and-paw gameplay session remains required.
 
 Release terminology remains deliberately limited: automated gates pass, while artifact-bound physical-device acceptance is still UNTESTED. No R3 push, PR, release, or deployment has occurred.
