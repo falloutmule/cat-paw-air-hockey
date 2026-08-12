@@ -99,14 +99,18 @@ try {
       const paw = current.paws[current.puckPresentation.contactPlayer === 1 ? "bottom" : "top"];
       const synchronizedFrame = current.puckPresentation.frame > 0 && paw.frame === current.puckPresentation.frame;
       observedContactAnimation ||= synchronizedFrame;
-      if (synchronizedFrame && !contactEvidenceCaptured) {
-        await page.screenshot({ path: resolve(evidenceDirectory, "09-godot-puck-paw-contact.png") });
-        contactEvidenceCaptured = true;
-      }
     }
     if (current.state.puck.lastHitter === 1 && current.puckPresentation?.palette === "player1") observedContactPalette = "player1";
     if (current.state.puck.lastHitter === 2 && current.puckPresentation?.palette === "player2") observedContactPalette = "player2";
   };
+  const contactAnimationSeen = page.waitForFunction(() => {
+    const current = window.__CAT_AIR_HOCKEY__!.snapshot() as any;
+    const player = current.puckPresentation?.contactPlayer;
+    if (player == null || current.puckPresentation.frame <= 0) return false;
+    const paw = current.paws[player === 1 ? "bottom" : "top"];
+    if (paw.frame !== current.puckPresentation.frame) return false;
+    return { player, frame: current.puckPresentation.frame, palette: current.puckPresentation.palette };
+  }, undefined, { timeout: 90_000 });
   const scoreForPlayerOne = async (targetScore: number): Promise<void> => {
     const deadline = Date.now() + 90_000;
     let sweptThisDescent = false;
@@ -196,6 +200,12 @@ try {
 
   await touch("pointermove", 1, 270, 690);
   await scoreForPlayerOne(1);
+  const contactAnimation = await (await contactAnimationSeen).jsonValue() as { player: number; frame: number; palette: string };
+  observedContact = true;
+  observedContactAnimation = contactAnimation.frame > 0;
+  if (contactAnimation.palette === "player1" || contactAnimation.palette === "player2") observedContactPalette = contactAnimation.palette;
+  await page.screenshot({ path: resolve(evidenceDirectory, "09-godot-puck-paw-contact.png") });
+  contactEvidenceCaptured = true;
   assert.equal((await snapshot()).state.scores[1], 1);
   assert.equal(observedContact, true, "normal pointer play reaches the contact presentation lane");
   assert.ok(observedContactPalette === "player1" || observedContactPalette === "player2", "contact gives the puck the last hitter's cat palette");
