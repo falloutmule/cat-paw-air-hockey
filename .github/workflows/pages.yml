@@ -45,7 +45,7 @@ jobs:
           pnpm --dir "$RUNNER_TEMP/sfhs" install --frozen-lockfile
           pushd "$RUNNER_TEMP/sfhs"
           node packages/cli/src/main.ts one-shot inspect --project "$GITHUB_WORKSPACE" --json
-          node packages/cli/src/main.ts one-shot graduate materialize --project "$GITHUB_WORKSPACE" --json
+          GITHUB_SHA="$pin" node packages/cli/src/main.ts one-shot graduate materialize --project "$GITHUB_WORKSPACE" --json
           popd
           project=$(find "$RUNNER_TEMP/sfhs/examples" -maxdepth 1 -type d -name '.sfhs-grad-cat-paw-air-hockey-*' | head -n 1)
           test -n "$project"
