@@ -1,0 +1,14 @@
+{
+  "schema": "public-pages-test-release@1",
+  "buildId": "cat-paw-air-hockey-de9678b30e35",
+  "artifactSha256": "1406c90b5edf69a230e909a7db9f27edc82a75ea32c65cfebdb9d8958ae9cee9",
+  "bytes": 4118612,
+  "sourceReference": "WINNING-SHOT-001; source SHA-256 de9678b30e3512cd600f0a1256ee8f412c166f69750dee1783a1bff8aea5ae29",
+  "publishedDate": "2026-10-07",
+  "publicationBranch": "pages-test-20261007",
+  "previousPublicCommit": "1aca4943495312b53cd162bbfa9494519e25e439",
+  "previousArtifactSha256": "827d1b6d1e3aa8877b206d2be5c89baaea89b5cd04e8643196b394b3f7789b1a",
+  "rollbackPath": "releases/2026-10-07-before/index.html",
+  "physicalAcceptance": "not claimed",
+  "notes": "Verified standalone WINNING-SHOT-001 test handoff. Retains actual scoring positions before reset, final scores, repeat export and capture during rematch. Existing public source on main is a distinct historical Rapier lineage; it is not the source of this test artifact. Canonical local SFHS gates passed in the handoff; exact-artifact browser capture checks were rerun for publication."
+}
